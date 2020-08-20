@@ -1,0 +1,7 @@
+CREATE TABLE [dbo].[MarketSummaryOverview](
+	[MS_ID] [int] NOT NULL PRIMARY KEY IDENTITY(1,1),
+	[MS_DATE] [datetime] NULL,
+	[MS_STATUS] [varchar](300) NULL,
+	[MS_VOLUME] [float] NULL,
+	[MS_VALUE] [float] NULL,
+	[MS_TRADES] [float] NULL) 

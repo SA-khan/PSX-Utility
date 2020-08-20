@@ -1,0 +1,6 @@
+CREATE PROC spGetSymbolFromCompanyName
+		@CompanyName varchar(500)
+		AS
+		BEGIN
+			SELECT C_SYMBOL FROM COMPANY WHERE C_NAME = @CompanyName
+		END
