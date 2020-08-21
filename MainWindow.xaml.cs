@@ -48,6 +48,7 @@ namespace PSXDataFetchingApp
         public static List<Double> CURRENT = new List<double>();
         public static List<Double> CHANGE = new List<double>();
         public static List<Double> VOLUME = new List<double>();
+        public static int statusFlag = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -72,6 +73,7 @@ namespace PSXDataFetchingApp
 
         private string[] GetDefault()
         {
+            
             HtmlNodeCollection name_nodes = FetchDataFromPSX("//h4");
             String[] names = new String[name_nodes.Count];
             string[] result = new string[ 5 + name_nodes.Count];
@@ -85,41 +87,49 @@ namespace PSXDataFetchingApp
             string localValue = String.Empty;
             string localTrades = String.Empty;
 
-            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            try
             {
-                if (node.InnerText.ToString().StartsWith("* LDCP")) { }
-                else if (node.InnerText.ToString().StartsWith("2020"))
-                {
-                    localdatetime = node.InnerText.ToString();
-                }
-                else if (node.InnerText.ToString().StartsWith("Status"))
-                {
-                    localstatus = node.InnerText.ToString().Replace("Status: ", "").Replace(" ", "");
-                }
-                else if (node.InnerText.ToString().StartsWith("Volume"))
-                {
-                    localVolume = node.InnerText.ToString().Replace("Volume: ", "");
-                }
-                else if (node.InnerText.ToString().StartsWith("Value"))
-                {
-                    localValue = node.InnerText.ToString().Replace("Value : ", "");
-                }
-                else if (node.InnerText.ToString().StartsWith("Trades"))
-                {
-                    localTrades = node.InnerText.ToString().Replace("Trades: ", "");
-                }
-                else
-                    names[counter++] = node.InnerText.ToString() + "\n";
-            }
 
-            result[0] = localdatetime;
-            result[1] = localstatus;
-            result[2] = localVolume;
-            result[3] = localValue;
-            result[4] = localTrades;
-            for(int i = 0; i < names.Count() ; i++)
+                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+                {
+                    if (node.InnerText.ToString().StartsWith("* LDCP")) { }
+                    else if (node.InnerText.ToString().StartsWith("2020"))
+                    {
+                        localdatetime = node.InnerText.ToString();
+                    }
+                    else if (node.InnerText.ToString().StartsWith("Status"))
+                    {
+                        localstatus = node.InnerText.ToString().Replace("Status: ", "").Replace(" ", "");
+                    }
+                    else if (node.InnerText.ToString().StartsWith("Volume"))
+                    {
+                        localVolume = node.InnerText.ToString().Replace("Volume: ", "");
+                    }
+                    else if (node.InnerText.ToString().StartsWith("Value"))
+                    {
+                        localValue = node.InnerText.ToString().Replace("Value : ", "");
+                    }
+                    else if (node.InnerText.ToString().StartsWith("Trades"))
+                    {
+                        localTrades = node.InnerText.ToString().Replace("Trades: ", "");
+                    }
+                    else
+                        names[counter++] = node.InnerText.ToString() + "\n";
+                }
+
+                result[0] = localdatetime;
+                result[1] = localstatus;
+                result[2] = localVolume;
+                result[3] = localValue;
+                result[4] = localTrades;
+                for (int i = 0; i < names.Count(); i++)
+                {
+                    result[i + 5] = names[i];
+                }
+            }
+            catch(Exception ex)
             {
-                 result[i+5] = names[i];
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             return result;
         }
@@ -210,21 +220,31 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyNames()
+        private List<string> GetMarketSummaryCompanyNames()
         {
-            HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
-            string[] result = new string[name_nodes.Count];
-            string[] AllTableRowData = new string[name_nodes.Count];
+            // Local List of string Variable to store return value 
+            List<string> result = new List<string>();
 
-            int counter = 0;
+            // Get All Nodes of td tag
+            HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+
+            // Get All Data of TD Tags
+            List<string> RowData = new List<string>();
+            //int counter = 0;
+
+            // Start capturing relevant data flag
             int StartCapturingflag = 0;
 
+            // Loops through all nodes
             foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
             {
+                // Tap to get desired data control flow
                 if (StartCapturingflag == 1)
                 {
-                    AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+                    RowData.Add(node.InnerText.ToString());
                 }
+
+                // Signal the flag to start capturing data when it gets Header VOLUME
                 else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
                 {
                     StartCapturingflag = 1;
@@ -234,30 +254,33 @@ namespace PSXDataFetchingApp
 
                 }
             }
-            int counter2 = 0;
-            for (int j = 0; j < AllTableRowData.Count(); j++)
+            //int counter2 = 0;
+            Debug.WriteLine(RowData.Count());
+            for (int j = 0; j < RowData.Count(); j++)
             {
                 if (j % 8 == 0)
                 {
-                    if (AllTableRowData[j] != null)
+                    if (RowData[j] != null)
                     {
-                        if (AllTableRowData[j].ToString().Contains("SCRIP"))
+                        if (RowData[j].Contains("SCRIP"))
                         {
 
                         }
                         else
                         {
-                            result[counter2++] += AllTableRowData[j];
+                            result.Add(RowData[j]);
                         }
                     }
                 }
             }
+
+            // return company names
             return result;
         }
 
-        private string GetMarketSummaryCompanySymbols(string CompanyName)
+        private List<string> GetMarketSummaryCompanySymbols(List<string> CompanyName)
         {
-            string result = String.Empty;
+            List<string> result = new List<string>();
             SqlConnection conn = new SqlConnection();
             try
             {
@@ -265,19 +288,24 @@ namespace PSXDataFetchingApp
                 SqlDataReader rd;
                 using (conn)
                 {
-                    SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn); // Read user-> stored procedure name
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@CompanyName", SqlDbType.DateTime);
-                    cmd.Parameters["@CompanyName"].Value = CompanyName;
                     conn.Open();
-                    rd = cmd.ExecuteReader();
-                    while (rd.Read())
+                    for (int i = 0; i < CompanyName.Count(); i++)
                     {
-                        result = rd[0].ToString();
+                        SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn); // Read user-> stored procedure name
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CompanyName", SqlDbType.VarChar,500);
+                        cmd.Parameters["@CompanyName"].Value = CompanyName[i];
+                        
+                        rd = cmd.ExecuteReader();
+                        while (rd.Read())
+                        {
+                            result[i] = rd[0].ToString();
+                        }
+                        rd.Close();
                     }
-                    rd.Close();
+                    conn.Close();
                 }
-                conn.Close();
+
             }
             catch (SqlException ex)
             {
@@ -293,120 +321,51 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanySymbols()
-        {
-            HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
-            string[] result = new string[name_nodes.Count];
-            string[] AllTableRowData = new string[name_nodes.Count];
+        //private string[] GetMarketSummaryCompanySymbols()
+        //{
+        //    HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+        //    string[] result = new string[name_nodes.Count];
+        //    string[] AllTableRowData = new string[name_nodes.Count];
 
-            int counter = 0;
-            int StartCapturingflag = 0;
+        //    int counter = 0;
+        //    int StartCapturingflag = 0;
 
-            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
-            {
-                if (StartCapturingflag == 1)
-                {
-                    AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
-                }
-                else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
-                {
-                    StartCapturingflag = 1;
-                }
-                else
-                {
+        //    foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+        //    {
+        //        if (StartCapturingflag == 1)
+        //        {
+        //            AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+        //        }
+        //        else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+        //        {
+        //            StartCapturingflag = 1;
+        //        }
+        //        else
+        //        {
 
-                }
-            }
-            int counter2 = 0;
-            for (int j = 0; j < AllTableRowData.Count(); j++)
-            {
-                if (j % 8 == 0)
-                {
-                    if (AllTableRowData[j] != null)
-                    {
-                        if (AllTableRowData[j].ToString().Contains("SCRIP"))
-                        {
+        //        }
+        //    }
+        //    int counter2 = 0;
+        //    for (int j = 0; j < AllTableRowData.Count(); j++)
+        //    {
+        //        if (j % 8 == 0)
+        //        {
+        //            if (AllTableRowData[j] != null)
+        //            {
+        //                if (AllTableRowData[j].ToString().Contains("SCRIP"))
+        //                {
 
-                        }
-                        else
-                        {
-                            result[counter2++] += GetMarketSummaryCompanySymbols(AllTableRowData[j]);
+        //                }
+        //                else
+        //                {
+        //                    result[counter2++] += GetMarketSummaryCompanySymbols(AllTableRowData[j]);
 
-                        }
-                    }
-                }
-            }
-            return result;
-            //string[] result = new string[1000];
-            //result[0] = "AGTL";
-            //result[1] = "ATLH";
-            //result[2] = "DFML";
-            //result[3] = "GHNI";
-            //result[4] = "GNLT";
-            //result[5] = "GAIL";
-            //result[6] = "HINO";
-            //result[7] = "HCAR";
-            //result[8] = "INDU";
-            //result[9] = "MTL";
-            //result[10] = "PSMC";
-            //result[11] = "SAZEW";
-            //result[12] = "AGIL";
-            //result[13] = "ATBA";
-            //result[14] = "BWHL";
-            //result[15] = "EXID";
-            //result[16] = "GTYR";
-            //result[17] = "LOADS";
-            //result[18] = "THALL";
-            //result[19] = "EMCO";
-            //result[20] = "JOPP";
-            //result[21] = "PAEL";
-            //result[22] = "PCAL";
-            //result[23] = "SIEG";
-            //result[24] = "WAVES";
-            //result[25] = "ACPL";
-            //result[26] = "BWCL";
-            //result[27] = "CHCC";
-            //result[28] = "DGKC";
-            //result[29] = "DCL";
-            //result[30] = "FCCL";
-            //result[31] = "FECTC";
-            //result[32] = "FLYNG";
-            //result[33] = "GWLC";
-            //result[34] = "JVDC";
-            //result[35] = "KOHC";
-            //result[36] = "LCL";
-            //result[37] = "MLCF";
-            //result[38] = "PIOC";
-            //result[39] = "POWE";
-            //result[40] = "POWE";
-            //result[41] = "SMCPL";
-            //result[42] = "THCCL";
-            //result[43] = "AGL";
-            //result[44] = "ARPL";
-            //result[45] = "BAPL";
-            //result[46] = "BERG";
-            //result[47] = "BIFO";
-            //result[48] = "BUXL";
-            //result[49] = "COLG";
-            //result[50] = "DOL";
-            //result[51] = "DYNO";
-            //result[52] = "EPCL"; //Engro Polymer & Chemicals Ltd. 
-            //result[53] = "GGL"; //Ghani Global Holdings Limited.	
-            //result[54] = "ICI"; //ICI Pakistan Limited. 
-            //result[55] = "ICL"; //Ittehad Chemical Ltd.
-            //result[56] = "LCC"; //Lotte Chemical Pakistan Ltd.
-            //result[57] = "NICL"; //Nimir Industrial Chemical Ltd. symbol
-            //result[58] = "NRSL"; //Nimir Resins Limited. symbol
-            //result[59] = "POL"; //Pakistan Oxygen Limited.
-            //result[60] = "SCIL"; //Sitara Chemicals. symbol
-            //result[61] = "SIPE"; //Sitara Peroxide Limited symbol
-            //result[62] = "WAHN"; //Wah Noble Chemicals Ltd. symbol
-            //result[63] = "HGFA"; //HBL Growth Fund symbol
-            //result[64] = "HIFA"; //HBL Investment Fund symbol
-            //result[65] = "TSMF"; //Tri - Star Mutual Fund Ltd.
-            //result[66] = "ABL"; //Allied Bank Ltd.
-            //return result;
-        }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return result;
+        //}
 
         private string[] GetMarketSummaryCompanyLDCP()
         {
@@ -729,32 +688,32 @@ namespace PSXDataFetchingApp
                 SqlCommand cmdspInsertMarketSummaryOverview = new SqlCommand("spInsertMarketSummaryOverview", conn);
                 cmdspInsertMarketSummaryOverview.CommandType = CommandType.StoredProcedure;
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@DATE", SqlDbType.DateTime);
-                cmdspInsertMarketSummaryOverview.Parameters["@DATE"].Value = DateTime.Parse(defaultData[0]);
+                cmdspInsertMarketSummaryOverview.Parameters["@DATE"].Value = RequestDate;
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@STATUS", SqlDbType.VarChar, 300);
-                cmdspInsertMarketSummaryOverview.Parameters["@STATUS"].Value = defaultData[1];
+                cmdspInsertMarketSummaryOverview.Parameters["@STATUS"].Value = RequestStatus;
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@VOLUME", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverview.Parameters["@VOLUME"].Value = Double.Parse(defaultData[2]);
+                cmdspInsertMarketSummaryOverview.Parameters["@VOLUME"].Value = RequestVolume;
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@VALUE", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverview.Parameters["@VALUE"].Value = Double.Parse(defaultData[3]);
+                cmdspInsertMarketSummaryOverview.Parameters["@VALUE"].Value = RequestValue;
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@TRADES", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverview.Parameters["@TRADES"].Value = Double.Parse(defaultData[4]);
+                cmdspInsertMarketSummaryOverview.Parameters["@TRADES"].Value = RequestTrades;
 
                 //
 
                 SqlCommand cmdspInsertMarketSummaryOverviewHistory = new SqlCommand("spInsertMarketSummaryOverviewHistory", conn);
                 cmdspInsertMarketSummaryOverviewHistory.CommandType = CommandType.StoredProcedure;
                 cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@DATE", SqlDbType.DateTime);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@DATE"].Value = DateTime.Parse(defaultData[0]);
+                cmdspInsertMarketSummaryOverviewHistory.Parameters["@DATE"].Value = RequestDate;
                 cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@STATUS", SqlDbType.VarChar, 300);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@STATUS"].Value = defaultData[1];
+                cmdspInsertMarketSummaryOverviewHistory.Parameters["@STATUS"].Value = RequestStatus;
 
                 cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@VOLUME", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@VOLUME"].Value = Double.Parse(defaultData[2]);
+                cmdspInsertMarketSummaryOverviewHistory.Parameters["@VOLUME"].Value = RequestVolume;
                 cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@VALUE", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@VALUE"].Value = Double.Parse(defaultData[3]);
+                cmdspInsertMarketSummaryOverviewHistory.Parameters["@VALUE"].Value = RequestValue;
 
                 cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@TRADES", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@TRADES"].Value = Double.Parse(defaultData[4]);
+                cmdspInsertMarketSummaryOverviewHistory.Parameters["@TRADES"].Value = RequestTrades;
 
                 try
                 {
@@ -773,90 +732,91 @@ namespace PSXDataFetchingApp
                     Debug.WriteLine("Exception: " + ex.Message);
                 }
 
-                for (int m = 0; m < CURRENT.Length; m++)
+                for (int m = 0; m < companyName.Length; m++)
                 {
-
-                    //
-                    if (LDCP[m] == null)
+                    try
                     {
-
-                    }
-                    else
-                    {
-                        SqlCommand cmdspInsertMarketSummary = new SqlCommand("spInsertMarketSummary", conn);
-                        cmdspInsertMarketSummary.CommandType = CommandType.StoredProcedure;
-                        cmdspInsertMarketSummary.Parameters.Add("@COMPANY_NAME", SqlDbType.VarChar, 300);
-                        cmdspInsertMarketSummary.Parameters["@COMPANY_NAME"].Value = companyName[m];
-                        cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, 300);
-                        cmdspInsertMarketSummary.Parameters["@COMPANY_SYMBOL"].Value = companySymbol[m];
-
-                        cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LDCP", SqlDbType.Float);
-                        cmdspInsertMarketSummary.Parameters["@COMPANY_LDCP"].Value = Double.Parse(LDCP[m]);
-                        cmdspInsertMarketSummary.Parameters.Add("@COMPANY_OPEN", SqlDbType.Float);
-                        cmdspInsertMarketSummary.Parameters["@COMPANY_OPEN"].Value = Double.Parse(OPEN[m]);
-
-                        cmdspInsertMarketSummary.Parameters.Add("@COMPANY_HIGH", SqlDbType.Float);
-                        cmdspInsertMarketSummary.Parameters["@COMPANY_HIGH"].Value = Double.Parse(HIGH[m]);
-                        cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LOW", SqlDbType.Float);
-                        cmdspInsertMarketSummary.Parameters["@COMPANY_LOW"].Value = Double.Parse(LOW[m]);
-
-                        cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CURRENT", SqlDbType.Float);
-                        cmdspInsertMarketSummary.Parameters["@COMPANY_CURRENT"].Value = Double.Parse(CURRENT[m]);
-                        cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CHANGE", SqlDbType.Float);
-                        cmdspInsertMarketSummary.Parameters["@COMPANY_CHANGE"].Value = Double.Parse(CHANGE[m]);
-                        cmdspInsertMarketSummary.Parameters.Add("@COMPANY_VOLUME", SqlDbType.Float);
-                        cmdspInsertMarketSummary.Parameters["@COMPANY_VOLUME"].Value = Double.Parse(VOLUME[m]);
-
                         //
-
-                        int nameFlag = 5;
-
-                        SqlCommand cmdForspInsertMarketSummaryHistory = new SqlCommand("spInsertMarketSummaryHistory", conn);
-                        cmdForspInsertMarketSummaryHistory.CommandType = CommandType.StoredProcedure;
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@DATE", SqlDbType.DateTime);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@DATE"].Value = DateTime.Parse(defaultData[0]);
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@STATUS", SqlDbType.VarChar, 500);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@STATUS"].Value = defaultData[1];
-
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@SECTOR", SqlDbType.VarChar, 500);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@SECTOR"].Value = defaultData[nameFlag];
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_NAME", SqlDbType.VarChar, 500);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_NAME"].Value = companyName[m];
-
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, 500);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_SYMBOL"].Value = companySymbol[m];
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_LDCP", SqlDbType.Float);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_LDCP"].Value = Double.Parse(LDCP[m]);
-
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_OPEN", SqlDbType.Float);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_OPEN"].Value = Double.Parse(OPEN[m]);
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_HIGH", SqlDbType.Float);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_HIGH"].Value = Double.Parse(HIGH[m]);
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_LOW", SqlDbType.Float);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_LOW"].Value = Double.Parse(LOW[0]);
-
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_CURRENT", SqlDbType.Float);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_CURRENT"].Value = Double.Parse(CURRENT[m]);
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_CHANGE", SqlDbType.Float);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_CHANGE"].Value = Double.Parse(CHANGE[m]);
-                        cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_VOLUME", SqlDbType.Float);
-                        cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_VOLUME"].Value = Double.Parse(VOLUME[m]);
-
-                        try
+                        if (LDCP[m] == null)
                         {
-                            
+
+                        }
+                        else
+                        {
+                            SqlCommand cmdspInsertMarketSummary = new SqlCommand("spInsertMarketSummary", conn);
+                            cmdspInsertMarketSummary.CommandType = CommandType.StoredProcedure;
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_NAME", SqlDbType.VarChar, 300);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_NAME"].Value = companyName[m];
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, 300);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_SYMBOL"].Value = companySymbol[m];
+
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LDCP", SqlDbType.Float);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_LDCP"].Value = Double.Parse(LDCP[m]);
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_OPEN", SqlDbType.Float);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_OPEN"].Value = Double.Parse(OPEN[m]);
+
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_HIGH", SqlDbType.Float);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_HIGH"].Value = Double.Parse(HIGH[m]);
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LOW", SqlDbType.Float);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_LOW"].Value = Double.Parse(LOW[m]);
+
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CURRENT", SqlDbType.Float);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_CURRENT"].Value = Double.Parse(CURRENT[m]);
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CHANGE", SqlDbType.Float);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_CHANGE"].Value = Double.Parse(CHANGE[m]);
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_VOLUME", SqlDbType.Float);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_VOLUME"].Value = Double.Parse(VOLUME[m]);
+
+                            //
+
+                            int nameFlag = 5;
+
+                            SqlCommand cmdForspInsertMarketSummaryHistory = new SqlCommand("spInsertMarketSummaryHistory", conn);
+                            cmdForspInsertMarketSummaryHistory.CommandType = CommandType.StoredProcedure;
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@DATE", SqlDbType.DateTime);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@DATE"].Value = RequestDate;
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@STATUS", SqlDbType.VarChar, 500);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@STATUS"].Value = RequestStatus;
+
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@SECTOR", SqlDbType.VarChar, 500);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@SECTOR"].Value = defaultData[nameFlag];
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_NAME", SqlDbType.VarChar, 500);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_NAME"].Value = companyName[m];
+
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, 500);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_SYMBOL"].Value = companySymbol[m];
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_LDCP", SqlDbType.Float);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_LDCP"].Value = Double.Parse(LDCP[m]);
+
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_OPEN", SqlDbType.Float);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_OPEN"].Value = Double.Parse(OPEN[m]);
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_HIGH", SqlDbType.Float);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_HIGH"].Value = Double.Parse(HIGH[m]);
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_LOW", SqlDbType.Float);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_LOW"].Value = Double.Parse(LOW[0]);
+
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_CURRENT", SqlDbType.Float);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_CURRENT"].Value = Double.Parse(CURRENT[m]);
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_CHANGE", SqlDbType.Float);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_CHANGE"].Value = Double.Parse(CHANGE[m]);
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_VOLUME", SqlDbType.Float);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_VOLUME"].Value = Double.Parse(VOLUME[m]);
+
+
                             j = cmdspInsertMarketSummary.ExecuteNonQuery();
                             l = cmdForspInsertMarketSummaryHistory.ExecuteNonQuery();
-                            
+
                         }
-                        catch (SqlException)
-                        {
-                            Debug.WriteLine("SQL Exception Occured.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine("Exception: " + ex.Message);
-                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        MessageBox.Show(ex.Message, "SQL Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Debug.WriteLine("SQL Exception: " + ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Debug.WriteLine("Exception: " + ex.Message);
                     }
                 }
 
@@ -881,51 +841,40 @@ namespace PSXDataFetchingApp
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
-
-            btnGet.IsEnabled = false;
-            progressBar.Visibility = Visibility.Visible;
-            lblProgress.Content = "Please Wait..";
-
-            BackgroundWorker worker = new BackgroundWorker();
-            worker.WorkerReportsProgress = true;
-            worker.DoWork += worker_DoWork;
-            worker.ProgressChanged += worker_ProgressChanged;
-            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            worker.RunWorkerAsync(10000);
-
-            //try
-            //{
-           
-            //
-
-            progressBar.Visibility = Visibility.Hidden;
-            lblProgress.Content = "Processing Completed.";
-            //MessageBox.Show(text);
-            
-        //}
-        //catch (Exception ex)
-        //{
-        //    Debug.WriteLine("Exception: " + ex.Message);
-        //}
-
-    }
+            try
+            {
+                progressBar.Visibility = Visibility.Visible;
+                lblProgress.Content = "Processing..";
+                btnGet.IsEnabled = false;
+                progressBar.Value = 1;
+                //BackgroundWorker worker = new BackgroundWorker();
+                //worker.DoWork += worker_DoWork;
+                //worker.ProgressChanged += worker_ProgressChanged;
+                //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+                //worker.RunWorkerAsync();
+                mustWork();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (isDataSaved)
-            {
-                PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
-                btnGet.IsEnabled = false;
-                window.Show();
-                this.Hide();
-            }
-            else
-            {
-                MessageBox.Show("Data Fetch Failed.", "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.WriteLine("Data saved Failed.");
-                btnGet.IsEnabled = false;
-            }
+            //if (isDataSaved)
+            //{
+                //PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
+                //btnGet.IsEnabled = false;
+                //window.Show();
+                //this.Hide();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Data Fetch Failed.", "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    Debug.WriteLine("Data saved Failed.");
+            //    btnGet.IsEnabled = false;
+            //}
             
         }
 
@@ -936,42 +885,116 @@ namespace PSXDataFetchingApp
                 lblProgress.Content = e.UserState;
         }
 
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        public void mustWork()
         {
-            //lblProgress.Content = "Getting Headers..";
             string[] defaultData = GetDefault();
             RequestDate = DateTime.Parse(defaultData[0]);
             RequestStatus = defaultData[1];
             RequestValue = Double.Parse(defaultData[2]);
             RequestVolume = Double.Parse(defaultData[3]);
             RequestTrades = Double.Parse(defaultData[4]);
-            //progressBar.Value = 10;
-            //lblProgress.Content = "Getting Company Names..";
-            string[] getCompanyNames = GetMarketSummaryCompanyNames();
+
+            NAME = GetMarketSummaryCompanyNames();
+            //SYMBOL = GetMarketSummaryCompanySymbols(NAME);
+            for (int i = 0; i < NAME.Count(); i++)
+            {
+                SYMBOL.Insert(i,NAME[i]);
+            }
+            
+            string[] getCompanyLDCP = GetMarketSummaryCompanyLDCP();
+            string[] getCompanyOPEN = GetMarketSummaryCompanyOPEN();
+            string[] getCompanyHIGH = GetMarketSummaryCompanyHIGH();
+            string[] getCompanyLOW = GetMarketSummaryCompanyLOW();
+            string[] getCompanyCURRENT = GetMarketSummaryCompanyCURRENT();
+            string[] getCompanyCHANGE = GetMarketSummaryCompanyCHANGE();
+            string[] getCompanyVOLUME = GetMarketSummaryCompanyVOLUME();
+
+            double[] CompanyLDCP = new double[getCompanyLDCP.Length];
+            double[] CompanyOPEN = new double[getCompanyLDCP.Length];
+            double[] CompanyHIGH = new double[getCompanyLDCP.Length];
+            double[] CompanyLOW = new double[getCompanyLDCP.Length];
+            double[] CompanyCURRENT = new double[getCompanyLDCP.Length];
+            double[] CompanyCHANGE = new double[getCompanyLDCP.Length];
+            double[] CompanyVOLUME = new double[getCompanyLDCP.Length];
+
+
+            for (int i = 0; i < NAME.Count(); i++)
+            {
+                CompanyLDCP[i] = Convert.ToDouble(getCompanyLDCP[i]);
+                CompanyOPEN[i] = Convert.ToDouble(getCompanyOPEN[i]);
+                CompanyHIGH[i] = Convert.ToDouble(getCompanyHIGH[i]);
+                CompanyLOW[i] = Convert.ToDouble(getCompanyLOW[i]);
+                CompanyCURRENT[i] = Convert.ToDouble(getCompanyCURRENT[i]);
+                CompanyCHANGE[i] = Convert.ToDouble(getCompanyCHANGE[i]);
+                CompanyVOLUME[i] = Convert.ToDouble(getCompanyVOLUME[i]);
+
+                LDCP.Add(CompanyLDCP[i]);
+                OPEN.Add(CompanyOPEN[i]);
+                HIGH.Add(CompanyHIGH[i]);
+                LOW.Add(CompanyLOW[i]);
+                CURRENT.Add(CompanyCURRENT[i]);
+                CHANGE.Add(CompanyCHANGE[i]);
+                VOLUME.Add(CompanyVOLUME[i]);
+            }
+            PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
+            btnGet.IsEnabled = false;
+            window.Show();
+            this.Hide();
+
+        }
+
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //lblProgress.Content = "Getting Headers..";
+            //worker.WorkerReportsProgress = true;
+            //statusFlag = (1 + 1) * 100 / 100;
+            //worker.ReportProgress(statusFlag);
+            string[] defaultData = GetDefault();
+            RequestDate = DateTime.Parse(defaultData[0]);
+            RequestStatus = defaultData[1];
+            RequestValue = Double.Parse(defaultData[2]);
+            RequestVolume = Double.Parse(defaultData[3]);
+            RequestTrades = Double.Parse(defaultData[4]);
+
+            progressBar.Value = 10;
+            lblProgress.Content = "Getting Company Names..";
+            NAME = GetMarketSummaryCompanyNames();
+            SYMBOL = GetMarketSummaryCompanySymbols(NAME);
+            //statusFlag = (3 + 1) * 100 / 100;
+            //worker.ReportProgress(statusFlag);
             //progressBar.Value = 20;
             //lblProgress.Content = "Getting Company Symbols..";
-            string[] getCompanySymbols = GetMarketSummaryCompanySymbols();
+            //statusFlag = (4 + 1) * 100 / 100;
+            //worker.ReportProgress(statusFlag);
             //progressBar.Value = 30;
             //lblProgress.Content = "Getting Company LDCP..";
             string[] getCompanyLDCP = GetMarketSummaryCompanyLDCP();
+            //statusFlag = (5 + 1) * 100 / 100;
+            //worker.ReportProgress(statusFlag);
             //progressBar.Value = 40;
             //lblProgress.Content = "Getting Company OPEN..";
             string[] getCompanyOPEN = GetMarketSummaryCompanyOPEN();
+            //statusFlag = (6 + 1) * 100 / 100;
+            //worker.ReportProgress(statusFlag);
             //progressBar.Value = 50;
             //lblProgress.Content = "Getting Company HIGH..";
             string[] getCompanyHIGH = GetMarketSummaryCompanyHIGH();
+            //worker.ReportProgress(5 + statusFlag);
             //progressBar.Value = 60;
             //lblProgress.Content = "Getting Company LOW..";
             string[] getCompanyLOW = GetMarketSummaryCompanyLOW();
             //progressBar.Value = 70;
             //lblProgress.Content = "Getting Company CURRENT..";
             string[] getCompanyCURRENT = GetMarketSummaryCompanyCURRENT();
+            //worker.ReportProgress(5 + statusFlag);
             //progressBar.Value = 80;
             //lblProgress.Content = "Getting Company CHANGE..";
             string[] getCompanyCHANGE = GetMarketSummaryCompanyCHANGE();
+            //worker.ReportProgress(5 + statusFlag);
             //progressBar.Value = 85;
             //lblProgress.Content = "Getting Company VOLUME..";
             string[] getCompanyVOLUME = GetMarketSummaryCompanyVOLUME();
+            //worker.ReportProgress(5 + statusFlag);
             //progressBar.Value = 90;
 
             double[] CompanyLDCP = new double[getCompanyLDCP.Length];
@@ -983,7 +1006,7 @@ namespace PSXDataFetchingApp
             double[] CompanyVOLUME = new double[getCompanyLDCP.Length];
 
 
-            for (int i = 0; i < getCompanyNames.Length; i++)
+            for (int i = 0; i < NAME.Count; i++)
             {
                 CompanyLDCP[i] = Convert.ToDouble(getCompanyLDCP[i]);
                 CompanyOPEN[i] = Convert.ToDouble(getCompanyOPEN[i]);
@@ -994,8 +1017,6 @@ namespace PSXDataFetchingApp
                 CompanyVOLUME[i] = Convert.ToDouble(getCompanyVOLUME[i]);
 
                 //New Changes
-                NAME.Add(getCompanyNames[i]);
-                SYMBOL.Add(getCompanyNames[i]);
                 LDCP.Add(CompanyLDCP[i]);
                 OPEN.Add(CompanyOPEN[i]);
                 HIGH.Add(CompanyHIGH[i]);
@@ -1003,13 +1024,17 @@ namespace PSXDataFetchingApp
                 CURRENT.Add(CompanyCURRENT[i]);
                 CHANGE.Add(CompanyCHANGE[i]);
                 VOLUME.Add(CompanyVOLUME[i]);
+                //statusFlag = (10 + i + 1) * 100 / 100;
+                //worker.ReportProgress( ++ statusFlag);
 
             }
 
 
             //lblProgress.Content = "Saving Data..";
-            isDataSaved = SavingDataToDatabase(defaultData, getCompanyNames, getCompanySymbols, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
+            //isDataSaved = SavingDataToDatabase(defaultData, getCompanyNames, getCompanySymbols, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
             //progressBar.Value = 100;
+            //statusFlag = (20 + 1) * 100 / 100;
+            //worker.ReportProgress(statusFlag);
         }
     }
 }
