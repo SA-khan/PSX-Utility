@@ -9,7 +9,7 @@
     <Border Margin="10">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="*" />
             <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
@@ -24,8 +24,8 @@
         </StackPanel>
         <ListView x:Name="list1" Grid.Row="2">  
             <ListView.View>
-                <GridView x:Name="gridView" AllowsColumnReorder="true" ColumnHeaderToolTip="Market Summary">
-                </GridView>
+                    <GridView x:Name="gridView" AllowsColumnReorder="true" ColumnHeaderToolTip="Market Summary">
+                    </GridView>
             </ListView.View>  
         </ListView>  
     </Grid>

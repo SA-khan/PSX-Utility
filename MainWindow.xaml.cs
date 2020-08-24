@@ -661,7 +661,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private bool SavingDataToDatabase(string[] defaultData, string[] companyName, string[] companySymbol, string[] LDCP, string[] OPEN, string[] HIGH, string[] LOW, string[] CURRENT, string[] CHANGE, string[] VOLUME)
+        private bool SavingDataToDatabase(string[] defaultData, List<string> companyName, List<string> companySymbol, string[] LDCP, string[] OPEN, string[] HIGH, string[] LOW, string[] CURRENT, string[] CHANGE, string[] VOLUME)
         {
             if(defaultData != null)
             {
@@ -732,7 +732,7 @@ namespace PSXDataFetchingApp
                     Debug.WriteLine("Exception: " + ex.Message);
                 }
 
-                for (int m = 0; m < companyName.Length; m++)
+                for (int m = 0; m < NAME.Count(); m++)
                 {
                     try
                     {
@@ -841,33 +841,33 @@ namespace PSXDataFetchingApp
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 progressBar.Visibility = Visibility.Visible;
                 lblProgress.Content = "Processing..";
                 btnGet.IsEnabled = false;
                 progressBar.Value = 1;
-                //BackgroundWorker worker = new BackgroundWorker();
-                //worker.DoWork += worker_DoWork;
-                //worker.ProgressChanged += worker_ProgressChanged;
-                //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-                //worker.RunWorkerAsync();
-                mustWork();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += worker_DoWork;
+            worker.ProgressChanged += worker_ProgressChanged;
+            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            worker.RunWorkerAsync();
+            //mustWork();
+            //}
+            //catch(Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             //if (isDataSaved)
             //{
-                //PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
-                //btnGet.IsEnabled = false;
-                //window.Show();
-                //this.Hide();
+                PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
+                btnGet.IsEnabled = false;
+                window.Show();
+                this.Hide();
             //}
             //else
             //{
@@ -875,7 +875,7 @@ namespace PSXDataFetchingApp
             //    Debug.WriteLine("Data saved Failed.");
             //    btnGet.IsEnabled = false;
             //}
-            
+
         }
 
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -885,8 +885,11 @@ namespace PSXDataFetchingApp
                 lblProgress.Content = e.UserState;
         }
 
+        #region MustWorkStart
         public void mustWork()
         {
+            int progressPercentage = Convert.ToInt32(((double)i / max) * 100);
+            (sender as BackgroundWorker)worker.ReportProgress(progressPercentage, statusFlag);
             string[] defaultData = GetDefault();
             RequestDate = DateTime.Parse(defaultData[0]);
             RequestStatus = defaultData[1];
@@ -898,9 +901,9 @@ namespace PSXDataFetchingApp
             //SYMBOL = GetMarketSummaryCompanySymbols(NAME);
             for (int i = 0; i < NAME.Count(); i++)
             {
-                SYMBOL.Insert(i,NAME[i]);
+                SYMBOL.Insert(i, NAME[i]);
             }
-            
+
             string[] getCompanyLDCP = GetMarketSummaryCompanyLDCP();
             string[] getCompanyOPEN = GetMarketSummaryCompanyOPEN();
             string[] getCompanyHIGH = GetMarketSummaryCompanyHIGH();
@@ -936,105 +939,92 @@ namespace PSXDataFetchingApp
                 CHANGE.Add(CompanyCHANGE[i]);
                 VOLUME.Add(CompanyVOLUME[i]);
             }
-            PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
-            btnGet.IsEnabled = false;
-            window.Show();
-            this.Hide();
+            isDataSaved = SavingDataToDatabase(defaultData, NAME, SYMBOL, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
+            //if (isDataSaved)
+            //{
+            //    PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
+            //    btnGet.IsEnabled = false;
+            //    window.Show();
+            //    this.Hide();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Data Saved Failed.", "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    Debug.WriteLine("Data saved Failed.");
+            //    progressBar.Visibility = Visibility.Hidden;
+            //    lblProgress.Visibility = Visibility.Hidden;
+            //    lblProgress.Content = "";
+            //}
 
         }
 
+        #endregion
+
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            //lblProgress.Content = "Getting Headers..";
-            //worker.WorkerReportsProgress = true;
-            //statusFlag = (1 + 1) * 100 / 100;
+            worker.WorkerReportsProgress = true;
+            //worker.ReportProgress();
+            mustWork();
             //worker.ReportProgress(statusFlag);
-            string[] defaultData = GetDefault();
-            RequestDate = DateTime.Parse(defaultData[0]);
-            RequestStatus = defaultData[1];
-            RequestValue = Double.Parse(defaultData[2]);
-            RequestVolume = Double.Parse(defaultData[3]);
-            RequestTrades = Double.Parse(defaultData[4]);
 
-            progressBar.Value = 10;
-            lblProgress.Content = "Getting Company Names..";
-            NAME = GetMarketSummaryCompanyNames();
-            SYMBOL = GetMarketSummaryCompanySymbols(NAME);
-            //statusFlag = (3 + 1) * 100 / 100;
+            //string[] defaultData = GetDefault();
+            //RequestDate = DateTime.Parse(defaultData[0]);
+            //RequestStatus = defaultData[1];
+            //RequestValue = Double.Parse(defaultData[2]);
+            //RequestVolume = Double.Parse(defaultData[3]);
+            //RequestTrades = Double.Parse(defaultData[4]);
+
+            //NAME = GetMarketSummaryCompanyNames();
             //worker.ReportProgress(statusFlag);
-            //progressBar.Value = 20;
-            //lblProgress.Content = "Getting Company Symbols..";
-            //statusFlag = (4 + 1) * 100 / 100;
+            //SYMBOL = GetMarketSummaryCompanySymbols(NAME);
             //worker.ReportProgress(statusFlag);
-            //progressBar.Value = 30;
-            //lblProgress.Content = "Getting Company LDCP..";
-            string[] getCompanyLDCP = GetMarketSummaryCompanyLDCP();
-            //statusFlag = (5 + 1) * 100 / 100;
+            //string[] getCompanyLDCP = GetMarketSummaryCompanyLDCP();
             //worker.ReportProgress(statusFlag);
-            //progressBar.Value = 40;
-            //lblProgress.Content = "Getting Company OPEN..";
-            string[] getCompanyOPEN = GetMarketSummaryCompanyOPEN();
-            //statusFlag = (6 + 1) * 100 / 100;
+            //string[] getCompanyOPEN = GetMarketSummaryCompanyOPEN();
             //worker.ReportProgress(statusFlag);
-            //progressBar.Value = 50;
-            //lblProgress.Content = "Getting Company HIGH..";
-            string[] getCompanyHIGH = GetMarketSummaryCompanyHIGH();
+            //string[] getCompanyHIGH = GetMarketSummaryCompanyHIGH();
             //worker.ReportProgress(5 + statusFlag);
-            //progressBar.Value = 60;
-            //lblProgress.Content = "Getting Company LOW..";
-            string[] getCompanyLOW = GetMarketSummaryCompanyLOW();
-            //progressBar.Value = 70;
-            //lblProgress.Content = "Getting Company CURRENT..";
-            string[] getCompanyCURRENT = GetMarketSummaryCompanyCURRENT();
+            //string[] getCompanyLOW = GetMarketSummaryCompanyLOW();
+            //string[] getCompanyCURRENT = GetMarketSummaryCompanyCURRENT();
             //worker.ReportProgress(5 + statusFlag);
-            //progressBar.Value = 80;
-            //lblProgress.Content = "Getting Company CHANGE..";
-            string[] getCompanyCHANGE = GetMarketSummaryCompanyCHANGE();
+            //string[] getCompanyCHANGE = GetMarketSummaryCompanyCHANGE();
             //worker.ReportProgress(5 + statusFlag);
-            //progressBar.Value = 85;
-            //lblProgress.Content = "Getting Company VOLUME..";
-            string[] getCompanyVOLUME = GetMarketSummaryCompanyVOLUME();
+            //string[] getCompanyVOLUME = GetMarketSummaryCompanyVOLUME();
             //worker.ReportProgress(5 + statusFlag);
-            //progressBar.Value = 90;
 
-            double[] CompanyLDCP = new double[getCompanyLDCP.Length];
-            double[] CompanyOPEN = new double[getCompanyLDCP.Length];
-            double[] CompanyHIGH = new double[getCompanyLDCP.Length];
-            double[] CompanyLOW = new double[getCompanyLDCP.Length];
-            double[] CompanyCURRENT = new double[getCompanyLDCP.Length];
-            double[] CompanyCHANGE = new double[getCompanyLDCP.Length];
-            double[] CompanyVOLUME = new double[getCompanyLDCP.Length];
-
-
-            for (int i = 0; i < NAME.Count; i++)
-            {
-                CompanyLDCP[i] = Convert.ToDouble(getCompanyLDCP[i]);
-                CompanyOPEN[i] = Convert.ToDouble(getCompanyOPEN[i]);
-                CompanyHIGH[i] = Convert.ToDouble(getCompanyHIGH[i]);
-                CompanyLOW[i] = Convert.ToDouble(getCompanyLOW[i]);
-                CompanyCURRENT[i] = Convert.ToDouble(getCompanyCURRENT[i]);
-                CompanyCHANGE[i] = Convert.ToDouble(getCompanyCHANGE[i]);
-                CompanyVOLUME[i] = Convert.ToDouble(getCompanyVOLUME[i]);
-
-                //New Changes
-                LDCP.Add(CompanyLDCP[i]);
-                OPEN.Add(CompanyOPEN[i]);
-                HIGH.Add(CompanyHIGH[i]);
-                LOW.Add(CompanyLOW[i]);
-                CURRENT.Add(CompanyCURRENT[i]);
-                CHANGE.Add(CompanyCHANGE[i]);
-                VOLUME.Add(CompanyVOLUME[i]);
-                //statusFlag = (10 + i + 1) * 100 / 100;
-                //worker.ReportProgress( ++ statusFlag);
-
-            }
+            //double[] CompanyLDCP = new double[getCompanyLDCP.Length];
+            //double[] CompanyOPEN = new double[getCompanyLDCP.Length];
+            //double[] CompanyHIGH = new double[getCompanyLDCP.Length];
+            //double[] CompanyLOW = new double[getCompanyLDCP.Length];
+            //double[] CompanyCURRENT = new double[getCompanyLDCP.Length];
+            //double[] CompanyCHANGE = new double[getCompanyLDCP.Length];
+            //double[] CompanyVOLUME = new double[getCompanyLDCP.Length];
 
 
-            //lblProgress.Content = "Saving Data..";
-            //isDataSaved = SavingDataToDatabase(defaultData, getCompanyNames, getCompanySymbols, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
-            //progressBar.Value = 100;
-            //statusFlag = (20 + 1) * 100 / 100;
-            //worker.ReportProgress(statusFlag);
+            //for (int i = 0; i < NAME.Count(); i++)
+            //{
+            //    CompanyLDCP[i] = Convert.ToDouble(getCompanyLDCP[i]);
+            //    CompanyOPEN[i] = Convert.ToDouble(getCompanyOPEN[i]);
+            //    CompanyHIGH[i] = Convert.ToDouble(getCompanyHIGH[i]);
+            //    CompanyLOW[i] = Convert.ToDouble(getCompanyLOW[i]);
+            //    CompanyCURRENT[i] = Convert.ToDouble(getCompanyCURRENT[i]);
+            //    CompanyCHANGE[i] = Convert.ToDouble(getCompanyCHANGE[i]);
+            //    CompanyVOLUME[i] = Convert.ToDouble(getCompanyVOLUME[i]);
+
+            //    //New Changes
+            //    LDCP.Add(CompanyLDCP[i]);
+            //    OPEN.Add(CompanyOPEN[i]);
+            //    HIGH.Add(CompanyHIGH[i]);
+            //    LOW.Add(CompanyLOW[i]);
+            //    CURRENT.Add(CompanyCURRENT[i]);
+            //    CHANGE.Add(CompanyCHANGE[i]);
+            //    VOLUME.Add(CompanyVOLUME[i]);
+            //    worker.ReportProgress( ++ statusFlag);
+
+            //}
+
+            //isDataSaved = SavingDataToDatabase(defaultData, NAME, SYMBOL, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
+            worker.ReportProgress(100);
         }
     }
 }
