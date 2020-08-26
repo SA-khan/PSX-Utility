@@ -1,0 +1,11 @@
+CREATE PROC ClearTableData
+AS
+BEGIN
+TRUNCATE TABLE MarketSummaryOverview
+
+TRUNCATE TABLE MarketSummaryOverviewHistory
+
+TRUNCATE TABLE MarketSummary
+
+TRUNCATE TABLE MarketSummaryHistory
+END

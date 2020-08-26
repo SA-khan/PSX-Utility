@@ -1,0 +1,34 @@
+CREATE PROC spInsertMarketSummary 
+		@COMPANY_NAME varchar(300),
+		@COMPANY_SYMBOL varchar(300),
+		@COMPANY_LDCP float,
+		@COMPANY_OPEN float,
+		@COMPANY_HIGH float,
+		@COMPANY_LOW float,
+		@COMPANY_CURRENT float,
+		@COMPANY_CHANGE float,
+		@COMPANY_VOLUME float
+	AS
+BEGIN
+TRUNCATE TABLE MarketSummary
+INSERT INTO [dbo].[MarketSummary]
+           ([MS_COMPANY_NAME]
+           ,[MS_COMPANY_SYMBOL]
+           ,[MS_COMPANY_LDCP]
+           ,[MS_COMPANY_OPEN]
+           ,[MS_COMPANY_HIGH]
+           ,[MS_COMPANY_LOW]
+           ,[MS_COMPANY_CURRENT]
+           ,[MS_COMPANY_CHANGE]
+           ,[MS_COMPANY_VOLUME])
+     VALUES
+           (@COMPANY_NAME
+           ,@COMPANY_SYMBOL
+           ,@COMPANY_LDCP
+           ,@COMPANY_OPEN
+           ,@COMPANY_HIGH 
+           ,@COMPANY_LOW
+           ,@COMPANY_CURRENT
+           ,@COMPANY_CHANGE
+           ,@COMPANY_VOLUME)
+END
