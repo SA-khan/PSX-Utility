@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Saad.Ahmed\Desktop\Projects\PSXDataFetchingApp\PSXDataFetchingApp\obj\Release\netcoreapp3.1\
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\
 PSXDataFetchingApp
 none
 false
 TRACE;RELEASE;NETCOREAPP;NETCOREAPP3_1
-C:\Users\Saad.Ahmed\Desktop\Projects\PSXDataFetchingApp\PSXDataFetchingApp\App.xaml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\App.xaml
 21181415416
 
-61788039921
+71176600563
 202-1268166995
 MainWindow.xaml;PreviewWindow.xaml;
 
-False
+True
 
