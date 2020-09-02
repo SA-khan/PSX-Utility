@@ -38,9 +38,18 @@
                 </Button>
             </Grid>
             <!--</StackPanel>-->
-        <ListView x:Name="list1" Grid.Row="2">  
+        <ListView x:Name="list1" Grid.Row="2" Width="Auto">  
             <ListView.View>
                     <GridView x:Name="gridView" AllowsColumnReorder="true" ColumnHeaderToolTip="Market Summary">
+                        <GridViewColumn x:Name="col1" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col2" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col3" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col4" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col5" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col6" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col7" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col8" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col9" Width="Auto"></GridViewColumn>
                     </GridView>
             </ListView.View>  
         </ListView>  

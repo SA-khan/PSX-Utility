@@ -214,12 +214,6 @@ namespace PSXDataFetchingApp
                     
                 }
             }
-            //for(int i = 0; i < result.Count(); i++)
-            //{
-            //    if (i % 6 == 0) { 
-                    
-            //    }
-            //}
             return result;
         }
 
@@ -281,7 +275,7 @@ namespace PSXDataFetchingApp
 
         private List<string> GetMarketSummaryCompanySymbols(List<string> CompanyName)
         {
-            List<string> result = new List<string>();
+            List<string> result = new List<string>( new string[NAME.Count]);
             SqlConnection conn = new SqlConnection();
             try
             {
@@ -299,7 +293,7 @@ namespace PSXDataFetchingApp
                         {
                             while (rdr.Read())
                             {
-                                result.Add(rdr.GetString(0)); 
+                                result.Insert(i,rdr.GetString(0)); 
                             }
                         }
                     }
@@ -840,7 +834,8 @@ namespace PSXDataFetchingApp
         private BackgroundWorker worker = new BackgroundWorker();
 
         public void Button_Click(object sender, RoutedEventArgs e)
-        { 
+        {
+            imgWebScrap.Visibility = Visibility.Hidden;
             progressBar.Visibility = Visibility.Visible;
             lblProgress.Content = "Processing..";
             btnGet.IsEnabled = false;

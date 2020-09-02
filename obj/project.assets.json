@@ -2445,25 +2445,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\saada\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\saada\\Downloads\\PSX-Utility-master\\PSX-Utility-master\\PSXDataFetchingApp.csproj",
+      "projectUniqueName": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj",
       "projectName": "PSXDataFetchingApp",
-      "projectPath": "C:\\Users\\saada\\Downloads\\PSX-Utility-master\\PSX-Utility-master\\PSXDataFetchingApp.csproj",
-      "packagesPath": "C:\\Users\\saada\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\saada\\Downloads\\PSX-Utility-master\\PSX-Utility-master\\obj\\",
+      "projectPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj",
+      "packagesPath": "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\saada\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Saad.Ahmed\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
@@ -2527,7 +2525,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

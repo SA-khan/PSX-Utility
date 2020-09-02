@@ -43,25 +43,29 @@ namespace PSXDataFetchingApp
 
             MarketSummary[] data = new MarketSummary[companyName.Count];
 
-            GridViewColumn col1 = new GridViewColumn();
-            GridViewColumn col2 = new GridViewColumn();
-            GridViewColumn col3 = new GridViewColumn();
-            GridViewColumn col4 = new GridViewColumn();
-            GridViewColumn col5 = new GridViewColumn();
-            GridViewColumn col6 = new GridViewColumn();
-            GridViewColumn col7 = new GridViewColumn();
-            GridViewColumn col8 = new GridViewColumn();
-            GridViewColumn col9 = new GridViewColumn();
+            //GridViewColumn col1 = new GridViewColumn();
+            //GridViewColumn col2 = new GridViewColumn();
+            //GridViewColumn col3 = new GridViewColumn();
+            //GridViewColumn col4 = new GridViewColumn();
+            //GridViewColumn col5 = new GridViewColumn();
+            //GridViewColumn col6 = new GridViewColumn();
+            //GridViewColumn col7 = new GridViewColumn();
+            //GridViewColumn col8 = new GridViewColumn();
+            //GridViewColumn col9 = new GridViewColumn();
 
-            gridView.Columns.Add(col1);
-            gridView.Columns.Add(col2);
-            gridView.Columns.Add(col3);
-            gridView.Columns.Add(col4);
-            gridView.Columns.Add(col5);
-            gridView.Columns.Add(col6);
-            gridView.Columns.Add(col7);
-            gridView.Columns.Add(col8);
-            gridView.Columns.Add(col9);
+
+            //gridView.Columns.Add(col1);
+            //gridView.Columns.Add(col2);
+            //gridView.Columns.Add(col3);
+            //gridView.Columns.Add(col4);
+            //gridView.Columns.Add(col5);
+            //gridView.Columns.Add(col6);
+            //gridView.Columns.Add(col7);
+            //gridView.Columns.Add(col8);
+            //gridView.Columns.Add(col9);
+
+            
+
             col1.DisplayMemberBinding = new Binding("Name");
             col2.DisplayMemberBinding = new Binding("Symbol");
             col3.DisplayMemberBinding = new Binding("CURRENT");

@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\mufap.jfif" />
     <None Remove="Images\psx.png" />
+    <None Remove="Images\psx2.png" />
     <None Remove="Images\refresh.png" />
     <None Remove="Images\refresh2.png" />
+    <None Remove="Images\web-scrap.PNG" />
+    <None Remove="Images\web-scrap2.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,9 +29,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\mufap.jfif" />
     <Resource Include="Images\psx.png" />
+    <Resource Include="Images\psx2.png" />
     <Resource Include="Images\refresh.png" />
     <Resource Include="Images\refresh2.png" />
+    <Resource Include="Images\web-scrap.PNG" />
+    <Resource Include="Images\web-scrap2.png" />
   </ItemGroup>
 
 </Project>
