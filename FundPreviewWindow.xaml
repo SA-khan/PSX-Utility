@@ -1,0 +1,63 @@
+﻿<Window x:Class="PSXDataFetchingApp.FundPreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PSXDataFetchingApp"
+        mc:Ignorable="d"
+        Title="Fund Preview Window" Height="450" Width="800" Icon="/Images/psx.png" WindowStartupLocation="CenterScreen">
+    <Border Margin="10" Background="DarkGray">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="9*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Fund Market Summary" FontSize="22" FontFamily="Tahoma" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Grid Grid.Row="1" Margin="0 5 0 5" Background="Silver">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="FUND ID:" FontWeight="Bold" FontFamily="Tahoma" Grid.Column="0" VerticalAlignment="Center"/>
+                <TextBox Grid.Column="1" Name="txtFundID"  Margin="1 0 5 0"  FontFamily="Tahoma" Width="150" HorizontalAlignment="Stretch" Padding="2"></TextBox>
+                <TextBlock Text="FUND NAME:" FontWeight="Bold" FontFamily="Tahoma"  Grid.Column="2" VerticalAlignment="Center"/>
+                <TextBox Grid.Column="3" Name="txtFund"  Margin="1 0 5 0"  FontFamily="Tahoma" Width="150" HorizontalAlignment="Stretch" Padding="2"></TextBox>
+                <Button x:Name="btnAdd" Grid.Column="4" Margin="5 0 1 0" Content="ADD" FontFamily="Tahoma" FontSize="16" Width="70" Height="22" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btnAdd_Click"></Button>
+                <ComboBox Grid.Column="5" Name="comboFund" Margin="1 0 5 0"  FontFamily="Tahoma" Width="150" HorizontalAlignment="Left"/>
+                <Button x:Name="btnGet" Grid.Column="6" Margin="5 0 1 0" Content="GET" FontFamily="Tahoma" FontSize="16" Width="70" Height="22" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnGet_Click"></Button>
+                
+                
+                
+                
+                
+            </Grid>
+            <ListView x:Name="list1" Grid.Row="2" Width="Auto">
+                <ListView.View>
+                    <GridView x:Name="gridView" AllowsColumnReorder="true" ColumnHeaderToolTip="Market Summary">
+                        <GridViewColumn x:Name="col1" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col2" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col3" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col4" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col5" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col6" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col7" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col8" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col9" Width="Auto"></GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StatusBar DockPanel.Dock="Bottom" Grid.Row="3" Name="statusBar" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Background="DarkGray" Foreground="Black">
+                <StatusBarItem>
+                    <TextBlock Name="lblStatus" Text="Status: Ready" />
+                </StatusBarItem>
+            </StatusBar>
+        </Grid>
+    </Border>
+</Window>

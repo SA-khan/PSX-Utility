@@ -1095,5 +1095,12 @@ namespace PSXDataFetchingApp
             }
             Debug.WriteLine("Response: " + text);
         }
+
+        private void btnGetV2_Click(object sender, RoutedEventArgs e)
+        {
+            FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
+            fundPreviewWindow.Show();
+            this.Hide();
+        }
     }
 }
