@@ -217,7 +217,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private List<string> GetMarketSummaryCompanyNames()
+        public List<string> GetMarketSummaryCompanyNames()
         {
             // Local List of string Variable to store return value 
             List<string> result = new List<string>();
@@ -273,7 +273,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private List<string> GetMarketSummaryCompanySymbols(List<string> CompanyName)
+        public List<string> GetMarketSummaryCompanySymbols(List<string> CompanyName)
         {
             List<string> result = new List<string>( new string[NAME.Count]);
             SqlConnection conn = new SqlConnection();
@@ -529,7 +529,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyCURRENT()
+        public string[] GetMarketSummaryCompanyCURRENT()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
             string[] result = new string[name_nodes.Count];

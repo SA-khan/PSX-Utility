@@ -96,12 +96,13 @@ C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\sni.dll
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
-C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csprojAssemblyReference.cache
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\FundPreviewWindow.g.cs
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\MainWindow.g.cs
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PreviewWindow.g.cs
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\App.g.cs
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp_MarkupCompile.cache
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp_MarkupCompile.lref
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\FundPreviewWindow.baml
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\MainWindow.baml
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PreviewWindow.baml
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.g.resources
@@ -112,5 +113,4 @@ C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.dll
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.pdb
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.genruntimeconfig.cache
-C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\FundPreviewWindow.g.cs
-C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\FundPreviewWindow.baml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csprojAssemblyReference.cache

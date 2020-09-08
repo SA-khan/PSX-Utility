@@ -15,5 +15,7 @@ namespace PSXDataFetchingApp.Model
         public string CURRENT { get; set; }
         public  string CHANGE { get; set; }
         public  string VOLUME { get; set; }
+
+        public string APPRECIATION_DEPRECIATION { get; set; }
     }
 }
