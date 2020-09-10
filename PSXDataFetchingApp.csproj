@@ -7,11 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\exclaimation.png" />
+    <None Remove="Images\fundImage.jpg" />
+    <None Remove="Images\loading.gif" />
     <None Remove="Images\mufap.jfif" />
+    <None Remove="Images\processing_complex.png" />
     <None Remove="Images\psx.png" />
     <None Remove="Images\psx2.png" />
     <None Remove="Images\refresh.png" />
     <None Remove="Images\refresh2.png" />
+    <None Remove="Images\stockMarket.jpg" />
+    <None Remove="Images\tick.gif" />
+    <None Remove="Images\tick.png" />
     <None Remove="Images\web-scrap.PNG" />
     <None Remove="Images\web-scrap2.png" />
   </ItemGroup>
@@ -22,6 +29,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,11 +37,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\exclaimation.png" />
+    <Resource Include="Images\fundImage.jpg" />
+    <Resource Include="Images\loading.gif" />
     <Resource Include="Images\mufap.jfif" />
+    <Resource Include="Images\processing_complex.png" />
     <Resource Include="Images\psx.png" />
     <Resource Include="Images\psx2.png" />
     <Resource Include="Images\refresh.png" />
     <Resource Include="Images\refresh2.png" />
+    <Resource Include="Images\stockMarket.jpg" />
+    <Resource Include="Images\tick.gif" />
+    <Resource Include="Images\tick.png" />
     <Resource Include="Images\web-scrap.PNG" />
     <Resource Include="Images\web-scrap2.png" />
   </ItemGroup>

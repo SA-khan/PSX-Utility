@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "H81dJ1wtxa4jdbzl9Z/7KmNbxUQwejPif/cNTPTzlfeXigHeXxaIJf9zPmxiR1jN30jas7sgg6cQfWzW3r58Pw==",
+  "dgSpecHash": "d5j7FVi/B9+h6QINboGvGwLJKPg/rxrsqYNN2X1Lccari2vltjrIZ1LeyQN52KwSr+lre03jPgy4b3qdszKqnw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj",
   "expectedPackageFiles": [
@@ -44,7 +44,8 @@
     "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\system.threading.tasks\\4.0.11\\system.threading.tasks.4.0.11.nupkg.sha512",
     "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\system.threading.tasks.extensions\\4.0.0\\system.threading.tasks.extensions.4.0.0.nupkg.sha512",
     "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\system.xml.readerwriter\\4.0.11\\system.xml.readerwriter.4.0.11.nupkg.sha512",
-    "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\system.xml.xpath\\4.0.1\\system.xml.xpath.4.0.1.nupkg.sha512"
+    "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\system.xml.xpath\\4.0.1\\system.xml.xpath.4.0.1.nupkg.sha512",
+    "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\wpfanimatedgif\\2.0.0\\wpfanimatedgif.2.0.0.nupkg.sha512"
   ],
   "logs": []
 }
