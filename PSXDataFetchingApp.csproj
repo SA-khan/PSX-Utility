@@ -49,6 +49,9 @@
     <None Remove="Images\psx2.png" />
     <None Remove="Images\refresh.png" />
     <None Remove="Images\refresh2.png" />
+    <None Remove="Images\report.png" />
+    <None Remove="Images\reset.png" />
+    <None Remove="Images\run.jpg" />
     <None Remove="Images\stockMarket.jpg" />
     <None Remove="Images\tick.gif" />
     <None Remove="Images\tick.png" />
@@ -63,10 +66,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Downloads\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -112,6 +111,9 @@
     <Resource Include="Images\psx2.png" />
     <Resource Include="Images\refresh.png" />
     <Resource Include="Images\refresh2.png" />
+    <Resource Include="Images\report.png" />
+    <Resource Include="Images\reset.png" />
+    <Resource Include="Images\run.jpg" />
     <Resource Include="Images\stockMarket.jpg" />
     <Resource Include="Images\tick.gif" />
     <Resource Include="Images\tick.png" />

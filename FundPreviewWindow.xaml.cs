@@ -531,5 +531,10 @@ namespace PSXDataFetchingApp
         {
 
         }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

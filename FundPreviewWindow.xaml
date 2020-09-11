@@ -45,22 +45,45 @@
             <Grid Grid.Row="1" Margin="1 5 1 5" Background="#fff" MaxHeight="30">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*" />
-                    <ColumnDefinition Width="2*" MaxWidth="80"/>
-                    <ColumnDefinition Width="2*" MaxWidth="80"/>
+                    <ColumnDefinition Width="2*" MaxWidth="60"/>
+                    <ColumnDefinition Width="2*" MaxWidth="60"/>
+                    <ColumnDefinition Width="2*" MaxWidth="60"/>
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
                 <ComboBox Grid.Column="0" Name="comboFund" FontFamily="Tahoma" MinWidth="150" HorizontalAlignment="Stretch" Margin="5" Height="20" SelectionChanged="comboFund_SelectionChanged"/>
-                <Button x:Name="btnGet" Grid.Column="1" Margin="5" Content="GET" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="70" MinWidth="70" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnGet_Click"></Button>
-                <Button x:Name="btnSave" Grid.Column="2" Margin="5" Content="SAVE" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="70" MinWidth="70" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnSave_Click"></Button>
-                <TextBlock x:Name="lblFundID" Grid.Column="3" Visibility="Hidden" Text="FUND ID:" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" />
-                <TextBox Grid.Column="4" Name="txtFundID" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
-                <TextBlock x:Name="lblFundNAME" Grid.Column="5" Text="FUND NAME:" Visibility="Hidden" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
-                <TextBox Grid.Column="6" Name="txtFund" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
-                <Button x:Name="btnAdd" Grid.Column="7" Visibility="Hidden" Margin="5" Content="ADD" IsEnabled="False" FontFamily="/Fonts/#Lato" FontSize="13" MinWidth="70" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="btnAdd_Click"></Button>
+                <Button x:Name="btnGet" Grid.Column="1" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="btnGet_Click" Background="Transparent" BorderBrush="Transparent">
+                    <Button.Content>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Source="Images/run.jpg" Stretch="Fill" >
+                            </Image>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button x:Name="btnSave" Grid.Column="2" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnSave_Click" Background="White" BorderBrush="Transparent">
+                    <Button.Content>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Source="Images/report.png" Stretch="Fill" Width="30"  >
+                            </Image>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button x:Name="btnReset" Grid.Column="3" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnReset_Click" Background="White" BorderBrush="Transparent">
+                    <Button.Content>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Source="Images/reset.png" Stretch="Fill" Width="50"  >
+                            </Image>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <TextBlock x:Name="lblFundID" Grid.Column="4" Visibility="Hidden" Text="FUND ID:" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" />
+                <TextBox Grid.Column="5" Name="txtFundID" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
+                <TextBlock x:Name="lblFundNAME" Grid.Column="6" Text="FUND NAME:" Visibility="Hidden" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
+                <TextBox Grid.Column="7" Name="txtFund" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
+                <Button x:Name="btnAdd" Grid.Column="8" Visibility="Hidden" Margin="5" Content="ADD" IsEnabled="False" FontFamily="/Fonts/#Lato" FontSize="13" MinWidth="70" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="btnAdd_Click"></Button>
                 
                 
                 
