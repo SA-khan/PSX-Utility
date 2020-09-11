@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using static PSXDataFetchingApp.PreviewWindow;
 
 namespace PSXDataFetchingApp
@@ -34,12 +35,19 @@ namespace PSXDataFetchingApp
         {
             InitializeComponent();
 
+            txtDate.Text = DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
+
             SqlConnection conn = new SqlConnection();
             SqlConnection conn2 = new SqlConnection();
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
             conn2.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            List<String> fundName = HasRows(conn2, 2);
-            List<String> fundName2 = HasRows(conn, 1);
+            List<String> fundName;
+            List<String> fundName2;
+            try
+            {
+                fundName = HasRows(conn2, 2);
+                fundName2 = HasRows(conn, 1);
+            
             comboFund.Items.Add("Select..");
             comboFund.SelectedIndex = 0;
             for (int i = 0; i < fundName.Count; i++)
@@ -50,69 +58,79 @@ namespace PSXDataFetchingApp
             {
                 comboFund.Items.Add(fundName2[i]);
             }
-            //comboFund.SelectedItem = fundName[0];
             comboFund.Items.Add("<ADD NEW FUND>");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Database connectivity failed with the exception.:\nException: " + ex.Message, "Database Connectivity Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                conn.Close();
+                conn2.Close();
+            }
         }
 
         static List<String> HasRows(SqlConnection connection, int flag)
         {
             List<String> result;
-            using (connection)
-            {
-                SqlCommand command;
-                if (flag == 1)
+                using (connection)
                 {
-                    command = new SqlCommand(
-                      "SELECT [fund_code], [fund_name] FROM [ipams_db].[dbo].[pms_funds] order by fund_code",
-                      connection);
-                    connection.Open();
-
-                    SqlDataReader reader = command.ExecuteReader();
-                    result = new List<String>(reader.FieldCount);
-                    if (reader.HasRows)
+                    SqlCommand command;
+                    if (flag == 1)
                     {
+                        command = new SqlCommand(
+                          "SELECT [fund_code], [fund_name] FROM [ipams_db].[dbo].[pms_funds] order by fund_code",
+                          connection);
+                        connection.Open();
 
-                        while (reader.Read())
+                        SqlDataReader reader = command.ExecuteReader();
+                        result = new List<String>(reader.FieldCount);
+                        if (reader.HasRows)
                         {
-                            result.Add(reader.GetString(1));
+
+                            while (reader.Read())
+                            {
+                                result.Add(reader.GetString(1));
+                            }
                         }
+                        else
+                        {
+                            Debug.WriteLine("No rows found.");
+                        }
+                        reader.Close();
                     }
                     else
                     {
-                        Debug.WriteLine("No rows found.");
-                    }
-                    reader.Close();
-                }
-                else
-                {
-                    command = new SqlCommand(
-                      "SELECT [FUND_ID],[FUND_CODE],[FUND_NAME],[FUND_SYMBOL],[FUND_DESC] FROM [dbo].[FUND] order by [FUND_ID]",
-                      connection);
-                    connection.Open();
+                        command = new SqlCommand(
+                          "SELECT [FUND_ID],[FUND_CODE],[FUND_NAME],[FUND_SYMBOL],[FUND_DESC] FROM [dbo].[FUND] order by [FUND_ID]",
+                          connection);
+                        connection.Open();
 
-                    SqlDataReader reader = command.ExecuteReader();
-                    result = new List<String>(reader.FieldCount);
-                    if (reader.HasRows)
-                    {
-
-                        while (reader.Read())
+                        SqlDataReader reader = command.ExecuteReader();
+                        result = new List<String>(reader.FieldCount);
+                        if (reader.HasRows)
                         {
-                            result.Add(reader.GetString(2));
-                            //Debug.WriteLine("{0}\t{1}", reader.GetInt32(0),
-                            //    reader.GetString(1));
 
+                            while (reader.Read())
+                            {
+                                result.Add(reader.GetString(2));
+                                //Debug.WriteLine("{0}\t{1}", reader.GetInt32(0),
+                                //    reader.GetString(1));
+
+                            }
                         }
+                        else
+                        {
+                            Debug.WriteLine("No rows found.");
+                        }
+                        reader.Close();
                     }
-                    else
-                    {
-                        Debug.WriteLine("No rows found.");
-                    }
-                    reader.Close();
+
+                    return result;
+
                 }
             
-                
-                return result;
-            }
         }
 
         public bool getSymbolStatus(string Symbol)
@@ -225,6 +243,13 @@ namespace PSXDataFetchingApp
             FundImage.Source = new BitmapImage(ResourceAccessor.Get("Images/exclaimation.png"));
             lblStatus.Text = "Status: Processing";
 
+            for (int i = 0; i < 10; i++)
+            {
+                this.InvalidateVisual();
+                this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
+                this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
+            }
+
             mustWork();
             //worker.DoWork += worker_DoWork;
 
@@ -237,6 +262,7 @@ namespace PSXDataFetchingApp
             //{
             //        await Task.Yield(); // fork the continuation into a separate work item
             //});
+            lblStatus.Text = "Status: Ready";
 
         }
 
@@ -334,9 +360,9 @@ namespace PSXDataFetchingApp
                             Share_Symbol.Add(rdr.GetString(1).ToString());
                             DateCostLastUpdated.Add(rdr.GetDateTime(2).ToString());
                             LastUpdatedPerUnitCost.Add(rdr.GetDecimal(3).ToString("#.##"));
-                            LastUpdatedCost.Add(rdr.GetDecimal(4).ToString("#.##"));
+                            LastUpdatedCost.Add(Math.Round(rdr.GetDecimal(4)).ToString("#,##0"));
                             double holding = Convert.ToDouble(rdr.GetDecimal(5));
-                            LastUpdatedHolding.Add(holding.ToString());
+                            LastUpdatedHolding.Add(holding.ToString("#,##0"));
                             LastUpdatedMarketPriceDate.Add(rdr.GetDateTime(6).ToString("#.##"));
                             string localSymbol = String.Empty;
                             string localCurrent = String.Empty;
@@ -355,9 +381,17 @@ namespace PSXDataFetchingApp
                             }
                             MarketSymbol.Add(localSymbol);
                             MarketPriceCurrent.Add(localCurrent);
-                            MarketValue.Add(localValue.ToString("#.##"));
+                            MarketValue.Add(Convert.ToInt32(Math.Round(localValue)).ToString("#,##0"));
                             decimal appreciation = localValue - rdr.GetDecimal(4);
-                            Appreciation_Depreciation.Add(appreciation.ToString("#.##"));
+                            string localAppreciate = Math.Round(appreciation, 2).ToString("#,##0");
+                            if(appreciation < 0)
+                            {
+                                localAppreciate = "(" + localAppreciate.Replace("-","") + ")";
+                                
+                                
+                            }
+                                
+                            Appreciation_Depreciation.Add(localAppreciate.ToString());
                         }
                     }
                     else { }
@@ -377,6 +411,8 @@ namespace PSXDataFetchingApp
             col7.DisplayMemberBinding = new Binding("CHANGE");
             col8.DisplayMemberBinding = new Binding("VOLUME");
             col9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
+
+            
             
 
             FundImage.Visibility = Visibility.Hidden;
@@ -462,6 +498,7 @@ namespace PSXDataFetchingApp
                     lblFundNAME.Visibility = Visibility.Visible;
                     txtFund.Visibility = Visibility.Visible;
                     btnAdd.Visibility = Visibility.Visible;
+                    comboFund.SelectedIndex = 0;
                 }
                 else
                 {
@@ -488,6 +525,11 @@ namespace PSXDataFetchingApp
             MainWindow window = new MainWindow();
             window.Show();
             this.Close();
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
