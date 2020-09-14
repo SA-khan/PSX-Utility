@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PSXDataFetchingApp"
         mc:Ignorable="d"
-        Title="Fund Preview Window" FontFamily="/Fonts/#Lato" Height="450" Width="800" Icon="/Images/psx.png" WindowStartupLocation="CenterScreen">
+        Title="Data Extractor Utility" FontFamily="/Fonts/#Lato" Height="450" Width="920" Icon="/Images/web-scrap2.png" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="{x:Type ListViewItem}">
             <!--<Setter Property="HorizontalContentAlignment" Value="Right" />-->
@@ -27,23 +27,23 @@
             <Grid Grid.Row="0" Background="#f0a500">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="10*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="1" x:Name="btnBack" FontFamily="/Fonts/#Lato" Click="btnBack_Click" Height="20" VerticalAlignment="Bottom" Width="40" HorizontalAlignment="Left" Margin="0 0 0 5">
-                    <Button.Content>
-                        <StackPanel>
-                            <Image Source="Images/back.png" Stretch="Uniform" Width="15" />
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
-                <Border Grid.Column="0" HorizontalAlignment="Left" Margin="5" Background="White" Padding="5">
-                <Image  Source="Images/BOP.png" Stretch="Uniform"  />
-                </Border>
-                <TextBlock Grid.Column="1"  Text="Fund Market Summary" FontSize="26" FontFamily="/Fonts/#Lato-BoldItalic" FontWeight="Bold" FontStyle="Italic" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Margin="0 0 10 0" />
-                <TextBlock x:Name="txtDate" Grid.Column="1" FontFamily="/Fonts/#Lato" HorizontalAlignment="Right" Margin="5"/>
+                
+                <Image  Source="Images/BOP.png" HorizontalAlignment="Left" Margin="5" gif:ImageBehavior.AnimatedSource="Images/bop.gif" Stretch="Uniform"  />
+                
+                <TextBlock Grid.Column="0"  Text="Fund Market Summary" FontSize="26" FontFamily="/Fonts/#Lato" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Margin="0 0 10 0" />
+                <Grid Grid.Column="0" HorizontalAlignment="Right" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="txtDate" Grid.Row="0" FontFamily="/Fonts/#Lato" VerticalAlignment="Bottom" Margin="0 0 2 0" />
+                    <TextBlock x:Name="txtStatus" Grid.Row="1" FontFamily="/Fonts/#Lato" VerticalAlignment="Top" Margin="0 2 0 0" />
+                </Grid>
             </Grid>
             <Grid Grid.Row="1" Margin="1 5 1 5" Background="#fff" MaxHeight="30">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="4*" />
                     <ColumnDefinition Width="2*" MaxWidth="60"/>
                     <ColumnDefinition Width="2*" MaxWidth="60"/>
@@ -54,36 +54,43 @@
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Column="0" Name="comboFund" FontFamily="Tahoma" MinWidth="150" HorizontalAlignment="Stretch" Margin="5" Height="20" SelectionChanged="comboFund_SelectionChanged"/>
-                <Button x:Name="btnGet" Grid.Column="1" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="btnGet_Click" Background="Transparent" BorderBrush="Transparent">
+                <Button Grid.Column="0" x:Name="btnBack" FontFamily="/Fonts/#Lato" Click="btnBack_Click" Height="20" VerticalAlignment="Center" Width="40" HorizontalAlignment="Center" Margin="0 0 0 0" ToolTip="Go To Main Menu">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="Images/back.png" Stretch="Uniform" Width="15" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <ComboBox Grid.Column="1" Name="comboFund" FontFamily="Tahoma" MinWidth="150" HorizontalAlignment="Stretch" Margin="5" Height="20" SelectionChanged="comboFund_SelectionChanged" ToolTip="Select Fund To Fetch Its Shares"/>
+                <Button x:Name="btnGet" Grid.Column="2" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnGet_Click" Background="Transparent" BorderBrush="Transparent" Padding="5" ToolTip="Get Shares of Fund">
                     <Button.Content>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Images/run.jpg" Stretch="Fill" >
+                            <Image Source="Images/play.png" Stretch="Fill" >
                             </Image>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button x:Name="btnSave" Grid.Column="2" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnSave_Click" Background="White" BorderBrush="Transparent">
+                <Button x:Name="btnSave" Grid.Column="3" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="30" MinWidth="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSave_Click" Background="White" BorderBrush="Transparent" ToolTip="Generate Report">
                     <Button.Content>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Images/report.png" Stretch="Fill" Width="30"  >
+                            <Image Source="Images/report.png" Stretch="Uniform"  >
                             </Image>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button x:Name="btnReset" Grid.Column="3" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnReset_Click" Background="White" BorderBrush="Transparent">
+                <Button x:Name="btnReset" Grid.Column="4" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="40" MinWidth="40" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btnReset_Click" Background="White" BorderBrush="Transparent">
                     <Button.Content>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Images/reset.png" Stretch="Fill" Width="50"  >
+                            <Image Source="Images/reset.jpg" Stretch="Fill" Width="38" Height="30" ToolTip="Refresh Information" >
                             </Image>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <TextBlock x:Name="lblFundID" Grid.Column="4" Visibility="Hidden" Text="FUND ID:" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" />
-                <TextBox Grid.Column="5" Name="txtFundID" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
-                <TextBlock x:Name="lblFundNAME" Grid.Column="6" Text="FUND NAME:" Visibility="Hidden" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
-                <TextBox Grid.Column="7" Name="txtFund" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
-                <Button x:Name="btnAdd" Grid.Column="8" Visibility="Hidden" Margin="5" Content="ADD" IsEnabled="False" FontFamily="/Fonts/#Lato" FontSize="13" MinWidth="70" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="btnAdd_Click"></Button>
+                <TextBlock x:Name="lblFundID" Grid.Column="5" Visibility="Hidden" Text="FUND ID:" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" />
+                <TextBox Grid.Column="6" Name="txtFundID" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
+                <TextBlock x:Name="lblFundNAME" Grid.Column="7" Text="FUND NAME:" Visibility="Hidden" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
+                <TextBox Grid.Column="8" Name="txtFund" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
+                <Button x:Name="btnAdd" Grid.Column="9" Visibility="Hidden" Margin="5" Content="ADD" IsEnabled="False" FontFamily="/Fonts/#Lato" FontSize="13" MinWidth="70" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="btnAdd_Click"></Button>
                 
                 
                 
@@ -95,47 +102,60 @@
                 <Image HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" gif:ImageBehavior.AnimatedSource="Images/loading.gif" Source="Images/Exclaimation.png" />
             </Border>
             <Image x:Name="FundImage" Grid.Row="2" Source="Images/stockMarket.jpg" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Fill"/>
-            <ListView x:Name="list1" Grid.Row="2" Width="Auto" Visibility="Hidden" FontFamily="/Fonts/#Lato" HorizontalContentAlignment="Right">
+            <ListView x:Name="list1" Grid.Row="2" Width="Auto" Visibility="Hidden" FontFamily="/Fonts/#Lato" HorizontalContentAlignment="Left" >
                 <ListView.Resources>
                     <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    </Style>
+                    <Style TargetType="ListViewItem" x:Key="txtAppDep">
+                        <Setter Property="Foreground" Value="Red" />
                     </Style>
                 </ListView.Resources>
                 <ListView.View>
                     <GridView x:Name="gridView" AllowsColumnReorder="true" ColumnHeaderToolTip="Market Summary">
-                        <GridViewColumn x:Name="col1" Width="70">
+                        <GridViewColumn x:Name="col1" Width="50">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Sr. No." Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                         <GridViewColumn x:Name="col2" Width="250">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Company Name" Padding="2"></GridViewColumnHeader>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Name" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <TextBlock HorizontalAlignment="Left" TextAlignment="Left" />
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn x:Name="col3" Width="100">
+                        <GridViewColumn x:Name="col3" Width="60">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Symbol" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn x:Name="col4" Width="100">
+                        <GridViewColumn x:Name="col4" Width="70">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Quantity" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn x:Name="col5" Width="100">
+                        <GridViewColumn x:Name="col5" Width="80">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Average Price" Padding="2"></GridViewColumnHeader>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Avg. Price" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn x:Name="col6" Width="100">
+                        <GridViewColumn x:Name="col6" Width="80">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Book Cost" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn x:Name="col7" Width="100">
+                        <GridViewColumn x:Name="col7" Width="85">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Market Price (Current)" Padding="2"></GridViewColumnHeader>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Market Price" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
                         <GridViewColumn x:Name="col8" Width="100">
@@ -143,13 +163,19 @@
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Market Value" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                         </GridViewColumn>
-                        <GridViewColumn x:Name="col9" Width="100">
+                        <GridViewColumn x:Name="col9" Width="80">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Appreciation / Depreciation" Padding="2"></GridViewColumnHeader>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="App. / Dep." Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="Txt" Foreground="Pink" Text="{Binding Path=APPRECIATION_DEPRECIATION}" HorizontalAlignment="Right" TextAlignment="Right" />
+                                    <TextBlock Text="{Binding APPRECIATION_DEPRECIATION}" x:Name="txtAppDep" HorizontalAlignment="Right" TextAlignment="Right">
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="Foreground" Value="Red" />
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -162,12 +188,12 @@
                     <ColumnDefinition Width="6*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <StatusBar DockPanel.Dock="Bottom" Grid.Column="0" HorizontalAlignment="Stretch" Name="statusBar"  VerticalAlignment="Bottom" Background="Transparent" Foreground="Black" Margin="1">
+                <StatusBar DockPanel.Dock="Bottom" Grid.Column="0" HorizontalAlignment="Stretch" Name="statusBar"  VerticalAlignment="Center" Background="Transparent" Foreground="Black" Margin="1">
                     <StatusBarItem>
-                        <TextBlock Name="lblStatus" Text="Status: Ready" FontFamily="/Fonts/#Lato" FontSize="10" Background="Transparent" />
+                        <TextBlock Name="lblStatus" Text="Status: Ready" FontFamily="/Fonts/#Lato" FontSize="11" Background="Transparent" />
                     </StatusBarItem>
                 </StatusBar>
-
+                <TextBlock Grid.Column="1" FontSize="14" HorizontalAlignment="Center" Text="The Data of Market Rates are getting from Pakistan Stock Exchange Website With 5 Minutes Interval." FontFamily="Fonts/#Lato" Foreground="Black" VerticalAlignment="Center" FontWeight="Bold" />
                 <StatusBar DockPanel.Dock="Bottom" Grid.Column="2" Name="statusBar2" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Background="Transparent" Foreground="Black" Margin="1">
                     <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Bottom" MaxHeight="50" Background="Transparent">
                         <Border Background="Transparent">

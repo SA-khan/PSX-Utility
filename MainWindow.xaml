@@ -22,6 +22,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <TextBlock Text="Demo Version v4.0.1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5" FontFamily="/Fonts/#Raleway-Bold" FontWeight="Bold"/>
                 <Image Source="Images/psx2.png" HorizontalAlignment="Right" Margin="0 0 10 0" />
                 <Image Grid.Column="1" Source="Images/mufap.jfif" Width="200" HorizontalAlignment="Left" Margin="10 0 0 0"/>
             </Grid>

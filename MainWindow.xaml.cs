@@ -30,7 +30,8 @@ namespace PSXDataFetchingApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+        //License Date 
+        DateTime ExpiryDate = DateTime.Parse("2020/09/16 15:17:00");
         public IConfiguration Configuration { get; set; }
 
         public static bool isDataSaved = false;
@@ -74,7 +75,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetDefault()
+        public string[] GetDefault()
         {
             
             HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//h4");
@@ -835,16 +836,30 @@ namespace PSXDataFetchingApp
 
         public void Button_Click(object sender, RoutedEventArgs e)
         {
-            imgWebScrap.Visibility = Visibility.Hidden;
-            progressBar.Visibility = Visibility.Visible;
-            lblProgress.Content = "Processing..";
-            btnGet.IsEnabled = false;
-            progressBar.Value = 1;
-            //BackgroundWorker worker = new BackgroundWorker();
-            worker.DoWork += worker_DoWork;
-            worker.ProgressChanged += worker_ProgressChanged;
-            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            worker.RunWorkerAsync();
+
+            DateTime CurrentTime = DateTime.Now;
+            Debug.WriteLine(CurrentTime);
+            DateTime ExpiredTime = ExpiryDate;
+            Debug.WriteLine(ExpiredTime);
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("Application is expired.");
+            }
+            else
+            {
+                //MessageBox.Show("Application is not expired.");
+                imgWebScrap.Visibility = Visibility.Hidden;
+                progressBar.Visibility = Visibility.Visible;
+                lblProgress.Content = "Processing..";
+                btnGet.IsEnabled = false;
+                progressBar.Value = 1;
+                //BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += worker_DoWork;
+                worker.ProgressChanged += worker_ProgressChanged;
+                worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+                worker.RunWorkerAsync();
+            }
+
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -1098,9 +1113,20 @@ namespace PSXDataFetchingApp
 
         private void btnGetV2_Click(object sender, RoutedEventArgs e)
         {
-            FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
-            fundPreviewWindow.Show();
-            this.Hide();
+            DateTime CurrentTime = DateTime.Now;
+            Debug.WriteLine(CurrentTime);
+            DateTime ExpiredTime = ExpiryDate;
+            Debug.WriteLine(ExpiredTime);
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("Application is expired.");
+            }
+            else
+            {
+                FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
+                fundPreviewWindow.Show();
+                this.Hide();
+            }
         }
     }
 }

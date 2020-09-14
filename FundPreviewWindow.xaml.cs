@@ -10,6 +10,8 @@ using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -18,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using WpfAnimatedGif;
 using static PSXDataFetchingApp.PreviewWindow;
 
 namespace PSXDataFetchingApp
@@ -30,12 +33,32 @@ namespace PSXDataFetchingApp
         public Configuration configuration;
         public MainWindow mainClass = new MainWindow();
         BackgroundWorker worker = new BackgroundWorker();
+
+        List<String> Share_Name;
+        List<String> Share_Symbol;
+        List<String> DateCostLastUpdated;
+        List<String> LastUpdatedPerUnitCost;
+        List<String> LastUpdatedCost;
+        List<String> LastUpdatedHolding;
+        List<String> LastUpdatedMarketPriceDate;
+        List<String> MarketSymbol;
+        List<String> MarketPriceCurrent;
+        List<String> MarketValue;
+        List<String> Appreciation_Depreciation;
+        SHARE[] testShare;
+
+        String[] DefaultData;
+
         //public static SHARE[] share;
+
+        DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        int countTimer = 0;
+
         public FundPreviewWindow()
         {
             InitializeComponent();
 
-            txtDate.Text = DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
+            txtDate.Text = "Date:" + DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
 
             SqlConnection conn = new SqlConnection();
             SqlConnection conn2 = new SqlConnection();
@@ -47,18 +70,18 @@ namespace PSXDataFetchingApp
             {
                 fundName = HasRows(conn2, 2);
                 fundName2 = HasRows(conn, 1);
-            
-            comboFund.Items.Add("Select..");
-            comboFund.SelectedIndex = 0;
-            for (int i = 0; i < fundName.Count; i++)
-            {
-                comboFund.Items.Add(fundName[i]);
-            }
-            for (int i = 0; i < fundName2.Count; i++)
-            {
-                comboFund.Items.Add(fundName2[i]);
-            }
-            comboFund.Items.Add("<ADD NEW FUND>");
+
+                comboFund.Items.Add("Select..");
+                comboFund.SelectedIndex = 0;
+                for (int i = 0; i < fundName.Count; i++)
+                {
+                    comboFund.Items.Add(fundName[i]);
+                }
+                for (int i = 0; i < fundName2.Count; i++)
+                {
+                    comboFund.Items.Add(fundName2[i]);
+                }
+                comboFund.Items.Add("<ADD NEW FUND>");
             }
             catch (Exception ex)
             {
@@ -74,63 +97,63 @@ namespace PSXDataFetchingApp
         static List<String> HasRows(SqlConnection connection, int flag)
         {
             List<String> result;
-                using (connection)
+            using (connection)
+            {
+                SqlCommand command;
+                if (flag == 1)
                 {
-                    SqlCommand command;
-                    if (flag == 1)
+                    command = new SqlCommand(
+                      "SELECT [fund_code], [fund_name] FROM [ipams_db].[dbo].[pms_funds] order by fund_code",
+                      connection);
+                    connection.Open();
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    result = new List<String>(reader.FieldCount);
+                    if (reader.HasRows)
                     {
-                        command = new SqlCommand(
-                          "SELECT [fund_code], [fund_name] FROM [ipams_db].[dbo].[pms_funds] order by fund_code",
-                          connection);
-                        connection.Open();
 
-                        SqlDataReader reader = command.ExecuteReader();
-                        result = new List<String>(reader.FieldCount);
-                        if (reader.HasRows)
+                        while (reader.Read())
                         {
-
-                            while (reader.Read())
-                            {
-                                result.Add(reader.GetString(1));
-                            }
+                            result.Add(reader.GetString(1));
                         }
-                        else
-                        {
-                            Debug.WriteLine("No rows found.");
-                        }
-                        reader.Close();
                     }
                     else
                     {
-                        command = new SqlCommand(
-                          "SELECT [FUND_ID],[FUND_CODE],[FUND_NAME],[FUND_SYMBOL],[FUND_DESC] FROM [dbo].[FUND] order by [FUND_ID]",
-                          connection);
-                        connection.Open();
-
-                        SqlDataReader reader = command.ExecuteReader();
-                        result = new List<String>(reader.FieldCount);
-                        if (reader.HasRows)
-                        {
-
-                            while (reader.Read())
-                            {
-                                result.Add(reader.GetString(2));
-                                //Debug.WriteLine("{0}\t{1}", reader.GetInt32(0),
-                                //    reader.GetString(1));
-
-                            }
-                        }
-                        else
-                        {
-                            Debug.WriteLine("No rows found.");
-                        }
-                        reader.Close();
+                        Debug.WriteLine("No rows found.");
                     }
-
-                    return result;
-
+                    reader.Close();
                 }
-            
+                else
+                {
+                    command = new SqlCommand(
+                      "SELECT [FUND_ID],[FUND_CODE],[FUND_NAME],[FUND_SYMBOL],[FUND_DESC] FROM [dbo].[FUND] order by [FUND_ID]",
+                      connection);
+                    connection.Open();
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    result = new List<String>(reader.FieldCount);
+                    if (reader.HasRows)
+                    {
+
+                        while (reader.Read())
+                        {
+                            result.Add(reader.GetString(2));
+                            //Debug.WriteLine("{0}\t{1}", reader.GetInt32(0),
+                            //    reader.GetString(1));
+
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("No rows found.");
+                    }
+                    reader.Close();
+                }
+
+                return result;
+
+            }
+
         }
 
         public bool getSymbolStatus(string Symbol)
@@ -217,15 +240,20 @@ namespace PSXDataFetchingApp
         //    return result;
         //}
 
+        public void getDefault()
+        {
+            DefaultData = mainClass.GetDefault();
+        }
 
-        public  SHARE[] getShareDetail ()
+
+        public SHARE[] getShareDetail()
         {
             List<string> NAME = mainClass.GetMarketSummaryCompanyNames();
             List<string> SYMBOL = mainClass.GetMarketSummaryCompanySymbols(NAME);
             string[] CURRENT = mainClass.GetMarketSummaryCompanyCURRENT();
 
             SHARE[] share = new SHARE[NAME.Count];
-            for(int i = 0; i < NAME.Count; i++)
+            for (int i = 0; i < NAME.Count; i++)
             {
                 share[i] = new SHARE { SHARE_NAME = NAME[i], SHARE_SYMBOL = SYMBOL[i], SHARE_CURRENT = CURRENT[i] };
                 //Debug.WriteLine("FNAME: " + NAME[i] + ", FSYMBOL: " + SYMBOL[i] + ", FCURRENT: " + CURRENT[i]);
@@ -233,43 +261,179 @@ namespace PSXDataFetchingApp
             return share;
         }
 
-        private void btnGet_Click(object sender, RoutedEventArgs e)
+        private async void btnGet_Click(object sender, RoutedEventArgs e)
         {
-            imgStatus.Source = new BitmapImage(ResourceAccessor.Get("Images/Exclaimation.png"));
-            FundImage.Visibility = Visibility.Hidden;
-            list1.Visibility = Visibility.Hidden;
-            loadingImage.Visibility = Visibility.Visible;
 
-            FundImage.Source = new BitmapImage(ResourceAccessor.Get("Images/exclaimation.png"));
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = ResourceAccessor.Get("Images/exclaimation.png");
+            image.EndInit();
+            ImageBehavior.SetAnimatedSource(imgStatus, image);
             lblStatus.Text = "Status: Processing";
 
-            for (int i = 0; i < 10; i++)
+            string FundName = comboFund.Text;
+            if (FundName == "Select..")
             {
-                this.InvalidateVisual();
-                this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
-                this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
+                MessageBox.Show("Please Select A Fund from the list.", "Fund Selection Required.", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else if (FundName == "<ADD NEW FUND>")
+            {
+                if (comboFund.SelectedValue.Equals("<ADD NEW FUND>"))
+                {
+                    lblFundID.Foreground = new SolidColorBrush(Colors.Black);
+                    lblFundNAME.Foreground = new SolidColorBrush(Colors.Black);
+                    txtFundID.IsEnabled = true;
+                    txtFund.IsEnabled = true;
+                    btnAdd.IsEnabled = true;
+                    lblFundID.Visibility = Visibility.Visible;
+                    txtFundID.Visibility = Visibility.Visible;
+                    lblFundNAME.Visibility = Visibility.Visible;
+                    txtFund.Visibility = Visibility.Visible;
+                    btnAdd.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    lblFundID.Foreground = new SolidColorBrush(Colors.Gray);
+                    lblFundNAME.Foreground = new SolidColorBrush(Colors.Gray);
+                    txtFundID.IsEnabled = false;
+                    txtFund.IsEnabled = false;
+                    btnAdd.IsEnabled = false;
+                    lblFundID.Visibility = Visibility.Hidden;
+                    txtFundID.Visibility = Visibility.Hidden;
+                    lblFundNAME.Visibility = Visibility.Hidden;
+                    txtFund.Visibility = Visibility.Hidden;
+                    btnAdd.Visibility = Visibility.Hidden;
+                }
+            }
+            else
+            {
+                //imgStatus.Source = new BitmapImage(ResourceAccessor.Get("Images/Exclaimation.png"));
+
+
+                FundImage.Visibility = Visibility.Hidden;
+                list1.Visibility = Visibility.Hidden;
+                loadingImage.Visibility = Visibility.Visible;
+
+                //FundImage.Source = new BitmapImage(ResourceAccessor.Get("Images/exclaimation.png"));
+
+
+                //for (int i = 0; i < 10; i++)
+                //{
+                //    this.InvalidateVisual();
+                //    this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
+                //    this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
+                //}
+
+                await Task.Run(() => mustWork(FundName));
+
+                //worker.DoWork += worker_DoWork;
+
+                //worker.DoWork += worker_DoWork;
+                //worker.ProgressChanged += worker_ProgressChanged;
+                //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+                //worker.RunWorkerAsync();
+
+                //Task.Run(async delegate
+                //{
+                //        await Task.Yield(); // fork the continuation into a separate work item
+                //});
+                await Task.Run(() => getDefault());
+                DateTime MarketDate = DateTime.Parse(DefaultData[0]);
+                txtDate.Text = "Date: " + MarketDate.ToString("dddd, dd MMMM yyyy hh:mm tt");
+                txtStatus.Text = "Status: " + DefaultData[1];
+
+
+                FundMarket[] data = new FundMarket[Share_Name.Count];
+
+                col1.DisplayMemberBinding = new Binding("SERIAL");
+                col2.DisplayMemberBinding = new Binding("NAME");
+                col3.DisplayMemberBinding = new Binding("SYMBOL");
+                col4.DisplayMemberBinding = new Binding("CURRENT");
+                col5.DisplayMemberBinding = new Binding("LDCP");
+                col6.DisplayMemberBinding = new Binding("OPEN");
+                col7.DisplayMemberBinding = new Binding("CHANGE");
+                col8.DisplayMemberBinding = new Binding("VOLUME");
+                col9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
+                
+
+                list1.Items.Clear();
+
+                FundImage.Visibility = Visibility.Hidden;
+                loadingImage.Visibility = Visibility.Hidden;
+                list1.Visibility = Visibility.Visible;
+                
+                for (int i = 0; i < Share_Name.Count; i++)
+                {
+                    if (Share_Name[i] == null) { }
+                    else
+                    {
+                        if (Appreciation_Depreciation[i].StartsWith('('))
+                        {
+                            //Style style = new Style();
+                            //style.TargetType = typeof(ListViewItem);
+                            //list1.ItemContainerStyle = style;
+                            //DataTrigger trigger = new DataTrigger();
+                            //trigger.Binding = new Binding("APPRECIATION_DEPRECIATION");
+                            //trigger.Value = Appreciation_Depreciation[i];
+                            //trigger.Setters.Add(new Setter(ListViewItem.ForegroundProperty, Brushes.Red));
+                            //style.Triggers.Add(trigger);
+                            //list1.ItemContainerStyle = style;
+                            //txtAppDep.
+                        }
+                        else
+                        {
+                            //Style style = new Style();
+                            //style.TargetType = typeof(ListViewItem);
+                            //style.Setters.Add(new Setter(ListViewItem.ForegroundProperty, Brushes.Black));
+                            //list1.SelectedItem = style;
+                        }
+                        list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
+                    }
+                }
+
+
+
+                FundImage.Visibility = Visibility.Hidden;
+                list1.Visibility = Visibility.Visible;
+
+                loadingImage.Visibility = Visibility.Hidden;
+
+                
+
+
             }
 
-            mustWork();
-            //worker.DoWork += worker_DoWork;
 
-            //worker.DoWork += worker_DoWork;
-            //worker.ProgressChanged += worker_ProgressChanged;
-            //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            //worker.RunWorkerAsync();
 
-            //Task.Run(async delegate
-            //{
-            //        await Task.Yield(); // fork the continuation into a separate work item
-            //});
+            var image2 = new BitmapImage();
+            image2.BeginInit();
+            image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
+            image2.EndInit();
+            ImageBehavior.SetAnimatedSource(imgStatus, image2);
+
             lblStatus.Text = "Status: Ready";
+
+            DispatcherTimer dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Start();
 
         }
 
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            countTimer++;
+            if(countTimer % 25 == 0)
+            {
+                ButtonAutomationPeer peer = new ButtonAutomationPeer(btnReset);
+                IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
+                invokeProv.Invoke();
+            }
+        }
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             //myDelegate delegate1 = new myDelegate(mustWork);
-            mustWork();
+            //mustWork();
         }
 
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -288,9 +452,9 @@ namespace PSXDataFetchingApp
 
         }
 
-        
 
-        private void mustWork()
+
+        private void mustWork(string FundName)
         {
             int FUND_ID = 0;
 
@@ -307,7 +471,7 @@ namespace PSXDataFetchingApp
             cmd.CommandType = CommandType.StoredProcedure;
 
             // 3. add parameter to command, which will be passed to the stored procedure
-            cmd.Parameters.Add(new SqlParameter("@FUND_NAME", comboFund.Text));
+            cmd.Parameters.Add(new SqlParameter("@FUND_NAME", FundName));
 
             // execute the command
             using (SqlDataReader rdr = cmd.ExecuteReader())
@@ -321,6 +485,34 @@ namespace PSXDataFetchingApp
 
             conn.Close();
 
+            if (FUND_ID == 0)
+            {
+
+                conn.Open();
+                // 1.  create a command object identifying the stored procedure
+                SqlCommand getFundIdByNameCmd = new SqlCommand("spGetFundIDByParamNAME", connIpams);
+
+                // 2. set the command object so it knows to execute a stored procedure
+                getFundIdByNameCmd.CommandType = CommandType.StoredProcedure;
+
+                // 3. add parameter to command, which will be passed to the stored procedure
+                getFundIdByNameCmd.Parameters.Add(new SqlParameter("@FUND_NAME", FundName));
+
+                // execute the command
+                using (SqlDataReader rdr2 = cmd.ExecuteReader())
+                {
+                    // iterate through results, printing each to console
+                    while (rdr2.Read())
+                    {
+                        FUND_ID = Convert.ToInt32(rdr2["FUND_CODE"]);
+                    }
+                }
+
+            }
+
+
+
+
             connIpams.Open();
 
             // 1.  create a command object identifying the stored procedure
@@ -333,18 +525,18 @@ namespace PSXDataFetchingApp
             cmdforFetchingShare.Parameters.Add(new SqlParameter("@FUND_ID", FUND_ID));
             //cmdforFetchingShare.Parameters.Add(new SqlParameter("@DATE", DateTime.Now.AddYears(-1)));
             cmdforFetchingShare.Parameters.Add(new SqlParameter("@DATE", DateTime.Now));
-            List<String> Share_Name = new List<String>();
-            List<String> Share_Symbol = new List<String>();
-            List<String> DateCostLastUpdated = new List<String>();
-            List<String> LastUpdatedPerUnitCost = new List<String>();
-            List<String> LastUpdatedCost = new List<String>();
-            List<String> LastUpdatedHolding = new List<String>();
-            List<String> LastUpdatedMarketPriceDate = new List<String>();
-            List<String> MarketSymbol = new List<String>();
-            List<String> MarketPriceCurrent = new List<String>();
-            List<String> MarketValue = new List<String>();
-            List<String> Appreciation_Depreciation = new List<String>();
-            SHARE[] testShare = getShareDetail();
+            Share_Name = new List<String>();
+            Share_Symbol = new List<String>();
+            DateCostLastUpdated = new List<String>();
+            LastUpdatedPerUnitCost = new List<String>();
+            LastUpdatedCost = new List<String>();
+            LastUpdatedHolding = new List<String>();
+            LastUpdatedMarketPriceDate = new List<String>();
+            MarketSymbol = new List<String>();
+            MarketPriceCurrent = new List<String>();
+            MarketValue = new List<String>();
+            Appreciation_Depreciation = new List<String>();
+            testShare = getShareDetail();
             // execute the command
             using (SqlDataReader rdr = cmdforFetchingShare.ExecuteReader())
             {
@@ -384,13 +576,13 @@ namespace PSXDataFetchingApp
                             MarketValue.Add(Convert.ToInt32(Math.Round(localValue)).ToString("#,##0"));
                             decimal appreciation = localValue - rdr.GetDecimal(4);
                             string localAppreciate = Math.Round(appreciation, 2).ToString("#,##0");
-                            if(appreciation < 0)
+                            if (appreciation < 0)
                             {
-                                localAppreciate = "(" + localAppreciate.Replace("-","") + ")";
-                                
-                                
+                                localAppreciate = "(" + localAppreciate.Replace("-", "") + ")";
+
+
                             }
-                                
+
                             Appreciation_Depreciation.Add(localAppreciate.ToString());
                         }
                     }
@@ -400,35 +592,10 @@ namespace PSXDataFetchingApp
 
             connIpams.Close();
 
-            FundMarket[] data = new FundMarket[Share_Name.Count];
 
-            col1.DisplayMemberBinding = new Binding("SERIAL");
-            col2.DisplayMemberBinding = new Binding("NAME");
-            col3.DisplayMemberBinding = new Binding("SYMBOL");
-            col4.DisplayMemberBinding = new Binding("CURRENT");
-            col5.DisplayMemberBinding = new Binding("LDCP");
-            col6.DisplayMemberBinding = new Binding("OPEN");
-            col7.DisplayMemberBinding = new Binding("CHANGE");
-            col8.DisplayMemberBinding = new Binding("VOLUME");
-            col9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
-
-            
-            
-
-            FundImage.Visibility = Visibility.Hidden;
-            loadingImage.Visibility = Visibility.Hidden;
-            list1.Visibility = Visibility.Visible;
-            for (int i = 0; i < Share_Name.Count; i++)
-            {
-                if (Share_Name[i] == null) { }
-                else
-                {
-                    list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
-                }
-            }
         }
 
-        
+
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
@@ -484,40 +651,7 @@ namespace PSXDataFetchingApp
 
         private void comboFund_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                if (comboFund.SelectedValue.Equals("<ADD NEW FUND>"))
-                {
-                    lblFundID.Foreground = new SolidColorBrush(Colors.Black);
-                    lblFundNAME.Foreground = new SolidColorBrush(Colors.Black);
-                    txtFundID.IsEnabled = true;
-                    txtFund.IsEnabled = true;
-                    btnAdd.IsEnabled = true;
-                    lblFundID.Visibility = Visibility.Visible;
-                    txtFundID.Visibility = Visibility.Visible;
-                    lblFundNAME.Visibility = Visibility.Visible;
-                    txtFund.Visibility = Visibility.Visible;
-                    btnAdd.Visibility = Visibility.Visible;
-                    comboFund.SelectedIndex = 0;
-                }
-                else
-                {
-                    lblFundID.Foreground = new SolidColorBrush(Colors.Gray);
-                    lblFundNAME.Foreground = new SolidColorBrush(Colors.Gray);
-                    txtFundID.IsEnabled = false;
-                    txtFund.IsEnabled = false;
-                    btnAdd.IsEnabled = false;
-                    lblFundID.Visibility = Visibility.Hidden;
-                    txtFundID.Visibility = Visibility.Hidden;
-                    lblFundNAME.Visibility = Visibility.Hidden;
-                    txtFund.Visibility = Visibility.Hidden;
-                    btnAdd.Visibility = Visibility.Hidden;
-                }
-            }
-            catch(Exception ex )
-            {
-                Debug.WriteLine("When comboBox reloads: " + ex.Message);
-            }
+
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -532,9 +666,78 @@ namespace PSXDataFetchingApp
 
         }
 
-        private void btnReset_Click(object sender, RoutedEventArgs e)
-        {
+        
 
+        private async void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = ResourceAccessor.Get("Images/exclaimation.png");
+            image.EndInit();
+            ImageBehavior.SetAnimatedSource(imgStatus, image);
+
+            lblStatus.Text = "Status: Processing";
+
+            string FundName = comboFund.Text;
+            if (list1.Visibility == Visibility.Visible)
+            {
+                
+                await Task.Run(() => mustWork(FundName));
+
+                FundMarket[] data = new FundMarket[Share_Name.Count];
+
+                col1.DisplayMemberBinding = new Binding("SERIAL");
+                col2.DisplayMemberBinding = new Binding("NAME");
+                col3.DisplayMemberBinding = new Binding("SYMBOL");
+                col4.DisplayMemberBinding = new Binding("CURRENT");
+                col5.DisplayMemberBinding = new Binding("LDCP");
+                col6.DisplayMemberBinding = new Binding("OPEN");
+                col7.DisplayMemberBinding = new Binding("CHANGE");
+                col8.DisplayMemberBinding = new Binding("VOLUME");
+                col9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
+
+                list1.Items.Clear();
+
+                for (int i = 0; i < Share_Name.Count; i++)
+                {
+                    if (Share_Name[i] == null) { }
+                    else
+                    {
+                        list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
+                    }
+                }
+
+
+                FundImage.Visibility = Visibility.Hidden;
+                list1.Visibility = Visibility.Visible;
+                loadingImage.Visibility = Visibility.Hidden;
+
+                await Task.Run(() => getDefault());
+                DateTime MarketDate = DateTime.Parse(DefaultData[0]);
+                txtDate.Text = "Date: " + MarketDate.ToString("dddd, dd MMMM yyyy hh:mm tt");
+                txtStatus.Text = "Status: " + DefaultData[1];
+
+            }
+
+            else
+            {
+                MessageBox.Show("Run the Fund Selection First.", "No Data Found.", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+
+
+            var image2 = new BitmapImage();
+            image2.BeginInit();
+            image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
+            image2.EndInit();
+            ImageBehavior.SetAnimatedSource(imgStatus, image2);
+
+            lblStatus.Text = "Status: Ready";
         }
+
+        
+
     }
+    
+    
 }
