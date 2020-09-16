@@ -4,6 +4,11 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ReferencePath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\</ReferencePath>
+    <ApplicationIcon>web-scrap.ico</ApplicationIcon>
+    <Authors>Saad Ahmed</Authors>
+    <Product>Data Extractor Utility</Product>
+    <PackageIcon>web-scrap2.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -60,6 +65,10 @@
     <None Remove="Images\tick.png" />
     <None Remove="Images\web-scrap.PNG" />
     <None Remove="Images\web-scrap2.png" />
+    <None Include="Images\web-scrap2.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -67,7 +76,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
+    <PackageReference Include="Syncfusion.ReportControls.WPF" Version="18.2.0.58" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.0" />
   </ItemGroup>
 
@@ -125,6 +136,33 @@
     <Resource Include="Images\tick.png" />
     <Resource Include="Images\web-scrap.PNG" />
     <Resource Include="Images\web-scrap2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{c0c07587-41a7-46c8-8fbd-3f9c8ebe2ddc}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Reports\FundMarketSummary.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Reports\PSXMarketSummary.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PSXMarketSummary.rpt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Reports\PSXMarketSummary.rpt">
+      <LastGenOutput>PSXMarketSummary.cs</LastGenOutput>
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+    </None>
+    <None Update="Reports\FundMarketSummary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>PSXMarketSummary.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

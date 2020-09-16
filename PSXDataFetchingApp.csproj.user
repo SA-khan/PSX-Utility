@@ -9,21 +9,21 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="FundPreviewWindow.xaml.cs">
+    <Compile Update="PreviewWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="PreviewWindow.xaml.cs">
+    <Compile Update="Report.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="FundPreviewWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="PreviewWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Report.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

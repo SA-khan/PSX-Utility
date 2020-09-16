@@ -108,10 +108,11 @@ C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.g.resources
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.AssemblyInfoInputs.cache
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.AssemblyInfo.cs
-C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csproj.CoreCompileInputs.cache
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csproj.CopyComplete
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.dll
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.pdb
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.genruntimeconfig.cache
-C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csprojAssemblyReference.cache
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\WpfAnimatedGif.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Report.g.cs
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Report.baml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csprojAssemblyReference.cache

@@ -15,4 +15,9 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgSyncfusion_Shared_WPF Condition=" '$(PkgSyncfusion_Shared_WPF)' == '' ">C:\Users\Saad.Ahmed\.nuget\packages\syncfusion.shared.wpf\18.2.0.58</PkgSyncfusion_Shared_WPF>
+    <PkgSyncfusion_SfMaps_WPF Condition=" '$(PkgSyncfusion_SfMaps_WPF)' == '' ">C:\Users\Saad.Ahmed\.nuget\packages\syncfusion.sfmaps.wpf\18.2.0.58</PkgSyncfusion_SfMaps_WPF>
+    <PkgSyncfusion_Grid_WPF Condition=" '$(PkgSyncfusion_Grid_WPF)' == '' ">C:\Users\Saad.Ahmed\.nuget\packages\syncfusion.grid.wpf\18.2.0.58</PkgSyncfusion_Grid_WPF>
+  </PropertyGroup>
 </Project>

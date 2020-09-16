@@ -31,7 +31,7 @@ namespace PSXDataFetchingApp
     public partial class MainWindow : Window
     {
         //License Date 
-        DateTime ExpiryDate = DateTime.Parse("2020/09/16 15:17:00");
+        DateTime ExpiryDate = DateTime.Parse("2020/09/20 15:17:00");
         public IConfiguration Configuration { get; set; }
 
         public static bool isDataSaved = false;
@@ -889,96 +889,130 @@ namespace PSXDataFetchingApp
         #region MustWorkStart
         public void mustWork()
         {
-            worker.WorkerReportsProgress = true;
-            //int progressPercentage = Convert.ToInt32(((double)i / max) * 100);
-            //(sender as BackgroundWorker)worker.ReportProgress(progressPercentage, statusFlag);
-            statusContent = "Getting General Content..";
-            worker.ReportProgress(1);
-            string[] defaultData = GetDefault();
-            RequestDate = DateTime.Parse(defaultData[0]);
-            worker.ReportProgress(2);
-            RequestStatus = defaultData[1];
-            worker.ReportProgress(3);
-            RequestValue = Double.Parse(defaultData[2]);
-            worker.ReportProgress(4);
-            RequestVolume = Double.Parse(defaultData[3]);
-            worker.ReportProgress(5);
-            RequestTrades = Double.Parse(defaultData[4]);
-            statusContent = "Getting Company Names..";
-            worker.ReportProgress(10);
-            NAME = GetMarketSummaryCompanyNames();
-            statusContent = "Getting Company Symbols..";
-            worker.ReportProgress(25);
-            SYMBOL = GetMarketSummaryCompanySymbols(NAME);
-            statusContent = "Getting LDCP..";
-            worker.ReportProgress(40);
-            string[] getCompanyLDCP = GetMarketSummaryCompanyLDCP();
-            statusContent = "Getting Open..";
-            worker.ReportProgress(55);
-            string[] getCompanyOPEN = GetMarketSummaryCompanyOPEN();
-            statusContent = "Getting High..";
-            worker.ReportProgress(65);
-            string[] getCompanyHIGH = GetMarketSummaryCompanyHIGH();
-            statusContent = "Getting Low..";
-            worker.ReportProgress(75);
-            string[] getCompanyLOW = GetMarketSummaryCompanyLOW();
-            statusContent = "Getting Current..";
-            worker.ReportProgress(85);
-            string[] getCompanyCURRENT = GetMarketSummaryCompanyCURRENT();
-            statusContent = "Getting Change..";
-            worker.ReportProgress(95);
-            string[] getCompanyCHANGE = GetMarketSummaryCompanyCHANGE();
-            statusContent = "Getting Volume..";
-            worker.ReportProgress(98);
-            string[] getCompanyVOLUME = GetMarketSummaryCompanyVOLUME();
-            worker.ReportProgress(99);
-            double[] CompanyLDCP = new double[getCompanyLDCP.Length];
-            double[] CompanyOPEN = new double[getCompanyLDCP.Length];
-            double[] CompanyHIGH = new double[getCompanyLDCP.Length];
-            double[] CompanyLOW = new double[getCompanyLDCP.Length];
-            double[] CompanyCURRENT = new double[getCompanyLDCP.Length];
-            double[] CompanyCHANGE = new double[getCompanyLDCP.Length];
-            double[] CompanyVOLUME = new double[getCompanyLDCP.Length];
-            //worker.ReportProgress(75);
-
-            for (int i = 0; i < NAME.Count(); i++)
+            try
             {
-                CompanyLDCP[i] = Convert.ToDouble(getCompanyLDCP[i]);
-                CompanyOPEN[i] = Convert.ToDouble(getCompanyOPEN[i]);
-                CompanyHIGH[i] = Convert.ToDouble(getCompanyHIGH[i]);
-                CompanyLOW[i] = Convert.ToDouble(getCompanyLOW[i]);
-                CompanyCURRENT[i] = Convert.ToDouble(getCompanyCURRENT[i]);
-                CompanyCHANGE[i] = Convert.ToDouble(getCompanyCHANGE[i]);
-                CompanyVOLUME[i] = Convert.ToDouble(getCompanyVOLUME[i]);
+                string[] defaultData = GetDefault();
+                RequestDate = DateTime.Parse(defaultData[0]);
+                worker.WorkerReportsProgress = true;
+                //int progressPercentage = Convert.ToInt32(((double)i / max) * 100);
+                //(sender as BackgroundWorker)worker.ReportProgress(progressPercentage, statusFlag);
+                statusContent = "Getting General Content..";
+                worker.ReportProgress(1);
 
-                LDCP.Add(CompanyLDCP[i]);
-                OPEN.Add(CompanyOPEN[i]);
-                HIGH.Add(CompanyHIGH[i]);
-                LOW.Add(CompanyLOW[i]);
-                CURRENT.Add(CompanyCURRENT[i]);
-                CHANGE.Add(CompanyCHANGE[i]);
-                VOLUME.Add(CompanyVOLUME[i]);
+                DateTime CurrentTime = RequestDate;
+                Debug.WriteLine(CurrentTime);
+                DateTime ExpiredTime = ExpiryDate;
+                Debug.WriteLine(ExpiredTime);
+                if (ExpiredTime <= CurrentTime)
+                {
+                    MessageBox.Show("Application is expired.");
+                }
+                else
+                {
+
+
+                    worker.ReportProgress(2);
+                    RequestStatus = defaultData[1];
+                    worker.ReportProgress(3);
+                    RequestValue = Double.Parse(defaultData[2]);
+                    worker.ReportProgress(4);
+                    RequestVolume = Double.Parse(defaultData[3]);
+                    worker.ReportProgress(5);
+                    RequestTrades = Double.Parse(defaultData[4]);
+                    statusContent = "Getting Company Names..";
+                    worker.ReportProgress(10);
+                    NAME = GetMarketSummaryCompanyNames();
+                    statusContent = "Getting Company Symbols..";
+                    worker.ReportProgress(25);
+                    SYMBOL = GetMarketSummaryCompanySymbols(NAME);
+                    statusContent = "Getting LDCP..";
+                    worker.ReportProgress(40);
+                    string[] getCompanyLDCP = GetMarketSummaryCompanyLDCP();
+                    statusContent = "Getting Open..";
+                    worker.ReportProgress(55);
+                    string[] getCompanyOPEN = GetMarketSummaryCompanyOPEN();
+                    statusContent = "Getting High..";
+                    worker.ReportProgress(65);
+                    string[] getCompanyHIGH = GetMarketSummaryCompanyHIGH();
+                    statusContent = "Getting Low..";
+                    worker.ReportProgress(75);
+                    string[] getCompanyLOW = GetMarketSummaryCompanyLOW();
+                    statusContent = "Getting Current..";
+                    worker.ReportProgress(85);
+                    string[] getCompanyCURRENT = GetMarketSummaryCompanyCURRENT();
+                    statusContent = "Getting Change..";
+                    worker.ReportProgress(95);
+                    string[] getCompanyCHANGE = GetMarketSummaryCompanyCHANGE();
+                    statusContent = "Getting Volume..";
+                    worker.ReportProgress(98);
+                    string[] getCompanyVOLUME = GetMarketSummaryCompanyVOLUME();
+                    worker.ReportProgress(99);
+                    double[] CompanyLDCP = new double[getCompanyLDCP.Length];
+                    double[] CompanyOPEN = new double[getCompanyLDCP.Length];
+                    double[] CompanyHIGH = new double[getCompanyLDCP.Length];
+                    double[] CompanyLOW = new double[getCompanyLDCP.Length];
+                    double[] CompanyCURRENT = new double[getCompanyLDCP.Length];
+                    double[] CompanyCHANGE = new double[getCompanyLDCP.Length];
+                    double[] CompanyVOLUME = new double[getCompanyLDCP.Length];
+                    //worker.ReportProgress(75);
+
+                    for (int i = 0; i < NAME.Count(); i++)
+                    {
+                        CompanyLDCP[i] = Convert.ToDouble(getCompanyLDCP[i]);
+                        CompanyOPEN[i] = Convert.ToDouble(getCompanyOPEN[i]);
+                        CompanyHIGH[i] = Convert.ToDouble(getCompanyHIGH[i]);
+                        CompanyLOW[i] = Convert.ToDouble(getCompanyLOW[i]);
+                        CompanyCURRENT[i] = Convert.ToDouble(getCompanyCURRENT[i]);
+                        CompanyCHANGE[i] = Convert.ToDouble(getCompanyCHANGE[i]);
+                        CompanyVOLUME[i] = Convert.ToDouble(getCompanyVOLUME[i]);
+
+                        LDCP.Add(CompanyLDCP[i]);
+                        OPEN.Add(CompanyOPEN[i]);
+                        HIGH.Add(CompanyHIGH[i]);
+                        LOW.Add(CompanyLOW[i]);
+                        CURRENT.Add(CompanyCURRENT[i]);
+                        CHANGE.Add(CompanyCHANGE[i]);
+                        VOLUME.Add(CompanyVOLUME[i]);
+                    }
+                    //worker.ReportProgress(80);
+                    //statusContent = "Saving Data..";
+                    //worker.ReportProgress(90);
+                    //isDataSaved = SavingDataToDatabase(defaultData, NAME, SYMBOL, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
+                    worker.ReportProgress(100);
+                    //if (isDataSaved)
+                    //{
+                    //    PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
+                    //    btnGet.IsEnabled = false;
+                    //    window.Show();
+                    //    this.Hide();
+                    //}
+                    //else
+                    //{
+                    //    MessageBox.Show("Data Saved Failed.", "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //    Debug.WriteLine("Data saved Failed.");
+                    //    progressBar.Visibility = Visibility.Hidden;
+                    //    lblProgress.Visibility = Visibility.Hidden;
+                    //    lblProgress.Content = "";
+                    //}
+                }
             }
-            //worker.ReportProgress(80);
-            //statusContent = "Saving Data..";
-            //worker.ReportProgress(90);
-            //isDataSaved = SavingDataToDatabase(defaultData, NAME, SYMBOL, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
-            worker.ReportProgress(100);
-            //if (isDataSaved)
-            //{
-            //    PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
-            //    btnGet.IsEnabled = false;
-            //    window.Show();
-            //    this.Hide();
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Data Saved Failed.", "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    Debug.WriteLine("Data saved Failed.");
-            //    progressBar.Visibility = Visibility.Hidden;
-            //    lblProgress.Visibility = Visibility.Hidden;
-            //    lblProgress.Content = "";
-            //}
+            catch(WebException ex)
+            {
+                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("Internet Exception: " + ex.Message);
+            }
+
+            catch(SqlException ex)
+            {
+                MessageBox.Show(ex.Message, "Database Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("SQL Exception: " + ex.Message);
+            }
+
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("General Exception: " + ex.Message);
+            }
 
         }
 
@@ -1113,19 +1147,43 @@ namespace PSXDataFetchingApp
 
         private void btnGetV2_Click(object sender, RoutedEventArgs e)
         {
-            DateTime CurrentTime = DateTime.Now;
-            Debug.WriteLine(CurrentTime);
-            DateTime ExpiredTime = ExpiryDate;
-            Debug.WriteLine(ExpiredTime);
-            if (ExpiredTime <= CurrentTime)
+            try
             {
-                MessageBox.Show("Application is expired.");
+                DateTime CurrentTime = DateTime.Now;
+                Debug.WriteLine(CurrentTime);
+                DateTime ExpiredTime = ExpiryDate;
+                Debug.WriteLine(ExpiredTime);
+                if (ExpiredTime <= CurrentTime)
+                {
+                    //MessageBox.Show("Application is expired.");
+                    Debug.WriteLine("Computer Date: " + ExpiredTime);
+                }
+                else
+                {
+                    string[] defaultData = GetDefault();
+                    RequestDate = DateTime.Parse(defaultData[0]);
+                    Debug.WriteLine("PSX Date" + ExpiredTime);
+                    if (ExpiredTime <= CurrentTime)
+                    {
+                        MessageBox.Show("Application is expired.");
+                    }
+                    else
+                    {
+                        FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
+                        fundPreviewWindow.Show();
+                        this.Hide();
+                    }
+                }
             }
-            else
+            catch(WebException ex)
             {
-                FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
-                fundPreviewWindow.Show();
-                this.Hide();
+                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("Internet Exception: " + ex.Message);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("General Exception: " + ex.Message);
             }
         }
     }

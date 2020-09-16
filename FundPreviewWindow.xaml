@@ -123,9 +123,9 @@
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Name" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
-                                <ItemContainerTemplate>
-                                    <TextBlock HorizontalAlignment="Left" TextAlignment="Left" />
-                                </ItemContainerTemplate>
+                                <DataTemplate>
+                                    <TextBlock HorizontalAlignment="Left" TextAlignment="Left" Text="{Binding NAME}"/>
+                                </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn x:Name="col3" Width="60">
@@ -139,7 +139,7 @@
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" />
+                                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center"  />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

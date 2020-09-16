@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,11 @@ namespace PSXDataFetchingApp
         public MainWindow mainClass = new MainWindow();
         BackgroundWorker worker = new BackgroundWorker();
 
+        DateTime MARKET_DATE;
+        String MARKET_STATUS;
+        Int64 FUND_ID1;
+        String FUND_NAME1;
+
         List<String> Share_Name;
         List<String> Share_Symbol;
         List<String> DateCostLastUpdated;
@@ -48,6 +54,21 @@ namespace PSXDataFetchingApp
         SHARE[] testShare;
 
         String[] DefaultData;
+
+        //
+        //QUANTITY
+        List<Decimal> QUANTITY; //LastUpdatedHolding1
+        //AVERAGE PRICE
+        List<Decimal> AVERAGE_PRICE; //LastUpdatedPerUnitCost
+        //Book Cost
+        List<Decimal> BOOK_COST; //LastUpdatedCost
+        //MARKET PRICE
+        List<Decimal> MARKET_PRICE;
+        //MARKET VALUE
+        List<Decimal> MARKET_VALUE;
+        //APPRECIATION
+        List<String> APPRECIATION_DEPRECIATION;
+        
 
         //public static SHARE[] share;
 
@@ -326,6 +347,8 @@ namespace PSXDataFetchingApp
 
                 await Task.Run(() => mustWork(FundName));
 
+                
+
                 //worker.DoWork += worker_DoWork;
 
                 //worker.DoWork += worker_DoWork;
@@ -338,10 +361,12 @@ namespace PSXDataFetchingApp
                 //        await Task.Yield(); // fork the continuation into a separate work item
                 //});
                 await Task.Run(() => getDefault());
-                DateTime MarketDate = DateTime.Parse(DefaultData[0]);
-                txtDate.Text = "Date: " + MarketDate.ToString("dddd, dd MMMM yyyy hh:mm tt");
-                txtStatus.Text = "Status: " + DefaultData[1];
+                MARKET_DATE = DateTime.Parse(DefaultData[0]);
+                txtDate.Text = "DATE: " + MARKET_DATE.ToString("dddd, dd MMMM yyyy hh:mm tt");
+                MARKET_STATUS = DefaultData[1];
+                txtStatus.Text = "STATUS: " + MARKET_STATUS;
 
+                
 
                 FundMarket[] data = new FundMarket[Share_Name.Count];
 
@@ -369,16 +394,60 @@ namespace PSXDataFetchingApp
                     {
                         if (Appreciation_Depreciation[i].StartsWith('('))
                         {
-                            //Style style = new Style();
-                            //style.TargetType = typeof(ListViewItem);
-                            //list1.ItemContainerStyle = style;
-                            //DataTrigger trigger = new DataTrigger();
-                            //trigger.Binding = new Binding("APPRECIATION_DEPRECIATION");
-                            //trigger.Value = Appreciation_Depreciation[i];
-                            //trigger.Setters.Add(new Setter(ListViewItem.ForegroundProperty, Brushes.Red));
-                            //style.Triggers.Add(trigger);
-                            //list1.ItemContainerStyle = style;
-                            //txtAppDep.
+                            //GridView myGridView = new GridView();
+                            //myGridView.AllowsColumnReorder = true;
+                            //myGridView.ColumnHeaderToolTip = "Fund Market Information";
+
+                            //GridViewColumn gvc1 = new GridViewColumn();
+                            //gvc1.DisplayMemberBinding = new Binding("SERIAL");
+                            //gvc1.Header = "Sr. No.";
+                            //gvc1.Width = 50;
+                            //myGridView.Columns.Add(gvc1);
+                            //GridViewColumn gvc2 = new GridViewColumn();
+                            //gvc2.DisplayMemberBinding = new Binding("NAME");
+                            //gvc2.Header = "NAME";
+                            //gvc2.Width = 250;
+                            //myGridView.Columns.Add(gvc2);
+                            //GridViewColumn gvc3 = new GridViewColumn();
+                            //gvc3.DisplayMemberBinding = new Binding("SYMBOL");
+                            //gvc3.Header = "SYMBOL";
+                            //gvc3.Width = 60;
+                            //myGridView.Columns.Add(gvc3);
+                            //GridViewColumn gvc4 = new GridViewColumn();
+                            //gvc4.DisplayMemberBinding = new Binding("CURRENT");
+                            //gvc4.Header = "Quantity";
+                            //gvc4.Width = 70;
+                            //myGridView.Columns.Add(gvc4);
+                            //GridViewColumn gvc5 = new GridViewColumn();
+                            //gvc5.DisplayMemberBinding = new Binding("LDCP");
+                            //gvc5.Header = "Avg. Price";
+                            //gvc5.Width = 80;
+                            //myGridView.Columns.Add(gvc5);
+                            //GridViewColumn gvc6 = new GridViewColumn();
+                            //gvc6.DisplayMemberBinding = new Binding("OPEN");
+                            //gvc6.Header = "Book Cost";
+                            //gvc6.Width = 80;
+                            //myGridView.Columns.Add(gvc6);
+                            //GridViewColumn gvc7 = new GridViewColumn();
+                            //gvc7.DisplayMemberBinding = new Binding("CHANGE");
+                            //gvc7.Header = "Market Price";
+                            //gvc7.Width = 85;
+                            //myGridView.Columns.Add(gvc7);
+                            //GridViewColumn gvc8 = new GridViewColumn();
+                            //gvc8.DisplayMemberBinding = new Binding("VOLUME");
+                            //gvc8.Header = "Market Value";
+                            //gvc8.Width = 100;
+                            //myGridView.Columns.Add(gvc8);
+                            //GridViewColumn gvc9 = new GridViewColumn();
+                            //gvc9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
+                            //gvc9.Header = "App. / Dep.";
+                            //gvc9.Width = 80;
+                            //myGridView.Columns.Add(gvc9);
+
+                            ////ItemsSource is ObservableCollection of EmployeeInfo objects
+                            //myListView.ItemsSource = new myEmployees();
+                            //myListView.View = myGridView;
+
                         }
                         else
                         {
@@ -403,7 +472,10 @@ namespace PSXDataFetchingApp
 
             }
 
+            bool DataSaved = await Task.Run(()=> SavingDataToDatabase(MARKET_STATUS, FUND_ID1, FUND_NAME1, Share_Name, Share_Symbol, QUANTITY, AVERAGE_PRICE, BOOK_COST, MARKET_PRICE, MARKET_VALUE, APPRECIATION_DEPRECIATION));
 
+            if (!DataSaved)
+                Debug.WriteLine("Unable to Save Data.");
 
             var image2 = new BitmapImage();
             image2.BeginInit();
@@ -463,135 +535,172 @@ namespace PSXDataFetchingApp
             SqlConnection connIpams = new SqlConnection();
             connIpams.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
 
-            conn.Open();
-            // 1.  create a command object identifying the stored procedure
-            SqlCommand cmd = new SqlCommand("spGetFundIDByParamNAME", conn);
-
-            // 2. set the command object so it knows to execute a stored procedure
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            // 3. add parameter to command, which will be passed to the stored procedure
-            cmd.Parameters.Add(new SqlParameter("@FUND_NAME", FundName));
-
-            // execute the command
-            using (SqlDataReader rdr = cmd.ExecuteReader())
-            {
-                // iterate through results, printing each to console
-                while (rdr.Read())
-                {
-                    FUND_ID = Convert.ToInt32(rdr["FUND_CODE"]);
-                }
-            }
-
-            conn.Close();
-
-            if (FUND_ID == 0)
+            try
             {
 
                 conn.Open();
                 // 1.  create a command object identifying the stored procedure
-                SqlCommand getFundIdByNameCmd = new SqlCommand("spGetFundIDByParamNAME", connIpams);
+                SqlCommand cmd = new SqlCommand("spGetFundIDByParamNAME", conn);
 
                 // 2. set the command object so it knows to execute a stored procedure
-                getFundIdByNameCmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandType = CommandType.StoredProcedure;
 
                 // 3. add parameter to command, which will be passed to the stored procedure
-                getFundIdByNameCmd.Parameters.Add(new SqlParameter("@FUND_NAME", FundName));
+                cmd.Parameters.Add(new SqlParameter("@FUND_NAME", FundName));
 
                 // execute the command
-                using (SqlDataReader rdr2 = cmd.ExecuteReader())
+                using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     // iterate through results, printing each to console
-                    while (rdr2.Read())
+                    while (rdr.Read())
                     {
-                        FUND_ID = Convert.ToInt32(rdr2["FUND_CODE"]);
+                        FUND_ID = Convert.ToInt32(rdr["FUND_CODE"]);
                     }
                 }
 
-            }
+                conn.Close();
 
-
-
-
-            connIpams.Open();
-
-            // 1.  create a command object identifying the stored procedure
-            SqlCommand cmdforFetchingShare = new SqlCommand("spGetShareDetailByParamFundIdAndDate", connIpams);
-
-            // 2. set the command object so it knows to execute a stored procedure
-            cmdforFetchingShare.CommandType = CommandType.StoredProcedure;
-
-            // 3. add parameter to command, which will be passed to the stored procedure
-            cmdforFetchingShare.Parameters.Add(new SqlParameter("@FUND_ID", FUND_ID));
-            //cmdforFetchingShare.Parameters.Add(new SqlParameter("@DATE", DateTime.Now.AddYears(-1)));
-            cmdforFetchingShare.Parameters.Add(new SqlParameter("@DATE", DateTime.Now));
-            Share_Name = new List<String>();
-            Share_Symbol = new List<String>();
-            DateCostLastUpdated = new List<String>();
-            LastUpdatedPerUnitCost = new List<String>();
-            LastUpdatedCost = new List<String>();
-            LastUpdatedHolding = new List<String>();
-            LastUpdatedMarketPriceDate = new List<String>();
-            MarketSymbol = new List<String>();
-            MarketPriceCurrent = new List<String>();
-            MarketValue = new List<String>();
-            Appreciation_Depreciation = new List<String>();
-            testShare = getShareDetail();
-            // execute the command
-            using (SqlDataReader rdr = cmdforFetchingShare.ExecuteReader())
-            {
-                while (rdr.Read())
+                if (FUND_ID == 0)
                 {
-                    // Qunatity is not Null
-                    if (!rdr.IsDBNull(5))
+
+                    conn.Open();
+                    // 1.  create a command object identifying the stored procedure
+                    SqlCommand getFundIdByNameCmd = new SqlCommand("spGetFundIDByParamNAME", connIpams);
+
+                    // 2. set the command object so it knows to execute a stored procedure
+                    getFundIdByNameCmd.CommandType = CommandType.StoredProcedure;
+
+                    // 3. add parameter to command, which will be passed to the stored procedure
+                    getFundIdByNameCmd.Parameters.Add(new SqlParameter("@FUND_NAME", FundName));
+
+                    // execute the command
+                    using (SqlDataReader rdr2 = cmd.ExecuteReader())
                     {
-                        // Quantity is not 0
-                        if (rdr.GetDecimal(5) != 0)
+                        // iterate through results, printing each to console
+                        while (rdr2.Read())
                         {
-                            Share_Name.Add(rdr.GetString(0).ToString());
-                            Share_Symbol.Add(rdr.GetString(1).ToString());
-                            DateCostLastUpdated.Add(rdr.GetDateTime(2).ToString());
-                            LastUpdatedPerUnitCost.Add(rdr.GetDecimal(3).ToString("#.##"));
-                            LastUpdatedCost.Add(Math.Round(rdr.GetDecimal(4)).ToString("#,##0"));
-                            double holding = Convert.ToDouble(rdr.GetDecimal(5));
-                            LastUpdatedHolding.Add(holding.ToString("#,##0"));
-                            LastUpdatedMarketPriceDate.Add(rdr.GetDateTime(6).ToString("#.##"));
-                            string localSymbol = String.Empty;
-                            string localCurrent = String.Empty;
-                            decimal localValue = 0;
-                            if (getSymbolStatus(rdr.GetString(1).ToString()))
-                            {
-                                for (int i = 0; i < testShare.Length; i++)
-                                {
-                                    if (rdr.GetString(1).ToString().Equals(testShare[i].SHARE_SYMBOL.ToString()))
-                                    {
-                                        localSymbol = testShare[i].SHARE_SYMBOL.ToString();
-                                        localCurrent = testShare[i].SHARE_CURRENT.ToString();
-                                        localValue = Convert.ToDecimal(testShare[i].SHARE_CURRENT) * rdr.GetDecimal(5);
-                                    }
-                                }
-                            }
-                            MarketSymbol.Add(localSymbol);
-                            MarketPriceCurrent.Add(localCurrent);
-                            MarketValue.Add(Convert.ToInt32(Math.Round(localValue)).ToString("#,##0"));
-                            decimal appreciation = localValue - rdr.GetDecimal(4);
-                            string localAppreciate = Math.Round(appreciation, 2).ToString("#,##0");
-                            if (appreciation < 0)
-                            {
-                                localAppreciate = "(" + localAppreciate.Replace("-", "") + ")";
-
-
-                            }
-
-                            Appreciation_Depreciation.Add(localAppreciate.ToString());
+                            FUND_ID = Convert.ToInt32(rdr2["FUND_CODE"]);
                         }
                     }
-                    else { }
+
                 }
+
+
+                connIpams.Open();
+
+                //Store
+                FUND_ID1 = FUND_ID;
+                FUND_NAME1 = FundName;
+
+                // 1.  create a command object identifying the stored procedure
+                SqlCommand cmdforFetchingShare = new SqlCommand("spGetShareDetailByParamFundIdAndDate", connIpams);
+
+                // 2. set the command object so it knows to execute a stored procedure
+                cmdforFetchingShare.CommandType = CommandType.StoredProcedure;
+
+                // 3. add parameter to command, which will be passed to the stored procedure
+                cmdforFetchingShare.Parameters.Add(new SqlParameter("@FUND_ID", FUND_ID));
+                //cmdforFetchingShare.Parameters.Add(new SqlParameter("@DATE", DateTime.Now.AddYears(-1)));
+                cmdforFetchingShare.Parameters.Add(new SqlParameter("@DATE", DateTime.Now));
+                Share_Name = new List<String>();
+                Share_Symbol = new List<String>();
+                DateCostLastUpdated = new List<String>();
+                LastUpdatedPerUnitCost = new List<String>();
+                LastUpdatedCost = new List<String>();
+                LastUpdatedHolding = new List<String>();
+                LastUpdatedMarketPriceDate = new List<String>();
+                MarketSymbol = new List<String>();
+                MarketPriceCurrent = new List<String>();
+                MarketValue = new List<String>();
+                Appreciation_Depreciation = new List<String>();
+                testShare = getShareDetail();
+                // execute the command
+                QUANTITY = new List<Decimal>();
+                AVERAGE_PRICE = new List<Decimal>(); 
+                BOOK_COST = new List<Decimal>(); 
+                MARKET_PRICE = new List<Decimal>();
+                MARKET_VALUE = new List<Decimal>();
+                APPRECIATION_DEPRECIATION = new List<String>();
+                //
+                using (SqlDataReader rdr = cmdforFetchingShare.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        // Qunatity is not Null
+                        if (!rdr.IsDBNull(5))
+                        {
+                            // Quantity is not 0
+                            if (rdr.GetDecimal(5) != 0)
+                            {
+                                Share_Name.Add(rdr.GetString(0).ToString());
+                                Share_Symbol.Add(rdr.GetString(1).ToString());
+                                DateCostLastUpdated.Add(rdr.GetDateTime(2).ToString());
+                                AVERAGE_PRICE.Add(rdr.GetDecimal(3).ToString() == null ? 0 : rdr.GetDecimal(3));
+                                //AVERAGE_PRICE.Add(33.89M);
+                                LastUpdatedPerUnitCost.Add(rdr.GetDecimal(3).ToString("#.##"));
+                                BOOK_COST.Add(rdr.GetDecimal(4));
+                                LastUpdatedCost.Add(Math.Round(rdr.GetDecimal(4)).ToString("#,##0"));
+                                double holding = Convert.ToDouble(rdr.GetDecimal(5));
+                                QUANTITY.Add(rdr.GetDecimal(5));
+                                LastUpdatedHolding.Add(holding.ToString("#,##0"));
+                                LastUpdatedMarketPriceDate.Add(rdr.GetDateTime(6).ToString("#.##"));
+                                string localSymbol = String.Empty;
+                                string localCurrent = String.Empty;
+                                decimal localValue = 0;
+                                if (getSymbolStatus(rdr.GetString(1).ToString()))
+                                {
+                                    for (int i = 0; i < testShare.Length; i++)
+                                    {
+                                        if (rdr.GetString(1).ToString().Equals(testShare[i].SHARE_SYMBOL.ToString()))
+                                        {
+                                            localSymbol = testShare[i].SHARE_SYMBOL.ToString();
+                                            localCurrent = testShare[i].SHARE_CURRENT.ToString();
+                                            MARKET_PRICE.Add(Decimal.Parse(testShare[i].SHARE_CURRENT));
+                                            localValue = Convert.ToDecimal(testShare[i].SHARE_CURRENT) * rdr.GetDecimal(5);
+                                            MARKET_VALUE.Add(localValue);
+                                        }
+                                    }
+                                }
+                                MarketSymbol.Add(localSymbol);
+
+                                MarketPriceCurrent.Add(localCurrent);
+                                MarketValue.Add(Convert.ToInt32(Math.Round(localValue)).ToString("#,##0"));
+                                decimal appreciation = localValue - rdr.GetDecimal(4);
+                                APPRECIATION_DEPRECIATION.Add(appreciation.ToString());
+                                string localAppreciate = Math.Round(appreciation, 2).ToString("#,##0");
+                                if (appreciation < 0)
+                                {
+                                    localAppreciate = "(" + localAppreciate.Replace("-", "") + ")";
+
+
+                                }
+
+                                Appreciation_Depreciation.Add(localAppreciate.ToString());
+                            }
+                        }
+                        else { }
+                    }
+                }
+
+                connIpams.Close();
+
             }
+            catch(SqlException ex)
+            {
+                MessageBox.Show(ex.Message, "Database Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("SQL Exception: " + ex.Message);
 
-            connIpams.Close();
-
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("Internet Exception: " + ex.Message);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("Exception: " + ex.Message);
+            }
 
         }
 
@@ -663,7 +772,9 @@ namespace PSXDataFetchingApp
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-
+            Report report = new Report();
+            report.Show();
+            this.Close();
         }
 
         
@@ -735,7 +846,104 @@ namespace PSXDataFetchingApp
             lblStatus.Text = "Status: Ready";
         }
 
-        
+        private bool SavingDataToDatabase(string MARKET_STATUS, Int64 FUND_ID, string FUND_NAME, List<String> SHARE_NAME, List<String> SHARE_SYMBOL, List<Decimal> QUANTITY, List<Decimal> AVERAGE_PRICE, List<Decimal> BOOK_COST, List<Decimal> MARKET_PRICE, List<Decimal> MARKET_VALUE, List<String> APP_DEP)
+        {
+            
+            if (MARKET_STATUS != null)
+            {
+
+                SqlConnection conn = new SqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+                conn.Open();
+                int status = 0;
+                try
+                {
+                    for (int i = 0; i < SHARE_NAME.Count; i++)
+                    {
+
+
+                        //
+                        //if (MARKET_PRICE[i] == null)
+                        //{
+
+                        //}
+                        //else
+                        //{
+
+                        SqlCommand cmd = new SqlCommand("spInsertFundMarketSummary", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@MARKET_STATUS", SqlDbType.VarChar, 500);
+                        cmd.Parameters["@MARKET_STATUS"].Value = MARKET_STATUS;
+                        cmd.Parameters.Add("@FUND_ID", SqlDbType.BigInt);
+                        cmd.Parameters["@FUND_ID"].Value = FUND_ID;
+                        cmd.Parameters.Add("@FUND_NAME", SqlDbType.VarChar,500);
+                        cmd.Parameters["@FUND_NAME"].Value = FUND_NAME;
+                        cmd.Parameters.Add("@SHR_NAME", SqlDbType.VarChar,500);
+                        cmd.Parameters["@SHR_NAME"].Value = SHARE_NAME[i];
+                        cmd.Parameters.Add("@SHR_SYMBOL", SqlDbType.VarChar,500);
+                        cmd.Parameters["@SHR_SYMBOL"].Value = SHARE_SYMBOL[i];
+                        cmd.Parameters.Add("@SHR_QUANTITY", SqlDbType.Decimal);
+                        cmd.Parameters["@SHR_QUANTITY"].Value = QUANTITY[i];
+                        cmd.Parameters.Add("@SHR_AVG_PRICE", SqlDbType.Decimal);
+                        cmd.Parameters["@SHR_AVG_PRICE"].Value = AVERAGE_PRICE[i];
+                        cmd.Parameters.Add("@SHR_BOOK_COST", SqlDbType.Decimal);
+                        cmd.Parameters["@SHR_BOOK_COST"].Value = BOOK_COST[i];
+                        cmd.Parameters.Add("@SHR_MARKET_PRICE", SqlDbType.Decimal);
+                        cmd.Parameters["@SHR_MARKET_PRICE"].Value = MARKET_PRICE[i];
+                        cmd.Parameters.Add("@SHR_MARKET_VALUE", SqlDbType.Decimal);
+                        cmd.Parameters["@SHR_MARKET_VALUE"].Value = MARKET_VALUE[i];
+                        cmd.Parameters.Add("@SHR_APP_DEP", SqlDbType.VarChar);
+                        cmd.Parameters["@SHR_APP_DEP"].Value = APP_DEP[i];
+
+                        status = cmd.ExecuteNonQuery();
+                        //if (status == 1)
+                        //{
+                        //    Debug.WriteLine("Passed!");
+                        //}
+
+                        //}
+                    }
+                    return true;
+
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                    return false;
+                }
+
+                
+
+                //
+
+                //if (status == 1)
+                //{
+                //    Debug.WriteLine("Data successfully saved.");
+                //    return true;
+                //}
+                finally
+                {
+                    conn.Close();
+                }
+                
+
+                
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
 
     }
     

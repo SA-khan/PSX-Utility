@@ -11,11 +11,11 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("PSXDataFetchingApp")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Saad Ahmed")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyProductAttribute("PSXDataFetchingApp")]
+[assembly: System.Reflection.AssemblyProductAttribute("Data Extractor Utility")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PSXDataFetchingApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
