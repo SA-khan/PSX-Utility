@@ -115,4 +115,16 @@ C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\WpfAnimatedGif.dll
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Report.g.cs
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Report.baml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\ClosedXML.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\DocumentFormat.OpenXml.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\ExcelNumberFormat.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.Grid.WPF.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.GridCommon.WPF.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.Licensing.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.Linq.Base.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.ReportControls.WPF.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.SfMaps.WPF.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.Shared.WPF.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csproj.CoreCompileInputs.cache
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csproj.ResolveComReference.cache
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csprojAssemblyReference.cache

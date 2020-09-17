@@ -47,6 +47,7 @@
     <None Remove="Images\BOP.png" />
     <None Remove="Images\exclaimation.png" />
     <None Remove="Images\fundImage.jpg" />
+    <None Remove="Images\HBL.gif" />
     <None Remove="Images\HBL.png" />
     <None Remove="Images\loading.gif" />
     <None Remove="Images\mufap.jfif" />
@@ -65,6 +66,12 @@
     <None Remove="Images\tick.png" />
     <None Remove="Images\web-scrap.PNG" />
     <None Remove="Images\web-scrap2.png" />
+    <COMReference Include="{bed7f4ea-1a96-11d2-8f08-00a0c9a6186d}">
+      <Guid>bed7f4ea-1a96-11d2-8f08-00a0c9a6186d</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <WrapperTool>tlbimp</WrapperTool>
+    </COMReference>
     <None Include="Images\web-scrap2.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -72,6 +79,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.95.3" />
     <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.7" />
@@ -118,6 +126,7 @@
     <Resource Include="Images\BOP.png" />
     <Resource Include="Images\exclaimation.png" />
     <Resource Include="Images\fundImage.jpg" />
+    <Resource Include="Images\HBL.gif" />
     <Resource Include="Images\HBL.png" />
     <Resource Include="Images\loading.gif" />
     <Resource Include="Images\mufap.jfif" />

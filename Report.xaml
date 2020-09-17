@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PSXDataFetchingApp"
         mc:Ignorable="d"
-        Title="Data Extractor Utility" Height="450" Width="900" Icon="Images/web-scrap2.png" WindowStartupLocation="CenterScreen">
+        Title="Data Extractor Utility" Height="450" Width="900" Icon="Images/web-scrap2.png" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
     <Border Margin="10" Padding="1" Background="DarkGray">
         <Grid>
             <Grid.RowDefinitions>

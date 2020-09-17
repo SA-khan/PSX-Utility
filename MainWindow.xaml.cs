@@ -22,6 +22,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
+using PSXDataFetchingApp.Model;
+using WpfAnimatedGif;
 
 namespace PSXDataFetchingApp
 {
@@ -56,6 +58,45 @@ namespace PSXDataFetchingApp
         public MainWindow()
         {
             InitializeComponent();
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        MainWindow1.Background = (Brush)bc.ConvertFrom("#e98645");
+
+                        lblDemo.Foreground = (Brush)bc.ConvertFrom("#f0a500");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/BOP.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(ClientLogo, image);
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        MainWindow1.Background = (Brush)bc.ConvertFrom("#cdcdcd");
+
+                        lblDemo.Foreground = (Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/HBL.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(ClientLogo, image);
+                    }
+                }
+            }
+            catch { }
         }
 
         private HtmlNodeCollection FetchDataFromPSX(string url, string param)
@@ -1147,44 +1188,49 @@ namespace PSXDataFetchingApp
 
         private void btnGetV2_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                DateTime CurrentTime = DateTime.Now;
-                Debug.WriteLine(CurrentTime);
-                DateTime ExpiredTime = ExpiryDate;
-                Debug.WriteLine(ExpiredTime);
-                if (ExpiredTime <= CurrentTime)
-                {
-                    //MessageBox.Show("Application is expired.");
-                    Debug.WriteLine("Computer Date: " + ExpiredTime);
-                }
-                else
-                {
-                    string[] defaultData = GetDefault();
-                    RequestDate = DateTime.Parse(defaultData[0]);
-                    Debug.WriteLine("PSX Date" + ExpiredTime);
-                    if (ExpiredTime <= CurrentTime)
-                    {
-                        MessageBox.Show("Application is expired.");
-                    }
-                    else
-                    {
-                        FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
-                        fundPreviewWindow.Show();
-                        this.Hide();
-                    }
-                }
-            }
-            catch(WebException ex)
-            {
-                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
-                Debug.WriteLine("Internet Exception: " + ex.Message);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
-                Debug.WriteLine("General Exception: " + ex.Message);
-            }
+            //try
+            //{
+            //    DateTime CurrentTime = DateTime.Now;
+            //    Debug.WriteLine(CurrentTime);
+            //    DateTime ExpiredTime = ExpiryDate;
+            //    Debug.WriteLine(ExpiredTime);
+            //    if (ExpiredTime <= CurrentTime)
+            //    {
+            //        //MessageBox.Show("Application is expired.");
+            //        Debug.WriteLine("Computer Date: " + ExpiredTime);
+            //    }
+            //    else
+            //    {
+            //        string[] defaultData = GetDefault();
+            //        RequestDate = DateTime.Parse(defaultData[0]);
+            //        Debug.WriteLine("PSX Date" + ExpiredTime);
+            //        if (ExpiredTime <= CurrentTime)
+            //        {
+            //            MessageBox.Show("Application is expired.");
+            //        }
+            //        else
+            //        {
+            FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
+            fundPreviewWindow.Show();
+            this.Hide();
+            //        }
+            //    }
+            //}
+            //catch(WebException ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+            //    Debug.WriteLine("Internet Exception: " + ex.Message);
+            //}
+            //catch(Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+            //    Debug.WriteLine("General Exception: " + ex.Message);
+            //}
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

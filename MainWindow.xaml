@@ -4,8 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PSXDataFetchingApp"
+        x:Name="MainWindow1"
         mc:Ignorable="d"
-        Title="Data Extractor Utility" Icon="Images/web-scrap2.png" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Data Extractor Utility" Icon="Images/web-scrap2.png" Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
     <Border Margin="10" >
         <Grid>
             <Grid.RowDefinitions>
@@ -22,7 +24,16 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Demo Version v4.0.1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5" FontFamily="/Fonts/#Raleway-Bold" FontWeight="Bold"/>
+                <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="2*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="lblDemo" Foreground="Black" Text="Demo Version v4.0.1" FontFamily="/Fonts/#Raleway-Bold" FontWeight="Bold" Padding="2"/>
+                    <Border Margin="0 5 0 0" Grid.Row="1" Padding="2">
+                    <Image x:Name="ClientLogo"  Source="Images/BOP.png" MaxWidth="120" MaxHeight="120" />
+                    </Border>
+                </Grid>
                 <Image Source="Images/psx2.png" HorizontalAlignment="Right" Margin="0 0 10 0" />
                 <Image Grid.Column="1" Source="Images/mufap.jfif" Width="200" HorizontalAlignment="Left" Margin="10 0 0 0"/>
             </Grid>

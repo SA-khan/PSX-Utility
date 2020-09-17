@@ -22,7 +22,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using WpfAnimatedGif;
+using System.IO;
+using System.Data.Common;
 using static PSXDataFetchingApp.PreviewWindow;
+using ClosedXML.Excel;
+using System.Xml;
 
 namespace PSXDataFetchingApp
 {
@@ -68,7 +72,7 @@ namespace PSXDataFetchingApp
         List<Decimal> MARKET_VALUE;
         //APPRECIATION
         List<String> APPRECIATION_DEPRECIATION;
-        
+
 
         //public static SHARE[] share;
 
@@ -81,16 +85,51 @@ namespace PSXDataFetchingApp
 
             txtDate.Text = "Date:" + DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
 
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (Brush)bc.ConvertFrom("#f0a500");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/BOP.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/HBL.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                }
+            }
+            catch { }
+
             SqlConnection conn = new SqlConnection();
             SqlConnection conn2 = new SqlConnection();
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
+            //conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
             conn2.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             List<String> fundName;
-            List<String> fundName2;
+            //List<String> fundName2;
             try
             {
                 fundName = HasRows(conn2, 2);
-                fundName2 = HasRows(conn, 1);
+                //fundName2 = HasRows(conn, 1);
 
                 comboFund.Items.Add("Select..");
                 comboFund.SelectedIndex = 0;
@@ -98,10 +137,10 @@ namespace PSXDataFetchingApp
                 {
                     comboFund.Items.Add(fundName[i]);
                 }
-                for (int i = 0; i < fundName2.Count; i++)
-                {
-                    comboFund.Items.Add(fundName2[i]);
-                }
+                //for (int i = 0; i < fundName2.Count; i++)
+                //{
+                //    comboFund.Items.Add(fundName2[i]);
+                //}
                 comboFund.Items.Add("<ADD NEW FUND>");
             }
             catch (Exception ex)
@@ -347,7 +386,7 @@ namespace PSXDataFetchingApp
 
                 await Task.Run(() => mustWork(FundName));
 
-                
+
 
                 //worker.DoWork += worker_DoWork;
 
@@ -366,7 +405,7 @@ namespace PSXDataFetchingApp
                 MARKET_STATUS = DefaultData[1];
                 txtStatus.Text = "STATUS: " + MARKET_STATUS;
 
-                
+
 
                 FundMarket[] data = new FundMarket[Share_Name.Count];
 
@@ -379,14 +418,14 @@ namespace PSXDataFetchingApp
                 col7.DisplayMemberBinding = new Binding("CHANGE");
                 col8.DisplayMemberBinding = new Binding("VOLUME");
                 col9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
-                
+
 
                 list1.Items.Clear();
 
                 FundImage.Visibility = Visibility.Hidden;
                 loadingImage.Visibility = Visibility.Hidden;
                 list1.Visibility = Visibility.Visible;
-                
+
                 for (int i = 0; i < Share_Name.Count; i++)
                 {
                     if (Share_Name[i] == null) { }
@@ -467,12 +506,12 @@ namespace PSXDataFetchingApp
 
                 loadingImage.Visibility = Visibility.Hidden;
 
-                
+
 
 
             }
 
-            bool DataSaved = await Task.Run(()=> SavingDataToDatabase(MARKET_STATUS, FUND_ID1, FUND_NAME1, Share_Name, Share_Symbol, QUANTITY, AVERAGE_PRICE, BOOK_COST, MARKET_PRICE, MARKET_VALUE, APPRECIATION_DEPRECIATION));
+            bool DataSaved = await Task.Run(() => SavingDataToDatabase(MARKET_STATUS, FUND_ID1, FUND_NAME1, Share_Name, Share_Symbol, QUANTITY, AVERAGE_PRICE, BOOK_COST, MARKET_PRICE, MARKET_VALUE, APPRECIATION_DEPRECIATION));
 
             if (!DataSaved)
                 Debug.WriteLine("Unable to Save Data.");
@@ -495,7 +534,7 @@ namespace PSXDataFetchingApp
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             countTimer++;
-            if(countTimer % 25 == 0)
+            if (countTimer % 25 == 0)
             {
                 ButtonAutomationPeer peer = new ButtonAutomationPeer(btnReset);
                 IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
@@ -616,8 +655,8 @@ namespace PSXDataFetchingApp
                 testShare = getShareDetail();
                 // execute the command
                 QUANTITY = new List<Decimal>();
-                AVERAGE_PRICE = new List<Decimal>(); 
-                BOOK_COST = new List<Decimal>(); 
+                AVERAGE_PRICE = new List<Decimal>();
+                BOOK_COST = new List<Decimal>();
                 MARKET_PRICE = new List<Decimal>();
                 MARKET_VALUE = new List<Decimal>();
                 APPRECIATION_DEPRECIATION = new List<String>();
@@ -685,7 +724,7 @@ namespace PSXDataFetchingApp
                 connIpams.Close();
 
             }
-            catch(SqlException ex)
+            catch (SqlException ex)
             {
                 MessageBox.Show(ex.Message, "Database Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
                 Debug.WriteLine("SQL Exception: " + ex.Message);
@@ -696,7 +735,7 @@ namespace PSXDataFetchingApp
                 MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
                 Debug.WriteLine("Internet Exception: " + ex.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Error);
                 Debug.WriteLine("Exception: " + ex.Message);
@@ -767,17 +806,93 @@ namespace PSXDataFetchingApp
         {
             MainWindow window = new MainWindow();
             window.Show();
-            this.Close();
+            this.Hide();
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            Report report = new Report();
-            report.Show();
-            this.Close();
+            //try
+            //{
+            //    StringBuilder stringBuilder = new StringBuilder();
+            //    stringBuilder.AppendLine("Id,FirstName,LastName");
+            //    FundMarket[] fund = new FundMarket[](Share_Name.Count); 
+            //    foreach (var item in fund)
+            //    {
+            //        stringBuilder.AppendLine($"{item.SERIAL},{ item.NAME },{ item.SYMBOL }");
+            //    }
+            //    new File(Encoding.UTF8.GetBytes(stringBuilder.ToString()), "text/csv", "Fund_Market_Share_Summary.csv");
+            //}
+            //catch(Exception ex)
+            //{
+            //    MessageBox.Show("Excel: "+ex.Message);
+            //}
+
+            FundMarket[] fund = new FundMarket[Share_Name.Count];
+            for (int i = 0; i < Share_Name.Count; i++)
+            {
+                //fund = new FundMarket[i];
+                int count = i;
+                fund[i] = new FundMarket();
+                fund[i].SERIAL = i;
+                fund[i].NAME = Share_Name[i];
+                fund[i].SYMBOL = Share_Symbol[i];
+                fund[i].CURRENT = LastUpdatedHolding[i];
+                fund[i].LDCP = LastUpdatedPerUnitCost[i];
+                fund[i].OPEN = LastUpdatedCost[i];
+                fund[i].CHANGE = MarketPriceCurrent[i];
+                fund[i].VOLUME = MarketValue[i];
+                fund[i].APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i];
+            }
+
+            var workbook = new XLWorkbook();
+            IXLWorksheet worksheet = workbook.Worksheets.Add("Fund Market Share Summary");
+            worksheet.Cell(1, 1).Value = "S. No.";
+            worksheet.Cell(1, 2).Value = "Name";
+            worksheet.Cell(1, 3).Value = "Summary";
+            worksheet.Cell(1, 4).Value = "Quantity";
+            worksheet.Cell(1, 5).Value = "Average Price";
+            worksheet.Cell(1, 6).Value = "Book Cost";
+            worksheet.Cell(1, 7).Value = "Market Price";
+            worksheet.Cell(1, 8).Value = "Market Value";
+            worksheet.Cell(1, 9).Value = "App. / Dep.";
+            for (int index = 1; index <= fund.Length; index++)
+            {
+                worksheet.Cell(index + 1, 1).Value = fund[index - 1].SERIAL;
+                worksheet.Cell(index + 1, 2).Value = fund[index - 1].NAME;
+                worksheet.Cell(index + 1, 3).Value = fund[index - 1].SYMBOL;
+                worksheet.Cell(index + 1, 4).Value = fund[index - 1].CURRENT;
+                worksheet.Cell(index + 1, 5).Value = fund[index - 1].LDCP;
+                worksheet.Cell(index + 1, 6).Value = fund[index - 1].OPEN;
+                worksheet.Cell(index + 1, 7).Value = fund[index - 1].CHANGE;
+                worksheet.Cell(index + 1, 8).Value = fund[index - 1].VOLUME;
+                worksheet.Cell(index + 1, 9).Value = fund[index - 1].APPRECIATION_DEPRECIATION;
+            }
+            //string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            string fileName = "authors.txt";
+
+            using (var stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream);
+                var content = stream.ToArray();
+                
+                //File file = Crea
+                
+                //new File(content, contentType, fileName);
+            }
+
+            //using (FileStream fs = File.Create(fileName))
+            //{
+            //    byte[] info = content;
+            //    // Add some information to the file.
+            //    fs.Write(info, 0, info.Length);
+            //}
+
+            //Report report = new Report();
+            //report.Show();
+            //this.Close();
         }
 
-        
+
 
         private async void btnReset_Click(object sender, RoutedEventArgs e)
         {
@@ -792,7 +907,7 @@ namespace PSXDataFetchingApp
             string FundName = comboFund.Text;
             if (list1.Visibility == Visibility.Visible)
             {
-                
+
                 await Task.Run(() => mustWork(FundName));
 
                 FundMarket[] data = new FundMarket[Share_Name.Count];
@@ -848,7 +963,7 @@ namespace PSXDataFetchingApp
 
         private bool SavingDataToDatabase(string MARKET_STATUS, Int64 FUND_ID, string FUND_NAME, List<String> SHARE_NAME, List<String> SHARE_SYMBOL, List<Decimal> QUANTITY, List<Decimal> AVERAGE_PRICE, List<Decimal> BOOK_COST, List<Decimal> MARKET_PRICE, List<Decimal> MARKET_VALUE, List<String> APP_DEP)
         {
-            
+
             if (MARKET_STATUS != null)
             {
 
@@ -877,11 +992,11 @@ namespace PSXDataFetchingApp
                         cmd.Parameters["@MARKET_STATUS"].Value = MARKET_STATUS;
                         cmd.Parameters.Add("@FUND_ID", SqlDbType.BigInt);
                         cmd.Parameters["@FUND_ID"].Value = FUND_ID;
-                        cmd.Parameters.Add("@FUND_NAME", SqlDbType.VarChar,500);
+                        cmd.Parameters.Add("@FUND_NAME", SqlDbType.VarChar, 500);
                         cmd.Parameters["@FUND_NAME"].Value = FUND_NAME;
-                        cmd.Parameters.Add("@SHR_NAME", SqlDbType.VarChar,500);
+                        cmd.Parameters.Add("@SHR_NAME", SqlDbType.VarChar, 500);
                         cmd.Parameters["@SHR_NAME"].Value = SHARE_NAME[i];
-                        cmd.Parameters.Add("@SHR_SYMBOL", SqlDbType.VarChar,500);
+                        cmd.Parameters.Add("@SHR_SYMBOL", SqlDbType.VarChar, 500);
                         cmd.Parameters["@SHR_SYMBOL"].Value = SHARE_SYMBOL[i];
                         cmd.Parameters.Add("@SHR_QUANTITY", SqlDbType.Decimal);
                         cmd.Parameters["@SHR_QUANTITY"].Value = QUANTITY[i];
@@ -920,7 +1035,7 @@ namespace PSXDataFetchingApp
                     return false;
                 }
 
-                
+
 
                 //
 
@@ -933,9 +1048,9 @@ namespace PSXDataFetchingApp
                 {
                     conn.Close();
                 }
-                
 
-                
+
+
             }
             else
             {
@@ -943,9 +1058,26 @@ namespace PSXDataFetchingApp
             }
         }
 
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
 
+        public bool KeyExists(string strKey)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(AppDomain.CurrentDomain.BaseDirectory + "~/App.config");
+
+            XmlNode appSettingsNode = xmlDoc.SelectSingleNode("configuration/appSettings");
+
+            foreach (XmlNode childNode in appSettingsNode)
+            {
+                if (childNode.Attributes["key"].Value == strKey)
+                    return true;
+            }
+            return false;
+        }
 
     }
-    
     
 }
