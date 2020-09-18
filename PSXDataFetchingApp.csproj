@@ -61,17 +61,14 @@
     <None Remove="Images\reset.jpg" />
     <None Remove="Images\reset.png" />
     <None Remove="Images\run.jpg" />
+    <None Remove="Images\setting.png" />
     <None Remove="Images\stockMarket.jpg" />
+    <None Remove="Images\system.png" />
+    <None Remove="Images\system2.png" />
     <None Remove="Images\tick.gif" />
     <None Remove="Images\tick.png" />
     <None Remove="Images\web-scrap.PNG" />
     <None Remove="Images\web-scrap2.png" />
-    <COMReference Include="{bed7f4ea-1a96-11d2-8f08-00a0c9a6186d}">
-      <Guid>bed7f4ea-1a96-11d2-8f08-00a0c9a6186d</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>4</VersionMinor>
-      <WrapperTool>tlbimp</WrapperTool>
-    </COMReference>
     <None Include="Images\web-scrap2.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -80,6 +77,7 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.95.3" />
+    <PackageReference Include="EPPlus" Version="5.3.2" />
     <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.7" />
@@ -140,7 +138,10 @@
     <Resource Include="Images\reset.jpg" />
     <Resource Include="Images\reset.png" />
     <Resource Include="Images\run.jpg" />
+    <Resource Include="Images\setting.png" />
     <Resource Include="Images\stockMarket.jpg" />
+    <Resource Include="Images\system.png" />
+    <Resource Include="Images\system2.png" />
     <Resource Include="Images\tick.gif" />
     <Resource Include="Images\tick.png" />
     <Resource Include="Images\web-scrap.PNG" />
@@ -172,6 +173,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PSXMarketSummary.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Downloads\" />
   </ItemGroup>
 
 </Project>

@@ -125,6 +125,11 @@ C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.ReportControls.WPF.dll
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.SfMaps.WPF.dll
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Syncfusion.Shared.WPF.dll
-C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csproj.CoreCompileInputs.cache
-C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csproj.ResolveComReference.cache
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csprojAssemblyReference.cache
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\EPPlus.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\System.Text.Encoding.CodePages.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\System.Xml.XPath.XmlDocument.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Text.Encoding.CodePages.dll
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csproj.CoreCompileInputs.cache
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Configuration.g.cs
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Configuration.baml
