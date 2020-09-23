@@ -33,7 +33,7 @@ namespace PSXDataFetchingApp
     public partial class MainWindow : Window
     {
         //License Date 
-        DateTime ExpiryDate = DateTime.Parse("2020/09/20 15:17:00");
+        DateTime ExpiryDate = DateTime.Parse("2020/09/30 15:17:00");
         public IConfiguration Configuration { get; set; }
 
         public static bool isDataSaved = false;
@@ -1071,44 +1071,44 @@ namespace PSXDataFetchingApp
 
         private void btnGetV3_Click(object sender, RoutedEventArgs e)
         {
-            HtmlNodeCollection name_nodes = FetchDataFromPSX("https://dps.psx.com.pk/downloads", "//td");
-            string[] result = new string[name_nodes.Count];
-            string[] AllTableRowData = new string[name_nodes.Count];
+            //HtmlNodeCollection name_nodes = FetchDataFromPSX("https://dps.psx.com.pk/downloads", "//td");
+            //string[] result = new string[name_nodes.Count];
+            //string[] AllTableRowData = new string[name_nodes.Count];
 
-            int counter = 0;
-            int StartCapturingflag = 0;
+            //int counter = 0;
+            //int StartCapturingflag = 0;
 
-            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
-            {
-                if (StartCapturingflag == 1)
-                {
-                    AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
-                }
-                else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
-                {
-                    StartCapturingflag = 1;
-                }
-                else
-                {
+            //foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            //{
+            //    if (StartCapturingflag == 1)
+            //    {
+            //        AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+            //    }
+            //    else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+            //    {
+            //        StartCapturingflag = 1;
+            //    }
+            //    else
+            //    {
 
-                }
-            }
-            int counter2 = 0;
-            for (int j = 7; j < AllTableRowData.Count(); j = j + 8)
-            {
-                if (AllTableRowData[j] != null)
-                {
-                    if (AllTableRowData[j].Trim().Equals("VOLUME"))
-                    {
-                        //result[counter2++] += AllTableRowData[j];
-                    }
-                    else
-                    {
-                        result[counter2++] += AllTableRowData[j];
-                    }
-                }
-            }
-            //return result;
+            //    }
+            //}
+            //int counter2 = 0;
+            //for (int j = 7; j < AllTableRowData.Count(); j = j + 8)
+            //{
+            //    if (AllTableRowData[j] != null)
+            //    {
+            //        if (AllTableRowData[j].Trim().Equals("VOLUME"))
+            //        {
+            //            //result[counter2++] += AllTableRowData[j];
+            //        }
+            //        else
+            //        {
+            //            result[counter2++] += AllTableRowData[j];
+            //        }
+            //    }
+            //}
+            ////return result;
         }
 
         private void btnMufapGetPKRV_Click(object sender, RoutedEventArgs e)
@@ -1205,19 +1205,19 @@ namespace PSXDataFetchingApp
                 }
                 else
                 {
-                    string[] defaultData = GetDefault();
-                    RequestDate = DateTime.Parse(defaultData[0]);
-                    Debug.WriteLine("PSX Date" + ExpiredTime);
-                    if (ExpiredTime <= CurrentTime)
-                    {
-                        MessageBox.Show("Application is expired.");
-                    }
-                    else
-                    {
+                    //string[] defaultData = GetDefault();
+                    //RequestDate = DateTime.Parse(defaultData[0]);
+                    //Debug.WriteLine("PSX Date" + ExpiredTime);
+                    //if (ExpiredTime <= CurrentTime)
+                    //{
+                    //    MessageBox.Show("Application is expired.");
+                    //}
+                    //else
+                    //{
                         FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
                         fundPreviewWindow.Show();
                         this.Hide();
-                    }
+                    //}
                 }
             }
             catch (WebException ex)
