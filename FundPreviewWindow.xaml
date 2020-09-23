@@ -140,45 +140,71 @@
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Quantity" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center"  />
-                                </DataTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="70">
+                                        <TextBlock Text="{Binding CURRENT}" HorizontalAlignment="Right" TextAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn x:Name="col5" Width="80">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Avg. Price" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="80">
+                                        <TextBlock Text="{Binding LDCP}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn x:Name="col6" Width="80">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Book Cost" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="80">
+                                        <TextBlock Text="{Binding OPEN}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn x:Name="col7" Width="85">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Market Price" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="85">
+                                        <TextBlock Text="{Binding CHANGE}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn x:Name="col8" Width="100">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Market Value" Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="100">
+                                        <TextBlock Text="{Binding VOLUME}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn x:Name="col9" Width="80">
                             <GridViewColumn.Header>
                                 <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="App. / Dep." Padding="2"></GridViewColumnHeader>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding APPRECIATION_DEPRECIATION}" x:Name="txtAppDep" HorizontalAlignment="Right" TextAlignment="Right">
-                                        <TextBlock.Style>
-                                            <Style TargetType="{x:Type TextBlock}">
-                                                <Setter Property="Foreground" Value="Red" />
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </DataTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="80">
+                                        <TextBlock Text="{Binding APPRECIATION_DEPRECIATION}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                     </GridView>
