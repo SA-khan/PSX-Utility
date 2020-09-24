@@ -137,14 +137,14 @@ namespace PSXDataFetchingApp
 
             SqlConnection conn = new SqlConnection();
             SqlConnection conn2 = new SqlConnection();
-            //conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
             conn2.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             List<String> fundName;
-            //List<String> fundName2;
+            List<String> fundName2;
             try
             {
                 fundName = HasRows(conn2, 2);
-                //fundName2 = HasRows(conn, 1);
+                fundName2 = HasRows(conn, 1);
 
                 comboFund.Items.Add("Select..");
                 comboFund.SelectedIndex = 0;
@@ -152,10 +152,10 @@ namespace PSXDataFetchingApp
                 {
                     comboFund.Items.Add(fundName[i]);
                 }
-                //for (int i = 0; i < fundName2.Count; i++)
-                //{
-                //    comboFund.Items.Add(fundName2[i]);
-                //}
+                for (int i = 0; i < fundName2.Count; i++)
+                {
+                    comboFund.Items.Add(fundName2[i]);
+                }
                 comboFund.Items.Add("<ADD NEW FUND>");
             }
             catch (Exception ex)
@@ -555,33 +555,36 @@ namespace PSXDataFetchingApp
 
 
 
+
                 FundImage.Visibility = Visibility.Hidden;
                 list1.Visibility = Visibility.Visible;
 
                 loadingImage.Visibility = Visibility.Hidden;
+
+                bool DataSaved = await Task.Run(() => SavingDataToDatabase(MARKET_STATUS, FUND_ID1, FUND_NAME1, Share_Name, Share_Symbol, QUANTITY, AVERAGE_PRICE, BOOK_COST, MARKET_PRICE, MARKET_VALUE, APPRECIATION_DEPRECIATION));
+
+                if (!DataSaved)
+                    Debug.WriteLine("Unable to Save Data.");
+
+                var image2 = new BitmapImage();
+                image2.BeginInit();
+                image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
+                image2.EndInit();
+                ImageBehavior.SetAnimatedSource(imgStatus, image2);
+
+                lblStatus.Text = "Status: Ready";
+
+                DispatcherTimer dispatcherTimer = new DispatcherTimer();
+                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                dispatcherTimer.Start();
 
 
 
 
             }
 
-            bool DataSaved = await Task.Run(() => SavingDataToDatabase(MARKET_STATUS, FUND_ID1, FUND_NAME1, Share_Name, Share_Symbol, QUANTITY, AVERAGE_PRICE, BOOK_COST, MARKET_PRICE, MARKET_VALUE, APPRECIATION_DEPRECIATION));
-
-            if (!DataSaved)
-                Debug.WriteLine("Unable to Save Data.");
-
-            var image2 = new BitmapImage();
-            image2.BeginInit();
-            image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
-            image2.EndInit();
-            ImageBehavior.SetAnimatedSource(imgStatus, image2);
-
-            lblStatus.Text = "Status: Ready";
-
-            DispatcherTimer dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            dispatcherTimer.Start();
+            
 
         }
 
@@ -648,6 +651,7 @@ namespace PSXDataFetchingApp
                     while (rdr.Read())
                     {
                         FUND_ID = Convert.ToInt32(rdr["FUND_CODE"]);
+                        //Debug.WriteLine("FUND_ID in Default DB: " + FUND_ID);
                     }
                 }
 
@@ -656,7 +660,7 @@ namespace PSXDataFetchingApp
                 if (FUND_ID == 0)
                 {
 
-                    conn.Open();
+                    connIpams.Open();
                     // 1.  create a command object identifying the stored procedure
                     SqlCommand getFundIdByNameCmd = new SqlCommand("spGetFundIDByParamNAME", connIpams);
 
@@ -667,23 +671,25 @@ namespace PSXDataFetchingApp
                     getFundIdByNameCmd.Parameters.Add(new SqlParameter("@FUND_NAME", FundName));
 
                     // execute the command
-                    using (SqlDataReader rdr2 = cmd.ExecuteReader())
+                    using (SqlDataReader rdr2 = getFundIdByNameCmd.ExecuteReader())
                     {
                         // iterate through results, printing each to console
                         while (rdr2.Read())
                         {
                             FUND_ID = Convert.ToInt32(rdr2["FUND_CODE"]);
+                            //Debug.WriteLine("FUND_ID in Ipams DB: " + FUND_ID);
                         }
                     }
 
+                    connIpams.Close();
+
                 }
-
-
-                connIpams.Open();
 
                 //Store
                 FUND_ID1 = FUND_ID;
                 FUND_NAME1 = FundName;
+
+                connIpams.Open();
 
                 // 1.  create a command object identifying the stored procedure
                 SqlCommand cmdforFetchingShare = new SqlCommand("spGetShareDetailByParamFundIdAndDate", connIpams);

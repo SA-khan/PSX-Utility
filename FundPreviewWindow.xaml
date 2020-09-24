@@ -31,7 +31,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 
-                <Image x:Name="HeaderImage"  Source="Images/BOP.png" HorizontalAlignment="Left" Margin="5" gif:ImageBehavior.AnimatedSource="Images/bop.gif" Stretch="Uniform"  />
+                <Image x:Name="HeaderImage"  Source="Images/BOP.png" HorizontalAlignment="Left" Margin="5" gif:ImageBehavior.AnimatedSource="Images/bop.gif" Stretch="Fill" Width="200" />
                 
                 <TextBlock Grid.Column="0"  Text="Fund Market Summary" FontSize="26" FontFamily="/Fonts/#Lato" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Margin="0 0 10 0" />
                 <Grid Grid.Column="0" HorizontalAlignment="Right" Margin="5">
