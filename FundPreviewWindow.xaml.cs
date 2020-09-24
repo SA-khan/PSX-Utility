@@ -30,6 +30,7 @@ using System.Xml;
 using OfficeOpenXml;
 using System.Drawing;
 using OfficeOpenXml.Style;
+using System.Threading;
 
 namespace PSXDataFetchingApp
 {
@@ -1055,14 +1056,16 @@ namespace PSXDataFetchingApp
         /// </summary>
         public void RunExcel()
         {
+            ExcelPackage package = null;
+            Stream xlFile = null;
             try
             {
                 ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-                using (var package = new ExcelPackage())
+                using (package = new ExcelPackage())
                 {
 
                     //Add a new worksheet to the empty workbook
-                    var worksheet = package.Workbook.Worksheets.Add("FUND MARKET SUMMARY");
+                    var worksheet = package.Workbook.Worksheets.Add("Fund Market Summary");
                     //Add the headers
                     worksheet.Cells[1, 1].Value = "Sr. No.";
                     worksheet.Cells[1, 2].Value = "NAME";
@@ -1076,23 +1079,9 @@ namespace PSXDataFetchingApp
 
                     //Add some items...
 
-
-                    //worksheet.Cells["A3"].Value = 12002;
-                    //worksheet.Cells["B3"].Value = "Hammer";
-                    //worksheet.Cells["C3"].Value = 5;
-                    //worksheet.Cells["D3"].Value = 12.10;
-
-                    //worksheet.Cells["A4"].Value = 12003;
-                    //worksheet.Cells["B4"].Value = "Saw";
-                    //worksheet.Cells["C4"].Value = 12;
-                    //worksheet.Cells["D4"].Value = 15.37;
-
-                    //Test
-
                     FundMarket[] fund = new FundMarket[Share_Name.Count];
                     for (int i = 0; i < Share_Name.Count; i++)
                     {
-                        //fund = new FundMarket[i];
                         int count = i;
                         fund[i] = new FundMarket();
                         fund[i].SERIAL = i;
@@ -1106,36 +1095,29 @@ namespace PSXDataFetchingApp
                         fund[i].APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i];
                     }
 
-                    //var workbook = new XLWorkbook();
-                    //IXLWorksheet worksheet = workbook.Worksheets.Add("Fund Market Share Summary");
-                    //worksheet.Cell(1, 1).Value = "S. No.";
-                    //worksheet.Cell(1, 2).Value = "Name";
-                    //worksheet.Cell(1, 3).Value = "Summary";
-                    //worksheet.Cell(1, 4).Value = "Quantity";
-                    //worksheet.Cell(1, 5).Value = "Average Price";
-                    //worksheet.Cell(1, 6).Value = "Book Cost";
-                    //worksheet.Cell(1, 7).Value = "Market Price";
-                    //worksheet.Cell(1, 8).Value = "Market Value";
-                    //worksheet.Cell(1, 9).Value = "App. / Dep.";
                     int total = 1;
                     for (int index = 0; index < Share_Name.Count; index++)
                     {
-                        total = index + 1;
-                        worksheet.Cells["A" + total].Value = fund[index].SERIAL;
+                        total = index + 2;
+                        worksheet.Cells["A" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["A" + total].Value = fund[index].SERIAL + 1;
                         worksheet.Cells["B" + total].Value = fund[index].NAME;
                         worksheet.Cells["C" + total].Value = fund[index].SYMBOL;
+                        worksheet.Cells["D" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         worksheet.Cells["D" + total].Value = fund[index].CURRENT;
+                        worksheet.Cells["E" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         worksheet.Cells["E" + total].Value = fund[index].LDCP;
+                        worksheet.Cells["F" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         worksheet.Cells["F" + total].Value = fund[index].OPEN;
+                        worksheet.Cells["G" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         worksheet.Cells["G" + total].Value = fund[index].CHANGE;
+                        worksheet.Cells["H" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         worksheet.Cells["H" + total].Value = fund[index].VOLUME;
+                        worksheet.Cells["I" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         worksheet.Cells["I" + total].Value = fund[index].APPRECIATION_DEPRECIATION;
                     }
 
                     //EndTest
-
-                    //Add a formula for the value-column
-                    //worksheet.Cells["E2:E4"].Formula = "C2*D2";
 
                     //Ok now format the values;
                     using (var range = worksheet.Cells[1, 1, 1, 9])
@@ -1145,13 +1127,6 @@ namespace PSXDataFetchingApp
                         range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DarkBlue);
                         range.Style.Font.Color.SetColor(System.Drawing.Color.White);
                     }
-
-                    //worksheet.Cells["A5:E5"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                    //worksheet.Cells["A5:E5"].Style.Font.Bold = true;
-
-                    //worksheet.Cells[5, 3, 5, 5].Formula = string.Format("SUBTOTAL(9,{0})", new ExcelAddress(2, 3, 4, 3).Address);
-                    //worksheet.Cells["C2:C5"].Style.Numberformat.Format = "#,##0";
-                    //worksheet.Cells["D2:E5"].Style.Numberformat.Format = "#,##0.00";
 
                     //Create an autofilter for the range
                     worksheet.Cells["A1:I4"].AutoFilter = true;
@@ -1166,7 +1141,7 @@ namespace PSXDataFetchingApp
                     worksheet.Cells.AutoFitColumns(0);  //Autofit columns for all cells
 
                     // Lets set the header text 
-                    worksheet.HeaderFooter.OddHeader.CenteredText = "&24&U&\"Arial,Regular Bold\" Inventory";
+                    worksheet.HeaderFooter.OddHeader.CenteredText = "&24&U&\"Arial,Regular Bold\" Fund Market Summary";
                     // Add the page number to the footer plus the total number of pages
                     worksheet.HeaderFooter.OddFooter.RightAlignedText =
                         string.Format("Page {0} of {1}", ExcelHeaderFooter.PageNumber, ExcelHeaderFooter.NumberOfPages);
@@ -1175,11 +1150,11 @@ namespace PSXDataFetchingApp
                     // Add the file path to the footer
                     worksheet.HeaderFooter.OddFooter.LeftAlignedText = ExcelHeaderFooter.FilePath + ExcelHeaderFooter.FileName;
 
-                    worksheet.PrinterSettings.RepeatRows = worksheet.Cells["1:2"];
-                    worksheet.PrinterSettings.RepeatColumns = worksheet.Cells["A:I"];
+                    //worksheet.PrinterSettings.RepeatRows = worksheet.Cells["1:2"];
+                    //worksheet.PrinterSettings.RepeatColumns = worksheet.Cells["A:I"];
 
                     // Change the sheet view to show it in page layout mode
-                    worksheet.View.PageLayoutView = true;
+                    //worksheet.View.PageLayoutView = true;
 
                     // Set some document properties
                     package.Workbook.Properties.Title = "Fund Market Summary";
@@ -1195,12 +1170,18 @@ namespace PSXDataFetchingApp
 
                     //var xlFile = FileOutputUtil.GetFileInfo("01-GettingStarted.xlsx");
                     string path = "FundMarketSummary.xlsx";
-                    Stream xlFile = File.Create(path);
-
+                    xlFile = File.Create(path);
+                    
 
                     // Save our new workbook in the output directory and we are done!
                     package.SaveAs(xlFile);
+                    //xlFile.Close();
+                    
                     //return xlFile.FullName;
+                    package.Stream.Close();
+
+                    xlFile.Dispose();
+                    package.Dispose();
 
                 }
             }
@@ -1210,11 +1191,32 @@ namespace PSXDataFetchingApp
                 MessageBox.Show(ex.Message,"Problem: ",MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 Debug.WriteLine("Exception: " + ex.Message);
             }
-
+            finally
+            {
+                xlFile.Dispose();
+                package.Dispose();
+            }
             Debug.WriteLine("Excel Sheet Created.");
+            Thread.Sleep(3000);
             if (File.Exists("FundMarketSummary.xlsx"))
             {
-                System.Diagnostics.Process.Start("FundMarketSummary.xlsx");
+                try
+                {
+                    //using (Stream stream = new FileStream("FundMarketSummary.xlsx", FileMode.Open))
+                    //{
+                    // File/Stream manipulating code here
+                    Process p = new Process();
+                    p.StartInfo.UseShellExecute = true;
+                    p.StartInfo.FileName = "FundMarketSummary.xlsx";
+                    p.Start();
+                    //}
+                }
+                catch(Exception ex)
+                {
+                    //check here why it failed and ask user to retry if the file is in use.
+                    MessageBox.Show(ex.Message);
+                }
+                
             }
 
         }

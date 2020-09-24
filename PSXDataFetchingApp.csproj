@@ -175,8 +175,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Downloads\" />
-  </ItemGroup>
-
 </Project>
