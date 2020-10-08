@@ -5,37 +5,108 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PSXDataFetchingApp"
         mc:Ignorable="d"
-        Title="Preview Window" Icon="Images/psx.png" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Data Extractor Utility" Icon="Images/web-scrap2.png" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Border Margin="10" Background="DarkGray">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="3*" MaxHeight="40" />
             <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
-        
-        <Label Grid.Row="0" Content="Pakistan Stock Exchange Data Preview" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Candara" FontSize="24"/>
+            <Grid Grid.Row="0" x:Name="header" Background="DarkGray" MinHeight="40">
+                <Border Margin="2" HorizontalAlignment="Left" Padding="5" Background="White">
+                <Image x:Name="imgClient" Source="/Images/BOP.png"   />
+                </Border>
+                <Label  Content="Pakistan Stock Exchange Data Preview" FontFamily="/Fonts/#Lato" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+                <Border HorizontalAlignment="Right" Padding="5" >
+                    <Grid Margin="0 0 10 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid VerticalAlignment="Bottom" Background="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="Date" Text="Date:" FontFamily="/Fonts/#Lato" FontSize="12" />
+                        <TextBlock Grid.Column="1" x:Name="lblDate" FontFamily="/Fonts/#Lato" FontStyle="Italic" FontSize="12" />
+                    </Grid>
+
+                        <Grid VerticalAlignment="Top" Grid.Row="1" Background="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="Status" Text="Market Status: " FontFamily="/Fonts/#Lato" FontSize="12" VerticalAlignment="Top"/>
+                        <TextBlock Grid.Column="1" x:Name="lblStatus" FontFamily="/Fonts/#Lato" Foreground="Red" FontWeight="Bold" FontSize="12" VerticalAlignment="Top"/>
+                    </Grid>
+                    
+                    
+                </Grid>
+                </Border>
+            </Grid>
+                
+            
         <!--<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Stretch" >-->
-                <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Background="White" Margin="0 2 0 2">
+                <Grid >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                <Label x:Name="lblDate" Grid.Row="0" Grid.Column="0" Content="Date: " FontFamily="Arial" FontSize="14" VerticalAlignment="Center" />
-                <Label x:Name="lblStatus" Grid.Row="0" Grid.Column="1" Content="Status: " FontFamily="Arial" FontSize="14" VerticalAlignment="Center" />
-                <Label x:Name="lblVolume" Grid.Row="0" Grid.Column="2" Content="Volume: " FontFamily="Arial" FontSize="14" VerticalAlignment="Center" />
-                <Label x:Name="lblValue" Grid.Row="0" Grid.Column="3" Content="Value: " FontFamily="Arial" FontSize="14" VerticalAlignment="Center" />
-                <Label x:Name="lblTrades" Grid.Row="0" Grid.Column="4" Content="Trades: " FontFamily="Arial" FontSize="14" VerticalAlignment="Center" />
-                <Button x:Name="btnRefresh" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center"  Width="40" Height="30" Background="AliceBlue" Click="btnRefresh_Click">
+                    <Button x:Name="btnBack" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Width="70" Height="30" Background="AliceBlue" Click="btnBack_Click" ToolTip="Go Back">
                     <StackPanel HorizontalAlignment="Stretch" >
-                        <Image Source="Images/refresh2.png" Height="28" Width="38" />
+                        <Image Source="Images/back.png" Height="25" Width="38" />
                         <!--<TextBlock HorizontalAlignment="Center" Width="84" Height="22" VerticalAlignment="Top" Margin="0,-31,-58,0" Text="ثبت مشتری" />-->
                     </StackPanel>
                 </Button>
+                    <Button x:Name="btnRefresh" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="70" Height="30" Background="AliceBlue" Click="btnRefresh_Click" ToolTip="Refresh">
+                    <StackPanel HorizontalAlignment="Stretch" >
+                        <Image Source="Images/refresh2.png" Height="25" Width="38" />
+                        <!--<TextBlock HorizontalAlignment="Center" Width="84" Height="22" VerticalAlignment="Top" Margin="0,-31,-58,0" Text="ثبت مشتری" />-->
+                    </StackPanel>
+                </Button>
+                    <Button x:Name="btnExport" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="70" Height="30" Background="AliceBlue" Click="btnExport_Click" ToolTip="Export Data">
+                        <StackPanel HorizontalAlignment="Stretch" >
+                            <Image Source="Images/report.png" Height="25" Width="38" />
+                            <!--<TextBlock HorizontalAlignment="Center" Width="84" Height="22" VerticalAlignment="Top" Margin="0,-31,-58,0" Text="ثبت مشتری" />-->
+                        </StackPanel>
+                    </Button>
+                    <Grid Grid.Column="3" HorizontalAlignment="Right">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Margin="15 0 5 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Volume: " FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" x:Name="lblVolume" FontWeight="Bold" FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid Grid.Column="1" Margin="15 0 5 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Value: " FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock x:Name="lblValue"  Grid.Column="1" FontWeight="Bold" FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid Grid.Column="2" Margin="15 0 5 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Trades: " FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock x:Name="lblTrades" Grid.Column="2" FontWeight="Bold" FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
+                        </Grid>
+                    </Grid>
+            </Grid>
             </Grid>
             <!--</StackPanel>-->
         <ListView x:Name="list1" Grid.Row="2" Width="Auto">  

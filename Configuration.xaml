@@ -50,7 +50,7 @@
                 </StackPanel>
 
             </Grid>
-            <Border Grid.Row="1" Padding="5" Background="White">
+            <Border Grid.Row="1" Padding="5" Background="White" MaxHeight="30">
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Background="DarkGray">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

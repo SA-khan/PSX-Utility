@@ -33,7 +33,7 @@ namespace PSXDataFetchingApp
     public partial class MainWindow : Window
     {
         //License Date 
-        DateTime ExpiryDate = DateTime.Parse("2020/09/30 15:17:00");
+        DateTime ExpiryDate = DateTime.Parse("2020/10/30 15:17:00");
         public IConfiguration Configuration { get; set; }
 
         public static bool isDataSaved = false;
