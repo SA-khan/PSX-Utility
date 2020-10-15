@@ -29,7 +29,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="2*" />
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="lblDemo" Foreground="Black" Text="Demo Version v4.0.1" FontFamily="/Fonts/#Raleway-Bold" FontWeight="Bold" Padding="2"/>
+                    <TextBlock x:Name="lblDemo" Foreground="Black" Text="Demo Version v4.0.7" FontFamily="/Fonts/#Raleway-Bold" FontWeight="Bold" Padding="2"/>
                     <Border Margin="0 5 0 0" Grid.Row="1" Padding="2">
                     <Image x:Name="ClientLogo"  Source="Images/BOP.png" MaxWidth="120" MaxHeight="120" />
                     </Border>
@@ -156,7 +156,7 @@
                     <Button.Content>
                         <StackPanel>
                             <TextBlock Text="PSX" FontSize="20" />
-                            <TextBlock Text="Fund Market Summary" FontSize="12" Foreground="Gainsboro" />
+                            <TextBlock Text="Fund Summary" FontSize="12" Foreground="Gainsboro" />
                         </StackPanel>
                     </Button.Content>
                     <Button.Style>
@@ -245,91 +245,7 @@
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="1" x:Name="btnMufapGetPKRV" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" FontSize="14" Click="btnMufapGetPKRV_Click"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                    <Button.Content>
-                        <StackPanel>
-                            <TextBlock Text="MUFAP" FontSize="20" />
-                            <TextBlock Text="PKRV Rates" FontSize="12" Foreground="Gainsboro" />
-                        </StackPanel>
-                    </Button.Content>
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="#373737" />
-                            <Setter Property="Foreground" Value="White" />
-                            <Setter Property="FontSize" Value="15" />
-                            <Setter Property="SnapsToDevicePixels" Value="True" />
-
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Border CornerRadius="4" Background="{TemplateBinding Background}">
-                                            <Grid>
-                                                <Path x:Name="PathIcon" Width="15" Height="25" Stretch="Fill" Fill="#4C87B3" HorizontalAlignment="Left" Margin="17,0,0,0" Data="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z "/>
-                                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
-                                            </Grid>
-                                        </Border>
-
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#E59400" />
-                                                <Setter Property="Foreground" Value="White" />
-                                                <Setter TargetName="PathIcon" Property="Fill" Value="Black" />
-                                            </Trigger>
-
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="OrangeRed" />
-                                                <Setter Property="Foreground" Value="White" />
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button Grid.Column="2" x:Name="btnMufapGetPKFRV" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" FontSize="14" Click="btnMufapGetPKFRV_Click"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                    <Button.Content>
-                        <StackPanel>
-                            <TextBlock Text="MUFAP" FontSize="20" />
-                            <TextBlock Text="PKFRV Rates" FontSize="12" Foreground="Gainsboro" />
-                        </StackPanel>
-                    </Button.Content>
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="#373737" />
-                            <Setter Property="Foreground" Value="White" />
-                            <Setter Property="FontSize" Value="15" />
-                            <Setter Property="SnapsToDevicePixels" Value="True" />
-
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Border CornerRadius="4" Background="{TemplateBinding Background}">
-                                            <Grid>
-                                                <Path x:Name="PathIcon" Width="15" Height="25" Stretch="Fill" Fill="#4C87B3" HorizontalAlignment="Left" Margin="17,0,0,0" Data="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z "/>
-                                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
-                                            </Grid>
-                                        </Border>
-
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#E59400" />
-                                                <Setter Property="Foreground" Value="White" />
-                                                <Setter TargetName="PathIcon" Property="Fill" Value="Black" />
-                                            </Trigger>
-
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="OrangeRed" />
-                                                <Setter Property="Foreground" Value="White" />
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button Grid.Column="3" x:Name="btnMufapGetMarketSummary" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" IsEnabled="True" Click="btnMufapGetMarketSummary_Click" FontSize="14"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <Button Grid.Column="1" x:Name="btnMufapGetMarketSummary" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" IsEnabled="True" Click="btnMufapGetMarketSummary_Click" FontSize="14"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
                     <Button.Content>
                         <StackPanel>
                             <TextBlock Text="MUFAP" FontSize="20" />
@@ -371,6 +287,91 @@
                         </Style>
                     </Button.Style>
                 </Button>
+                <Button Grid.Column="2" x:Name="btnMufapGetPKRV" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" FontSize="14" Click="btnMufapGetPKRV_Click"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <Button.Content>
+                        <StackPanel>
+                            <TextBlock Text="MUFAP" FontSize="20" />
+                            <TextBlock Text="PKRV Rates" FontSize="12" Foreground="Gainsboro" />
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#373737" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontSize" Value="15" />
+                            <Setter Property="SnapsToDevicePixels" Value="True" />
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border CornerRadius="4" Background="{TemplateBinding Background}">
+                                            <Grid>
+                                                <Path x:Name="PathIcon" Width="15" Height="25" Stretch="Fill" Fill="#4C87B3" HorizontalAlignment="Left" Margin="17,0,0,0" Data="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z "/>
+                                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
+                                            </Grid>
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#E59400" />
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Setter TargetName="PathIcon" Property="Fill" Value="Black" />
+                                            </Trigger>
+
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="OrangeRed" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Grid.Column="3" x:Name="btnMufapGetPKFRV" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" FontSize="14" Click="btnMufapGetPKFRV_Click"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <Button.Content>
+                        <StackPanel>
+                            <TextBlock Text="MUFAP" FontSize="20" />
+                            <TextBlock Text="PKFRV Rates" FontSize="12" Foreground="Gainsboro" />
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#373737" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontSize" Value="15" />
+                            <Setter Property="SnapsToDevicePixels" Value="True" />
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border CornerRadius="4" Background="{TemplateBinding Background}">
+                                            <Grid>
+                                                <Path x:Name="PathIcon" Width="15" Height="25" Stretch="Fill" Fill="#4C87B3" HorizontalAlignment="Left" Margin="17,0,0,0" Data="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z "/>
+                                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
+                                            </Grid>
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#E59400" />
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Setter TargetName="PathIcon" Property="Fill" Value="Black" />
+                                            </Trigger>
+
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="OrangeRed" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                
                 
 
             </Grid>

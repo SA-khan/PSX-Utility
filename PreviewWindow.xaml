@@ -3,16 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:PSXDataFetchingApp"
         mc:Ignorable="d"
-        Title="Data Extractor Utility" Icon="Images/web-scrap2.png" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Data Extractor Utility" Icon="Images/web-scrap2.png" Height="620" Width="950" WindowStartupLocation="CenterScreen">
     <Border Margin="10" Background="DarkGray">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="3*" MaxHeight="40" />
             <RowDefinition Height="10*" />
-        </Grid.RowDefinitions>
+            <RowDefinition Height="*" MaxHeight="30" />
+            </Grid.RowDefinitions>
             <Grid Grid.Row="0" x:Name="header" Background="DarkGray" MinHeight="40">
                 <Border Margin="2" HorizontalAlignment="Left" Padding="5" Background="White">
                 <Image x:Name="imgClient" Source="/Images/BOP.png"   />
@@ -29,18 +31,26 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="Date" Text="Date:" FontFamily="/Fonts/#Lato" FontSize="12" />
-                        <TextBlock Grid.Column="1" x:Name="lblDate" FontFamily="/Fonts/#Lato" FontStyle="Italic" FontSize="12" />
-                    </Grid>
+                            <Border Padding="2">
+                                <TextBlock x:Name="Date" Text="Date:" FontFamily="/Fonts/#Lato" FontSize="12" />
+                            </Border>
+                            <Border Padding="2"  Grid.Column="1">
+                                <TextBlock x:Name="lblDate" FontFamily="/Fonts/#Lato" FontStyle="Italic" FontSize="12" />
+                            </Border>
+                        </Grid>
 
                         <Grid VerticalAlignment="Top" Grid.Row="1" Background="White">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="Status" Text="Market Status: " FontFamily="/Fonts/#Lato" FontSize="12" VerticalAlignment="Top"/>
-                        <TextBlock Grid.Column="1" x:Name="lblStatus" FontFamily="/Fonts/#Lato" Foreground="Red" FontWeight="Bold" FontSize="12" VerticalAlignment="Top"/>
-                    </Grid>
+                            <Border Padding="2">
+                                <TextBlock x:Name="Status" Text="Market Status: " FontFamily="/Fonts/#Lato" FontSize="12" VerticalAlignment="Top"/>
+                            </Border>
+                            <Border Padding="2" Grid.Column="1">
+                                <TextBlock x:Name="lblStatus" FontFamily="/Fonts/#Lato" Foreground="Green" FontWeight="Bold" FontSize="12" VerticalAlignment="Top"/>
+                            </Border>
+                        </Grid>
                     
                     
                 </Grid>
@@ -86,44 +96,185 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Volume: " FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="1" x:Name="lblVolume" FontWeight="Bold" FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Volume: " FontFamily="/Fonts/#Lato" FontSize="11" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" x:Name="lblVolume" FontWeight="Bold" FontFamily="/Fonts/#Lato" FontSize="11" VerticalAlignment="Center" />
                         </Grid>
                         <Grid Grid.Column="1" Margin="15 0 5 0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Value: " FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
-                            <TextBlock x:Name="lblValue"  Grid.Column="1" FontWeight="Bold" FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Value: " FontFamily="/Fonts/#Lato" FontSize="11" VerticalAlignment="Center" />
+                            <TextBlock x:Name="lblValue"  Grid.Column="1" FontWeight="Bold" FontFamily="/Fonts/#Lato" FontSize="11" VerticalAlignment="Center" />
                         </Grid>
                         <Grid Grid.Column="2" Margin="15 0 5 0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Trades: " FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
-                            <TextBlock x:Name="lblTrades" Grid.Column="2" FontWeight="Bold" FontFamily="/Fonts/#Lato" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Trades: " FontFamily="/Fonts/#Lato" FontSize="11" VerticalAlignment="Center" />
+                            <TextBlock x:Name="lblTrades" Grid.Column="2" FontWeight="Bold" FontFamily="/Fonts/#Lato" FontSize="11" VerticalAlignment="Center" />
                         </Grid>
                     </Grid>
             </Grid>
             </Grid>
             <!--</StackPanel>-->
-        <ListView x:Name="list1" Grid.Row="2" Width="Auto">  
-            <ListView.View>
+            <ListView x:Name="list1" Grid.Row="2" Width="Auto">
+                <ListView.View>
                     <GridView x:Name="gridView" AllowsColumnReorder="true" ColumnHeaderToolTip="Market Summary">
-                        <GridViewColumn x:Name="col1" Width="Auto"></GridViewColumn>
-                        <GridViewColumn x:Name="col2" Width="Auto"></GridViewColumn>
-                        <GridViewColumn x:Name="col3" Width="Auto"></GridViewColumn>
-                        <GridViewColumn x:Name="col4" Width="Auto"></GridViewColumn>
-                        <GridViewColumn x:Name="col5" Width="Auto"></GridViewColumn>
-                        <GridViewColumn x:Name="col6" Width="Auto"></GridViewColumn>
-                        <GridViewColumn x:Name="col7" Width="Auto"></GridViewColumn>
-                        <GridViewColumn x:Name="col8" Width="Auto"></GridViewColumn>
-                        <GridViewColumn x:Name="col9" Width="Auto"></GridViewColumn>
+                        <GridViewColumn x:Name="col0" Width="40">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Sr." Padding="2" MinHeight="30"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="275">
+                                        <TextBlock Text="{Binding ID}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col1" Width="250">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="NAME" Padding="2" MinHeight="30"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Left" Width="280">
+                                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col2" Width="80">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="SYMBOL" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Left" Width="80">
+                                        <TextBlock Text="{Binding Symbol}" HorizontalAlignment="Left"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col3" Width="70">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="LDCP" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="70">
+                                        <TextBlock Text="{Binding LDCP}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col4" Width="70">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="OPEN" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="70">
+                                        <TextBlock Text="{Binding OPEN}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col5" Width="70">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="HIGH" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="70">
+                                        <TextBlock Text="{Binding HIGH}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col6" Width="70">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="LOW" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="70">
+                                        <TextBlock Text="{Binding LOW}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col7" Width="80">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="CURRENT" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="80">
+                                        <TextBlock Text="{Binding CURRENT}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col8" Width="80">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="CHANGE" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="80">
+                                        <TextBlock Text="{Binding Change}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col9" Width="80">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="VOLUME" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="80">
+                                        <TextBlock Text="{Binding Volume}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
-            </ListView.View>  
-        </ListView>  
-    </Grid>
+                </ListView.View>
+            </ListView>
+
+            <Grid Grid.Row="3" Background="DarkGray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="6*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <StatusBar DockPanel.Dock="Bottom" Grid.Column="0" HorizontalAlignment="Left" Name="statusBar"  VerticalAlignment="Center" Background="Transparent" Foreground="Black" Margin="1">
+                    <StatusBarItem>
+                        <TextBlock x:Name="lblStatusMessage" Grid.Column="0" Text="Status: Ready" FontFamily="/Fonts/#Lato" FontSize="11" Background="Transparent" />
+                    </StatusBarItem>
+                </StatusBar>
+                <StatusBar x:Name="progressBarContainer" DockPanel.Dock="Bottom" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0" Background="Transparent" Visibility="Hidden">
+                    <StatusBarItem>
+                        <ProgressBar x:Name="progressBar" Width="50" Height="10" />
+                    </StatusBarItem>
+                </StatusBar>
+                <TextBlock Grid.Column="1" FontSize="14" HorizontalAlignment="Center" Text="The Data is getting from Pakistan Stock Exchange Website With 5 Minutes Interval." FontFamily="Fonts/#Lato" Foreground="Black" VerticalAlignment="Center" FontWeight="Bold" />
+                <StatusBar DockPanel.Dock="Bottom" Grid.Column="2" Name="statusBar2" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Background="Transparent" Foreground="Black" Margin="1">
+                    <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Bottom" MaxHeight="50" Background="Transparent">
+                        <Border Background="Transparent">
+                            <Image x:Name="imgStatus" gif:ImageBehavior.AnimatedSource="Images/tick.gif" Source="Images/tick.png" MaxHeight="30" MaxWidth="30"/>
+                        </Border>
+                    </StatusBarItem>
+                </StatusBar>
+            </Grid>
+
+        </Grid>
+        
+        
+        
     </Border>
 </Window>

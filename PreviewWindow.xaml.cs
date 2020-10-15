@@ -1,16 +1,22 @@
-﻿using OfficeOpenXml;
+﻿using HtmlAgilityPack;
+using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using PSXDataFetchingApp.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -19,6 +25,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using WpfAnimatedGif;
 
 namespace PSXDataFetchingApp
@@ -29,20 +36,48 @@ namespace PSXDataFetchingApp
     public partial class PreviewWindow : Window
     {
 
+        //15/10/2020
+        DateTime ExpiryDate = DateTime.Parse("2020/10/30 15:17:00");
+        public static bool isDataSaved = false;
+        public static DateTime RequestDate = DateTime.Now;
+        public static string RequestStatus = String.Empty;
+        public static double RequestValue = 0;
+        public static double RequestVolume = 0;
+        public static double RequestTrades = 0;
+        public static List<string> NAME = new List<string>();
+        public static List<string> SYMBOL = new List<string>();
+        public static List<Double> LDCP = new List<double>();
+        public static List<Double> OPEN = new List<double>();
+        public static List<Double> HIGH = new List<double>();
+        public static List<Double> LOW = new List<double>();
+        public static List<Double> CURRENT = new List<double>();
+        public static List<Double> CHANGE = new List<double>();
+        public static List<Double> VOLUME = new List<double>();
+        public static int statusFlag = 0;
+        public static string statusContent = "";
+        private BackgroundWorker worker = new BackgroundWorker();
+        string[] defaultData = new string[2000];
+        public delegate void MyDelegate();
+        //End 15/10/2020
+
         public static SpecificScripDetail[] _scrip = null;
         public class MarketSummary
         {
+            public int ID { get; set; }
             public string Name { get; set; }
             public string Symbol { get; set; }
-            public double CURRENT { get; set; }
+            public string CURRENT { get; set; }
 
-            public double LDCP { get; set; }
-            public double OPEN { get; set; }
-            public double HIGH { get; set; }
-            public double LOW { get; set; }
+            public string LDCP { get; set; }
+            public string OPEN { get; set; }
+            public string HIGH { get; set; }
+            public string LOW { get; set; }
             public double Change { get; set; }
-            public double Volume { get; set; }
+            public string Volume { get; set; }
         }
+
+        DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        int countTimer = 0;
         public PreviewWindow(DateTime date, string status, Double Volume, Double Value, Double Trades, List<string> companyName, List<string> companySymbol, List<double> LDCP, List<double> OPEN, List<double> HIGH, List<double> LOW, List<double> CURRENT, List<double> CHANGE, List<double> VOLUME)
         {
             InitializeComponent();
@@ -102,7 +137,7 @@ namespace PSXDataFetchingApp
             catch { }
 
             lblDate.Text +=  date.ToString();
-            lblStatus.Text += status.ToString();
+            lblStatus.Text += status.ToString().ToUpper();
             lblVolume.Text += Volume.ToString("#,##0");
             lblValue.Text += Value.ToString("#,##0");
             lblTrades.Text += Trades.ToString("#,##0");
@@ -130,27 +165,27 @@ namespace PSXDataFetchingApp
             //gridView.Columns.Add(col8);
             //gridView.Columns.Add(col9);
 
-            
 
-            col1.DisplayMemberBinding = new Binding("Name");
-            col2.DisplayMemberBinding = new Binding("Symbol");
-            col3.DisplayMemberBinding = new Binding("CURRENT");
-            col4.DisplayMemberBinding = new Binding("LDCP");
-            col5.DisplayMemberBinding = new Binding("OPEN");
-            col6.DisplayMemberBinding = new Binding("HIGH");
-            col7.DisplayMemberBinding = new Binding("LOW");
-            col8.DisplayMemberBinding = new Binding("Change");
-            col9.DisplayMemberBinding = new Binding("Volume");
-            col1.Header = "NAME";
-            col2.Header = "SYMBOL";
-            col3.Header = "CURRENT";
-            col4.Header = "LDCP";
-            col5.Header = "OPEN";
-            col6.Header = "HIGH";
-            col7.Header = "LOW";
-            col8.Header = "CHANGE";
-            col9.Header = "VOLUME";
 
+            //col1.DisplayMemberBinding = new Binding("Name");
+            //col2.DisplayMemberBinding = new Binding("Symbol");
+            //col3.DisplayMemberBinding = new Binding("CURRENT");
+            //col4.DisplayMemberBinding = new Binding("LDCP");
+            //col5.DisplayMemberBinding = new Binding("OPEN");
+            //col6.DisplayMemberBinding = new Binding("HIGH");
+            //col7.DisplayMemberBinding = new Binding("LOW");
+            //col8.DisplayMemberBinding = new Binding("Change");
+            //col9.DisplayMemberBinding = new Binding("Volume");
+            //col1.Header = "NAME";
+            //col2.Header = "SYMBOL";
+            //col3.Header = "CURRENT";
+            //col4.Header = "LDCP";
+            //col5.Header = "OPEN";
+            //col6.Header = "HIGH";
+            //col7.Header = "LOW";
+            //col8.Header = "CHANGE";
+            //col9.Header = "VOLUME";
+            int count = 1;
             //lblMessage.Content = "COMPANY NAME - SYMBOL - CURRENT - LDCP - OPEN - HIGH - LOW - CURRENT - CHANGE - VOLUME \n" ;
             for (int i = 0; i < companyName.Count; i++)
             {
@@ -158,17 +193,149 @@ namespace PSXDataFetchingApp
                 else
                 {
 
-                    list1.Items.Add(new MarketSummary { Name = companyName[i], Symbol = companySymbol[i], CURRENT = CURRENT[i],LDCP = LDCP[i], OPEN = OPEN[i], HIGH = HIGH[i], LOW = LOW[i], Change = CHANGE[i], Volume = VOLUME[i] });
+                    list1.Items.Add(new MarketSummary {ID = count++ , Name = companyName[i], Symbol = companySymbol[i], CURRENT = String.Format("{0:00.00}", CURRENT[i]),LDCP = String.Format("{0:00.00}", LDCP[i]), OPEN = String.Format("{0:00.00}", OPEN[i]), HIGH = String.Format("{0:00.00}", HIGH[i]), LOW = String.Format("{0:00.00}",LOW[i]), Change = CHANGE[i], Volume = VOLUME[i].ToString("#,##0") });
+
                 }
+            }
+
+            DispatcherTimer dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Start();
+
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            countTimer++;
+            if (countTimer % 180 == 0)
+            {
+                ButtonAutomationPeer peer = new ButtonAutomationPeer(btnRefresh);
+                IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
+                invokeProv.Invoke();
+                //mustWork();
+
+                //Application.Current.Dispatcher.Invoke((Action)delegate {
+                //    // your code
+                //worker.DoWork += worker_DoWork;
+                //worker.ProgressChanged += worker_ProgressChanged;
+                //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+                //worker.RunWorkerAsync();
+                //});
+
+
             }
         }
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            mainWindow.Button_Click(sender, e);
-            this.Close();
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = ResourceAccessor.Get("Images/exclaimation.png");
+            image.EndInit();
+            ImageBehavior.SetAnimatedSource(imgStatus, image);
+            progressBarContainer.Visibility = Visibility.Visible;
+            lblStatusMessage.Text = "Status: Refreshing Data..";
+
+            //MainWindow mainWindow = new MainWindow();
+            //mainWindow.Show();
+            //mainWindow.Button_Click(sender, e);
+            //this.Close();
+            Debug.WriteLine("Page Refreshed.");
+
+            //Thread t = new Thread(worker.RunWorkerAsync());
+            //t.SetApartmentState(ApartmentState.STA);
+
+            //t.Start();
+
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+                // your code
+                MyDelegate mdelegate = new MyDelegate(mustWork);
+                Thread t = new Thread(mdelegate.Invoke);
+                t.SetApartmentState(ApartmentState.STA);
+
+                t.Start();
+                //await Task.Run(() => mustWork());
+            });
+
+            
+
+            //var image2 = new BitmapImage();
+            //image2.BeginInit();
+            //image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
+            //image2.EndInit();
+            //ImageBehavior.SetAnimatedSource(imgStatus, image2);
+            //lblStatusMessage.Text = "Status: Ready";
+
+            //Thread t = new Thread(mustWork());
+            //t.SetApartmentState(ApartmentState.STA);
+
+            //t.Start();
+
+            //await Task.Run(() => mustWork());
+
+            //mustWork();
+
+            // create a thread  
+            //Thread newWindowThread = new Thread(new ThreadStart(() =>
+            //{
+            //    // create and show the window
+            //    worker.DoWork += worker_DoWork;
+            //    worker.ProgressChanged += worker_ProgressChanged;
+            //    worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            //    worker.RunWorkerAsync();
+
+            //    // start the Dispatcher processing  
+            //    System.Windows.Threading.Dispatcher.Run();
+            //}));
+
+            //// set the apartment state  
+            //newWindowThread.SetApartmentState(ApartmentState.STA);
+
+            //// make the thread a background thread  
+            //newWindowThread.IsBackground = true;
+
+            //// start the thread  
+            //newWindowThread.Start();
+
+
+        }
+
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+             mustWork();
+            //mustWork();
+            //worker.DoWork += worker_DoWork;
+            //worker.ProgressChanged += worker_ProgressChanged;
+            //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            //worker.RunWorkerAsync();
+            //
+        }
+
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            
+            //if (isDataSaved)
+            //{
+            //PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
+            //btnGet.IsEnabled = false;
+            //window.Show();
+            //this.Hide();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Data Fetch Failed.", "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    Debug.WriteLine("Data saved Failed.");
+            //    btnGet.IsEnabled = false;
+            //}
+
+        }
+
+        private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar.Value = e.ProgressPercentage;
+            lblStatusMessage.Text = statusContent;
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -346,6 +513,342 @@ namespace PSXDataFetchingApp
 
             }
 
+        }
+
+        #region MustWorkStart
+        public void mustWork()
+        {
+            try
+            {
+                defaultData = GetDefault();
+                RequestDate = DateTime.Parse(defaultData[0]);
+                worker.WorkerReportsProgress = true;
+                //int progressPercentage = Convert.ToInt32(((double)i / max) * 100);
+                //(sender as BackgroundWorker)worker.ReportProgress(progressPercentage, statusFlag);
+                //lblStatusMessage.Text = "Getting General Content..";
+                worker.ReportProgress(1);
+
+                DateTime CurrentTime = RequestDate;
+                Debug.WriteLine(CurrentTime);
+                DateTime ExpiredTime = ExpiryDate;
+                Debug.WriteLine(ExpiredTime);
+                if (ExpiredTime <= CurrentTime)
+                {
+                    statusContent = "Application Expired.";
+                    //MessageBox.Show("Application is expired.");
+                }
+                else
+                {
+
+                    MainWindow cls = new MainWindow();
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        progressBar.Value = 2;
+                    });
+                    RequestStatus = defaultData[1];
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        progressBar.Value = 3;
+                    });
+                    //worker.ReportProgress(3);
+                    RequestValue = Double.Parse(defaultData[2]);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        progressBar.Value = 4;
+                    });
+                    //worker.ReportProgress(4);
+                    RequestVolume = Double.Parse(defaultData[3]);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        progressBar.Value = 5;
+                    });
+                    //worker.ReportProgress(5);
+                    RequestTrades = Double.Parse(defaultData[4]);
+                    statusContent = "Status: Getting Names..";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = statusContent;
+                        progressBar.Value = 10;
+                    });
+                    //worker.ReportProgress(10);
+                    NAME = cls.GetMarketSummaryCompanyNames();
+                    statusContent = "Status: Getting Symbols..";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = statusContent;
+                        progressBar.Value = 25;
+                    });
+                    //worker.ReportProgress(25);
+                    SYMBOL = cls.GetMarketSummaryCompanySymbols(NAME);
+                    statusContent = "Status: Getting LDCP..";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = statusContent;
+                        progressBar.Value = 40;
+                    });
+                    //worker.ReportProgress(40);
+                    string[] getCompanyLDCP = cls.GetMarketSummaryCompanyLDCP();
+                    statusContent = "Status: Getting Open..";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = statusContent;
+                        progressBar.Value = 55;
+                    });
+                    //worker.ReportProgress(55);
+                    string[] getCompanyOPEN = cls.GetMarketSummaryCompanyOPEN();
+                    statusContent = "Status: Getting High..";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = statusContent;
+                        progressBar.Value = 65;
+                    });
+                    //worker.ReportProgress(65);
+                    string[] getCompanyHIGH = cls.GetMarketSummaryCompanyHIGH();
+                    statusContent = "Status: Getting Low..";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = statusContent;
+                        progressBar.Value = 75;
+                    });
+                    //worker.ReportProgress(75);
+                    string[] getCompanyLOW = cls.GetMarketSummaryCompanyLOW();
+                    statusContent = "Status: Getting Current..";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = statusContent;
+                        progressBar.Value = 85;
+                    });
+                    //worker.ReportProgress(85);
+                    string[] getCompanyCURRENT = cls.GetMarketSummaryCompanyCURRENT();
+                    statusContent = "Status: Getting Change..";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = statusContent;
+                        progressBar.Value = 95;
+                    });
+                    //worker.ReportProgress(95);
+                    string[] getCompanyCHANGE = cls.GetMarketSummaryCompanyCHANGE();
+                    statusContent = "Status: Getting Volume..";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = statusContent;
+                        progressBar.Value = 98;
+                    });
+                    //worker.ReportProgress(98);
+                    string[] getCompanyVOLUME = cls.GetMarketSummaryCompanyVOLUME();
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        progressBar.Value = 99;
+                    });
+                    //worker.ReportProgress(99);
+                    double[] CompanyLDCP = new double[getCompanyLDCP.Length];
+                    double[] CompanyOPEN = new double[getCompanyLDCP.Length];
+                    double[] CompanyHIGH = new double[getCompanyLDCP.Length];
+                    double[] CompanyLOW = new double[getCompanyLDCP.Length];
+                    double[] CompanyCURRENT = new double[getCompanyLDCP.Length];
+                    double[] CompanyCHANGE = new double[getCompanyLDCP.Length];
+                    double[] CompanyVOLUME = new double[getCompanyLDCP.Length];
+                    //worker.ReportProgress(75);
+
+                    for (int i = 0; i < NAME.Count; i++)
+                    {
+                        CompanyLDCP[i] = Convert.ToDouble(getCompanyLDCP[i]);
+                        CompanyOPEN[i] = Convert.ToDouble(getCompanyOPEN[i]);
+                        CompanyHIGH[i] = Convert.ToDouble(getCompanyHIGH[i]);
+                        CompanyLOW[i] = Convert.ToDouble(getCompanyLOW[i]);
+                        CompanyCURRENT[i] = Convert.ToDouble(getCompanyCURRENT[i]);
+                        CompanyCHANGE[i] = Convert.ToDouble(getCompanyCHANGE[i]);
+                        CompanyVOLUME[i] = Convert.ToDouble(getCompanyVOLUME[i]);
+
+                        LDCP.Add(CompanyLDCP[i]);
+                        OPEN.Add(CompanyOPEN[i]);
+                        HIGH.Add(CompanyHIGH[i]);
+                        LOW.Add(CompanyLOW[i]);
+                        CURRENT.Add(CompanyCURRENT[i]);
+                        CHANGE.Add(CompanyCHANGE[i]);
+                        VOLUME.Add(CompanyVOLUME[i]);
+                    }
+                    //worker.ReportProgress(80);
+                    //statusContent = "Saving Data..";
+                    //worker.ReportProgress(90);
+                    //isDataSaved = SavingDataToDatabase(defaultData, NAME, SYMBOL, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblStatusMessage.Text = "Status: Complete..";
+                        progressBar.Value = 100;
+                    });
+                    //worker.ReportProgress(100);
+                    //if (isDataSaved)
+                    //{
+                    //    PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
+                    //    btnGet.IsEnabled = false;
+                    //    window.Show();
+                    //    this.Hide();
+                    //}
+                    //else
+                    //{
+                    //    MessageBox.Show("Data Saved Failed.", "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //    Debug.WriteLine("Data saved Failed.");
+                    //    progressBar.Visibility = Visibility.Hidden;
+                    //    lblProgress.Visibility = Visibility.Hidden;
+                    //    lblProgress.Content = "";
+                    //}
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        lblDate.Text = DateTime.Parse(defaultData[0]).ToString();
+                        lblStatus.Text = defaultData[1].ToUpper();
+                        lblVolume.Text = String.Format("{0:#,##0}", defaultData[2]);
+                        lblValue.Text = String.Format("{0:#,##0}", defaultData[3]);
+                        lblTrades.Text = String.Format("{0:#,##0}", defaultData[4]);
+
+                        list1.Items.Clear();
+
+                        _scrip = new SpecificScripDetail[NAME.Count];
+                        int count = 1;
+                        for (int i = 0; i < NAME.Count; i++)
+                        {
+                            _scrip[i] = new SpecificScripDetail();
+                            _scrip[i].SECTOR = "";
+                            _scrip[i].DATE = Convert.ToDateTime(defaultData[0]);
+                            _scrip[i].STATUS = defaultData[1];
+                            _scrip[i].SCRIP = NAME[i];
+                            _scrip[i].SYMBOL = SYMBOL[i];
+                            _scrip[i].LDCP = Convert.ToDecimal(LDCP[i]);
+                            _scrip[i].OPEN = Convert.ToDecimal(OPEN[i]);
+                            _scrip[i].HIGH = Convert.ToDecimal(HIGH[i]);
+                            _scrip[i].LOW = Convert.ToDecimal(LOW[i]);
+                            _scrip[i].CURRENT = Convert.ToDecimal(CURRENT[i]);
+                            _scrip[i].CHANGE = Convert.ToDouble(CHANGE[i]);
+                            _scrip[i].VOLUME = Convert.ToDecimal(VOLUME[i]);
+                            list1.Items.Add(new MarketSummary { ID = count++, Name = NAME[i], Symbol = SYMBOL[i], CURRENT = String.Format("{0:00.00}", CURRENT[i]), LDCP = String.Format("{0:00.00}", LDCP[i]), OPEN = String.Format("{0:00.00}", OPEN[i]), HIGH = String.Format("{0:00.00}", HIGH[i]), LOW = String.Format("{0:00.00}", LOW[i]), Change = CHANGE[i], Volume = VOLUME[i].ToString("#,##0") });
+                        }
+                        progressBarContainer.Visibility = Visibility.Hidden;
+                        var image2 = new BitmapImage();
+                        image2.BeginInit();
+                        image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
+                        image2.EndInit();
+                        ImageBehavior.SetAnimatedSource(imgStatus, image2);
+                        lblStatusMessage.Text = "Status: Ready";
+
+                    });
+                    
+
+
+                    //lblMessage.Content = "COMPANY NAME - SYMBOL - CURRENT - LDCP - OPEN - HIGH - LOW - CURRENT - CHANGE - VOLUME \n" ;
+                    //for (int i = 0; i < NAME.Count; i++)
+                    //{
+                    //    if (NAME[i] == null) { }
+                    //    else
+                    //    {
+
+
+
+                    //    }
+                    //}
+                }
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("Internet Exception: " + ex.Message);
+            }
+
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message, "Database Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("SQL Exception: " + ex.Message);
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("General Exception: " + ex.Message);
+            }
+
+        }
+
+        #endregion
+
+        //Default Data 15/10/2020
+        private HtmlNodeCollection FetchDataFromPSX(string url, string param)
+        {
+            string URL = url;
+            HtmlDocument doc = new HtmlDocument();
+            WebClient client = new WebClient();
+            try
+            {
+                string html = client.DownloadString(URL);
+                doc.LoadHtml(html);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            HtmlNodeCollection result = doc.DocumentNode.SelectNodes(param);
+            return result;
+        }
+        public string[] GetDefault()
+        {
+
+            HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//h4");
+            String[] names = new String[name_nodes.Count];
+            string[] result = new string[5 + name_nodes.Count];
+
+            int counter = 0;
+
+            //Variable
+            string localdatetime = String.Empty;
+            string localstatus = String.Empty;
+            string localVolume = String.Empty;
+            string localValue = String.Empty;
+            string localTrades = String.Empty;
+
+            try
+            {
+
+                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+                {
+                    if (node.InnerText.ToString().StartsWith("* LDCP")) { }
+                    else if (node.InnerText.ToString().StartsWith("2020"))
+                    {
+                        localdatetime = node.InnerText.ToString();
+                    }
+                    else if (node.InnerText.ToString().StartsWith("Status"))
+                    {
+                        localstatus = node.InnerText.ToString().Replace("Status: ", "").Replace(" ", "");
+                    }
+                    else if (node.InnerText.ToString().StartsWith("Volume"))
+                    {
+                        localVolume = node.InnerText.ToString().Replace("Volume: ", "");
+                    }
+                    else if (node.InnerText.ToString().StartsWith("Value"))
+                    {
+                        localValue = node.InnerText.ToString().Replace("Value : ", "");
+                    }
+                    else if (node.InnerText.ToString().StartsWith("Trades"))
+                    {
+                        localTrades = node.InnerText.ToString().Replace("Trades: ", "");
+                    }
+                    else
+                        names[counter++] = node.InnerText.ToString() + "\n";
+                }
+
+                result[0] = localdatetime;
+                result[1] = localstatus;
+                result[2] = localVolume;
+                result[3] = localValue;
+                result[4] = localTrades;
+                for (int i = 0; i < names.Length; i++)
+                {
+                    result[i + 5] = names[i];
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return result;
         }
 
     }

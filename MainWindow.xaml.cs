@@ -407,7 +407,7 @@ namespace PSXDataFetchingApp
         //    return result;
         //}
 
-        private string[] GetMarketSummaryCompanyLDCP()
+        public string[] GetMarketSummaryCompanyLDCP()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
             string[] result = new string[name_nodes.Count];
@@ -449,7 +449,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyOPEN()
+        public string[] GetMarketSummaryCompanyOPEN()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
             string[] result = new string[name_nodes.Count];
@@ -491,7 +491,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyHIGH()
+        public string[] GetMarketSummaryCompanyHIGH()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
             string[] result = new string[name_nodes.Count];
@@ -533,7 +533,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyLOW()
+        public string[] GetMarketSummaryCompanyLOW()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
             string[] result = new string[name_nodes.Count];
@@ -617,7 +617,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyCHANGE()
+        public string[] GetMarketSummaryCompanyCHANGE()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
             string[] result = new string[name_nodes.Count];
@@ -659,7 +659,7 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyVOLUME()
+        public string[] GetMarketSummaryCompanyVOLUME()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
             string[] result = new string[name_nodes.Count];
