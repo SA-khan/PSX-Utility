@@ -12,10 +12,16 @@
     <Compile Update="Configuration.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="MUFAPMarketSummary.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="PreviewWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Report.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UploadPSXData.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -26,10 +32,16 @@
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="MUFAPMarketSummary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="PreviewWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Report.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UploadPSXData.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
