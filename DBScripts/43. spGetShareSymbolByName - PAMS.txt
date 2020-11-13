@@ -1,0 +1,15 @@
+USE [ipams_db]
+GO
+/****** Object:  StoredProcedure [dbo].[spGetShareSymbolByName]    Script Date: 11/13/2020 2:02:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROC [dbo].[spGetShareSymbolByName]
+		@NAME varchar(500)
+AS
+BEGIN
+SELECT 
+      [share_symbol] AS [C_SYMBOL]
+  FROM [pms_shares] WHERE [share_name] LIKE '%'+@NAME+'%'
+END

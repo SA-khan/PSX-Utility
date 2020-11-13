@@ -1,0 +1,11 @@
+/****** Object:  StoredProcedure [dbo].[spGetFundIDByParamNAME]    Script Date: 11/13/2020 2:05:38 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[spGetFundIDByParamNAME]
+		@FUND_NAME varchar(500)
+		AS
+		BEGIN
+SELECT [FUND_CODE] FROM [dbo].[FUND] WHERE [FUND_NAME] = @FUND_NAME
+END

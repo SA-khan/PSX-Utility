@@ -1,6 +1,13 @@
-CREATE PROC spInsertMarketSummary 
-		@COMPANY_NAME varchar(300),
-		@COMPANY_SYMBOL varchar(300),
+USE [PSXDataWarehouse]
+GO
+/****** Object:  StoredProcedure [dbo].[spInsertMarketSummary]    Script Date: 10/19/2020 11:24:17 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[spInsertMarketSummary] 
+		@COMPANY_NAME varchar(MAX),
+		@COMPANY_SYMBOL varchar(MAX),
 		@COMPANY_LDCP float,
 		@COMPANY_OPEN float,
 		@COMPANY_HIGH float,
@@ -10,20 +17,22 @@ CREATE PROC spInsertMarketSummary
 		@COMPANY_VOLUME float
 	AS
 BEGIN
-TRUNCATE TABLE MarketSummary
-INSERT INTO [dbo].[MarketSummary]
-           ([MS_COMPANY_NAME]
-           ,[MS_COMPANY_SYMBOL]
-           ,[MS_COMPANY_LDCP]
-           ,[MS_COMPANY_OPEN]
-           ,[MS_COMPANY_HIGH]
-           ,[MS_COMPANY_LOW]
-           ,[MS_COMPANY_CURRENT]
-           ,[MS_COMPANY_CHANGE]
-           ,[MS_COMPANY_VOLUME])
+
+INSERT INTO [dbo].[CURRENT_MARKET_SUMMARY]
+           ([CMS_SECTOR]
+		   ,[CMS_SCRIP_NAME]
+           ,[CMS_SYMBOL]
+           ,[CMS_LDCP]
+           ,[CMS_OPEN]
+           ,[CMS_HIGH]
+           ,[CMS_LOW]
+           ,[CMS_CURRENT]
+           ,[CMS_CHANGE]
+           ,[CMS_VOLUME])
      VALUES
-           (@COMPANY_NAME
-           ,@COMPANY_SYMBOL
+           (''
+		   ,UPPER(@COMPANY_NAME)
+           ,UPPER(@COMPANY_SYMBOL)
            ,@COMPANY_LDCP
            ,@COMPANY_OPEN
            ,@COMPANY_HIGH 

@@ -1,0 +1,15 @@
+/****** Object:  Table [dbo].[MARKET_OVERVIEW_HISTORY]    Script Date: 10/16/2020 10:16:00 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MARKET_OVERVIEW_HISTORY](
+	[MOH_ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[MOH_DATE] [datetime] NULL,
+	[MOH_SYS_DATE] [datetime] NULL,
+	[MOH_STATUS] [varchar](MAX) NULL,
+	[MOH_VOLUME] [float] NULL,
+	[MOH_VALUE] [float] NULL,
+	[MOH_TRADES] [float] NULL)

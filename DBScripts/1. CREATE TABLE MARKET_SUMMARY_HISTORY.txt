@@ -1,0 +1,21 @@
+/****** Object:  Table [dbo].[MarketSummaryHistory]    Script Date: 10/16/2020 10:06:13 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MARKET_SUMMARY_HISTORY](
+	[MSH_ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[MSH_DATE] [datetime] NULL,
+	[MSH_STATUS] [varchar](500) NULL,
+	[MSH_SECTOR] [varchar](500) NULL,
+	[MSH_SCRIP_NAME] [varchar](500) NULL,
+	[MSH_SYMBOL] [varchar](500) NULL,
+	[MSH_COMPANY_LDCP] [decimal](18,2) NULL,
+	[MSH_COMPANY_OPEN] [decimal](18,2) NULL,
+	[MSH_COMPANY_HIGH] [decimal](18,2) NULL,
+	[MSH_COMPANY_LOW] [decimal](18,2) NULL,
+	[MSH_COMPANY_CURRENT] [decimal](18,2) NULL,
+	[MSH_COMPANY_CHANGE] [float] NULL,
+	[MSH_COMPANY_VOLUME] [decimal](18,2) NULL)

@@ -1,6 +1,0 @@
-CREATE TABLE MarketSummaryOverviewHistory (MS_ID int primary key identity(1,1),
-									MS_DATE datetime,
-									MS_SYS_DATE datetime,
-									MS_STATUS varchar(300), 
-									MS_VOLUME float, MS_VALUE float, 
-									MS_TRADES float)

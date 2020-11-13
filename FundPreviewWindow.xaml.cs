@@ -178,7 +178,7 @@ namespace PSXDataFetchingApp
                 if (flag == 1)
                 {
                     command = new SqlCommand(
-                      "SELECT [fund_code], [fund_name] FROM [ipams_db].[dbo].[pms_funds] order by fund_code",
+                      "SELECT [fund_code], [fund_name] FROM [pms_funds] order by fund_code",
                       connection);
                     connection.Open();
 
