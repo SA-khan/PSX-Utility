@@ -15,6 +15,12 @@
     <Compile Update="MUFAPMarketSummary.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="MufapPKFRV.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MufapPKRV.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="PreviewWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -33,6 +39,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MUFAPMarketSummary.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MufapPKFRV.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MufapPKRV.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="PreviewWindow.xaml">

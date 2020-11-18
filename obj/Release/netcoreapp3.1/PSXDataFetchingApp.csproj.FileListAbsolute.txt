@@ -95,3 +95,11 @@ C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Release\netcoreapp3.
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Release\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Text.Encoding.CodePages.dll
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\Configuration.g.cs
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\Configuration.baml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\MUFAPMarketSummary.g.cs
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\UploadPSXData.g.cs
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\MUFAPMarketSummary.baml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\UploadPSXData.baml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\MufapPKFRV.g.cs
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\MufapPKRV.g.cs
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\MufapPKFRV.baml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Release\netcoreapp3.1\MufapPKRV.baml

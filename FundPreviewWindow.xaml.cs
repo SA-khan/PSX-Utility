@@ -70,7 +70,7 @@ namespace PSXDataFetchingApp
         List<String> MarketPriceCurrent;
         List<String> MarketValue;
         List<String> Appreciation_Depreciation;
-        SHARE[] testShare;
+        static List<SHARE> testShare;
 
         String[] DefaultData;
 
@@ -93,6 +93,14 @@ namespace PSXDataFetchingApp
 
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
         int countTimer = 0;
+
+        //New Edition 11/17/2020
+        //By Saad
+        List<SpecificFundDetail> spFundDetial;
+
+        //New Edition 11/18/2020
+        //By Saad
+        bool resetFlag = false;
 
         public FundPreviewWindow()
         {
@@ -135,26 +143,21 @@ namespace PSXDataFetchingApp
             }
             catch { }
 
-            SqlConnection conn = new SqlConnection();
-            SqlConnection conn2 = new SqlConnection();
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
-            conn2.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            List<String> fundName;
-            List<String> fundName2;
+            SqlConnection connDefault = new SqlConnection();
+            SqlConnection connIpams = new SqlConnection();
+
+            connDefault.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            connIpams.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
+            
             try
             {
-                fundName = HasRows(conn2, 2);
-                fundName2 = HasRows(conn, 1);
-
+                List<String> fundName = getFundNameList(connDefault, true);
+                fundName.AddRange(getFundNameList(connIpams, false));
                 comboFund.Items.Add("Select..");
                 comboFund.SelectedIndex = 0;
                 for (int i = 0; i < fundName.Count; i++)
                 {
                     comboFund.Items.Add(fundName[i]);
-                }
-                for (int i = 0; i < fundName2.Count; i++)
-                {
-                    comboFund.Items.Add(fundName2[i]);
                 }
                 comboFund.Items.Add("<ADD NEW FUND>");
             }
@@ -164,71 +167,52 @@ namespace PSXDataFetchingApp
             }
             finally
             {
-                conn.Close();
-                conn2.Close();
+                connDefault.Close();
+                connIpams.Close();
             }
         }
 
-        static List<String> HasRows(SqlConnection connection, int flag)
+        public List<String> getFundNameList(SqlConnection connectionName, bool defaultDB)
         {
-            List<String> result;
-            using (connection)
+            List<String> result = new List<string>();
+            try
             {
-                SqlCommand command;
-                if (flag == 1)
+                using (connectionName)
                 {
-                    command = new SqlCommand(
-                      "SELECT [fund_code], [fund_name] FROM [pms_funds] order by fund_code",
-                      connection);
-                    connection.Open();
-
-                    SqlDataReader reader = command.ExecuteReader();
-                    result = new List<String>(reader.FieldCount);
-                    if (reader.HasRows)
+                    connectionName.Open();
+                    SqlCommand cmd = new SqlCommand("spGetFundNames", connectionName); // Read user-> stored procedure name
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
-
-                        while (reader.Read())
+                        while (rdr.Read())
                         {
-                            result.Add(reader.GetString(1));
+                            if (defaultDB)
+                            {
+                                result.Add(rdr.GetString(2));
+                            }
+                            else
+                            {
+                                result.Add(rdr.GetString(4));
+                            }
                         }
                     }
-                    else
-                    {
-                        Debug.WriteLine("No rows found.");
-                    }
-                    reader.Close();
+                    connectionName.Close();
                 }
-                else
-                {
-                    command = new SqlCommand(
-                      "SELECT [FUND_ID],[FUND_CODE],[FUND_NAME],[FUND_SYMBOL],[FUND_DESC] FROM [dbo].[FUND] order by [FUND_ID]",
-                      connection);
-                    connection.Open();
-
-                    SqlDataReader reader = command.ExecuteReader();
-                    result = new List<String>(reader.FieldCount);
-                    if (reader.HasRows)
-                    {
-
-                        while (reader.Read())
-                        {
-                            result.Add(reader.GetString(2));
-                            //Debug.WriteLine("{0}\t{1}", reader.GetInt32(0),
-                            //    reader.GetString(1));
-
-                        }
-                    }
-                    else
-                    {
-                        Debug.WriteLine("No rows found.");
-                    }
-                    reader.Close();
-                }
-
-                return result;
 
             }
-
+            catch (SqlException ex)
+            {
+                Debug.WriteLine("SQL Exception: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception: " + ex.Message);
+            }
+            finally
+            {
+                connectionName.Close();
+            }
+            return result;
         }
 
         public bool getSymbolStatus(string Symbol)
@@ -273,64 +257,22 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        //public bool getSymbolStatus1(string Symbol)
-        //{
-        //    bool result = false;
-        //    SqlConnection conn = new SqlConnection();
-        //    try
-        //    {
-        //        conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-        //        using (conn)
-        //        {
-        //            conn.Open();
-
-        //            SqlCommand cmd = new SqlCommand("spIsGetCompanySymbolExist", conn); // Read user-> stored procedure name
-        //            cmd.CommandType = CommandType.StoredProcedure;
-        //            cmd.Parameters.Add("@SYMBOL", SqlDbType.VarChar, 500);
-        //            cmd.Parameters["@SYMBOL"].Value = Symbol;
-        //            using (SqlDataReader rdr = cmd.ExecuteReader())
-        //            {
-        //                while (rdr.Read())
-        //                {
-        //                    result = Convert.ToBoolean(rdr.GetInt64(0));
-        //                }
-        //            }
-
-        //            conn.Close();
-        //        }
-
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        Debug.WriteLine("SQL Exception: " + ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine("Exception: " + ex.Message);
-        //    }
-        //    finally
-        //    {
-        //        conn.Close();
-        //    }
-        //    return result;
-        //}
-
         public void getDefault()
         {
             DefaultData = mainClass.GetDefault();
         }
 
 
-        public SHARE[] getShareDetail()
+        public List<SHARE> getShareDetail()
         {
             List<string> NAME = mainClass.GetMarketSummaryCompanyNames();
             List<string> SYMBOL = mainClass.GetMarketSummaryCompanySymbols(NAME);
             string[] CURRENT = mainClass.GetMarketSummaryCompanyCURRENT();
 
-            SHARE[] share = new SHARE[NAME.Count];
+            List<SHARE> share = new List<SHARE>();
             for (int i = 0; i < NAME.Count; i++)
             {
-                share[i] = new SHARE { SHARE_NAME = NAME[i], SHARE_SYMBOL = SYMBOL[i], SHARE_CURRENT = CURRENT[i] };
+                share.Add(new SHARE { SHARE_NAME = NAME[i], SHARE_SYMBOL = SYMBOL[i], SHARE_CURRENT = CURRENT[i] });
                 //Debug.WriteLine("FNAME: " + NAME[i] + ", FSYMBOL: " + SYMBOL[i] + ", FCURRENT: " + CURRENT[i]);
             }
             return share;
@@ -338,260 +280,290 @@ namespace PSXDataFetchingApp
 
         private async void btnGet_Click(object sender, RoutedEventArgs e)
         {
-
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.UriSource = ResourceAccessor.Get("Images/exclaimation.png");
-            image.EndInit();
-            ImageBehavior.SetAnimatedSource(imgStatus, image);
-            lblStatus.Text = "Status: Processing";
-
-            string FundName = comboFund.Text;
-            if (FundName == "Select..")
+            try
             {
-                MessageBox.Show("Please Select A Fund from the list.", "Fund Selection Required.", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else if (FundName == "<ADD NEW FUND>")
-            {
-                if (comboFund.SelectedValue.Equals("<ADD NEW FUND>"))
+                //setting background task to off
+                resetFlag = false;
+                ///Hiding txtboxes and add button
+                ///
+                if (!comboFund.Text.Contains("ADD NEW FUND"))
                 {
-                    lblFundID.Foreground = new SolidColorBrush(Colors.Black);
-                    lblFundNAME.Foreground = new SolidColorBrush(Colors.Black);
-                    txtFundID.IsEnabled = true;
-                    txtFund.IsEnabled = true;
-                    btnAdd.IsEnabled = true;
-                    lblFundID.Visibility = Visibility.Visible;
-                    txtFundID.Visibility = Visibility.Visible;
-                    lblFundNAME.Visibility = Visibility.Visible;
-                    txtFund.Visibility = Visibility.Visible;
-                    btnAdd.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    lblFundID.Foreground = new SolidColorBrush(Colors.Gray);
-                    lblFundNAME.Foreground = new SolidColorBrush(Colors.Gray);
-                    txtFundID.IsEnabled = false;
-                    txtFund.IsEnabled = false;
-                    btnAdd.IsEnabled = false;
                     lblFundID.Visibility = Visibility.Hidden;
-                    txtFundID.Visibility = Visibility.Hidden;
                     lblFundNAME.Visibility = Visibility.Hidden;
+                    txtFundID.Visibility = Visibility.Hidden;
                     txtFund.Visibility = Visibility.Hidden;
                     btnAdd.Visibility = Visibility.Hidden;
                 }
-            }
-            else
-            {
-                //imgStatus.Source = new BitmapImage(ResourceAccessor.Get("Images/Exclaimation.png"));
 
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = ResourceAccessor.Get("Images/exclaimation.png");
+                image.EndInit();
+                ImageBehavior.SetAnimatedSource(imgStatus, image);
+                lblStatus.Text = "Status: Processing";
 
-                FundImage.Visibility = Visibility.Hidden;
-                list1.Visibility = Visibility.Hidden;
-                loadingImage.Visibility = Visibility.Visible;
-
-                //FundImage.Source = new BitmapImage(ResourceAccessor.Get("Images/exclaimation.png"));
-
-
-                //for (int i = 0; i < 10; i++)
-                //{
-                //    this.InvalidateVisual();
-                //    this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
-                //    this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
-                //}
-
-                await Task.Run(() => mustWork(FundName));
-
-
-
-                //worker.DoWork += worker_DoWork;
-
-                //worker.DoWork += worker_DoWork;
-                //worker.ProgressChanged += worker_ProgressChanged;
-                //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-                //worker.RunWorkerAsync();
-
-                //Task.Run(async delegate
-                //{
-                //        await Task.Yield(); // fork the continuation into a separate work item
-                //});
-                await Task.Run(() => getDefault());
-                MARKET_DATE = DateTime.Parse(DefaultData[0]);
-                txtDate.Text = "DATE: " + MARKET_DATE.ToString("dddd, dd MMMM yyyy hh:mm tt");
-                MARKET_STATUS = DefaultData[1];
-                txtStatus.Text = "STATUS: " + MARKET_STATUS;
-
-
-
-                FundMarket[] data = new FundMarket[Share_Name.Count];
-
-                col1.DisplayMemberBinding = new Binding("SERIAL");
-                col2.DisplayMemberBinding = new Binding("NAME");
-                col3.DisplayMemberBinding = new Binding("SYMBOL");
-                //col4.DisplayMemberBinding = new Binding("CURRENT");
-                //col5.DisplayMemberBinding = new Binding("LDCP");
-                //col6.DisplayMemberBinding = new Binding("OPEN");
-                //col7.DisplayMemberBinding = new Binding("CHANGE");
-                //col8.DisplayMemberBinding = new Binding("VOLUME");
-                //col9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
-
-                //gvc1.DisplayMemberBinding = new Binding("SERIAL");
-                //gvc2.DisplayMemberBinding = new Binding("NAME");
-                //gvc3.DisplayMemberBinding = new Binding("SYMBOL");
-                //gvc4.DisplayMemberBinding = new Binding("CURRENT");
-                //gvc5.DisplayMemberBinding = new Binding("LDCP");
-                //gvc6.DisplayMemberBinding = new Binding("OPEN");
-                //gvc7.DisplayMemberBinding = new Binding("CHANGE");
-                //gvc8.DisplayMemberBinding = new Binding("VOLUME");
-                //gvc9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
-
-
-                list1.Items.Clear();
-
-                FundImage.Visibility = Visibility.Hidden;
-                loadingImage.Visibility = Visibility.Hidden;
-                list1.Visibility = Visibility.Visible;
-
-                //int total = 0;
-
-                
-                
-
-                for (int i = 0; i < Share_Name.Count; i++)
+                string FundName = comboFund.Text;
+                if (FundName == "Select..")
                 {
-                    if (Share_Name[i] == null) { }
+                    MessageBox.Show("Please Select A Fund from the list.", "Fund Selection Required.", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else if (FundName == "<ADD NEW FUND>")
+                {
+                    if (comboFund.SelectedValue.Equals("<ADD NEW FUND>"))
+                    {
+                        lblFundID.Foreground = new SolidColorBrush(Colors.Black);
+                        lblFundNAME.Foreground = new SolidColorBrush(Colors.Black);
+                        txtFundID.IsEnabled = true;
+                        txtFund.IsEnabled = true;
+                        btnAdd.IsEnabled = true;
+                        lblFundID.Visibility = Visibility.Visible;
+                        txtFundID.Visibility = Visibility.Visible;
+                        lblFundNAME.Visibility = Visibility.Visible;
+                        txtFund.Visibility = Visibility.Visible;
+                        btnAdd.Visibility = Visibility.Visible;
+                    }
                     else
                     {
-                        
-                        if (Appreciation_Depreciation[i].StartsWith('('))
-                        {
-                            //var bc = new BrushConverter();
-
-                            //myGridView.AllowsColumnReorder = true;
-                            //myGridView.ColumnHeaderToolTip = "Fund Market Information";
-
-
-                            //gvc1.DisplayMemberBinding = new Binding("SERIAL");
-                            //gvc1.Header = "Sr. No.";
-                            //gvc1.Width = 50;
-                            //myGridView.Columns.Add(gvc1);
-                            ////GridViewColumn gvc2 = new GridViewColumn();
-                            //gvc2.DisplayMemberBinding = new Binding("NAME");
-                            //gvc2.Header = "NAME";
-                            //gvc2.Width = 250;
-                            //myGridView.Columns.Add(gvc2);
-                            ////GridViewColumn gvc3 = new GridViewColumn();
-                            //gvc3.DisplayMemberBinding = new Binding("SYMBOL");
-                            //gvc3.Header = "SYMBOL";
-                            //gvc3.Width = 60;
-                            //myGridView.Columns.Add(gvc3);
-                            ////GridViewColumn gvc4 = new GridViewColumn();
-                            //gvc4.DisplayMemberBinding = new Binding("CURRENT");
-                            //gvc4.Header = "Quantity";
-                            //gvc4.Width = 70;
-                            //myGridView.Columns.Add(gvc4);
-                            ////GridViewColumn gvc5 = new GridViewColumn();
-                            //gvc5.DisplayMemberBinding = new Binding("LDCP");
-                            //gvc5.Header = "Avg. Price";
-                            //gvc5.Width = 80;
-                            //myGridView.Columns.Add(gvc5);
-                            ////GridViewColumn gvc6 = new GridViewColumn();
-                            //gvc6.DisplayMemberBinding = new Binding("OPEN");
-                            //gvc6.Header = "Book Cost";
-                            //gvc6.Width = 80;
-                            //myGridView.Columns.Add(gvc6);
-                            ////GridViewColumn gvc7 = new GridViewColumn();
-                            //gvc7.DisplayMemberBinding = new Binding("CHANGE");
-                            //gvc7.Header = "Market Price";
-                            //gvc7.Width = 85;
-                            //myGridView.Columns.Add(gvc7);
-                            ////GridViewColumn gvc8 = new GridViewColumn();
-                            //gvc8.DisplayMemberBinding = new Binding("VOLUME");
-                            //gvc8.Header = "Market Value";
-                            //gvc8.Width = 100;
-                            //myGridView.Columns.Add(gvc8);
-                            ////GridViewColumn gvc9 = new GridViewColumn();
-                            //gvc9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
-                            //gvc9.Header = "App. / Dep.";
-                            //gvc9.Width = 80;
-                            //gvc9.ItemStyle.BackColor = System.Drawing.Color.Red;
-                            //myGridView.Columns.Add(gvc9);
-                            //list1.View = myGridView;
-                            //HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
-
-                            //Style style = new Style();
-                            //style.TargetType = typeof(GridViewColumn);
-                            //style.Setters.Add(new Setter(GridViewColumn.BackgroundProperty, (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500"));
-                            //list1.ItemContainerStyle = style;
-
-                            //gvc9.S
-
-                            //Style style = new Style();
-                            //style.TargetType = typeof(ListViewItem);
-                            //style.Setters.Add(new Setter(ListViewItem.ForegroundProperty, Brushes.Red));
-                            //list1.SelectedItem = style;
-                            //ItemsSource is ObservableCollection of EmployeeInfo objects
-                            //list1.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF0000");
-                            //list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
-                            //list1.Items.Add= new SHARE(total + 1, Share_Name[i], );
-                            //list1.View = myGridView;
-                            
-
-                        }
-                        else
-                        {
-                            //var bc = new BrushConverter();
-                            //Style style = new Style();
-                            //style.TargetType = typeof(ListViewItem);
-                            //style.Setters.Add(new Setter(ListViewItem.ForegroundProperty, Brushes.DarkGray));
-                            //list1.SelectedItem = style;
-                            //list1.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#000000");
-                            //list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
-                            
-                            //list1.View = myGridView;
-                        }
-                        list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
+                        lblFundID.Foreground = new SolidColorBrush(Colors.Gray);
+                        lblFundNAME.Foreground = new SolidColorBrush(Colors.Gray);
+                        txtFundID.IsEnabled = false;
+                        txtFund.IsEnabled = false;
+                        btnAdd.IsEnabled = false;
+                        lblFundID.Visibility = Visibility.Hidden;
+                        txtFundID.Visibility = Visibility.Hidden;
+                        lblFundNAME.Visibility = Visibility.Hidden;
+                        txtFund.Visibility = Visibility.Hidden;
+                        btnAdd.Visibility = Visibility.Hidden;
                     }
                 }
+                else
+                {
+                    //imgStatus.Source = new BitmapImage(ResourceAccessor.Get("Images/Exclaimation.png"));
+
+
+                    FundImage.Visibility = Visibility.Hidden;
+                    list1.Visibility = Visibility.Hidden;
+                    loadingImage.Visibility = Visibility.Visible;
+
+                    //FundImage.Source = new BitmapImage(ResourceAccessor.Get("Images/exclaimation.png"));
+
+
+                    //for (int i = 0; i < 10; i++)
+                    //{
+                    //    this.InvalidateVisual();
+                    //    this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
+                    //    this.Dispatcher.Invoke(delegate () { }, DispatcherPriority.Render);
+                    //}
+
+                    await Task.Run(() => mustWork(FundName));
+
+
+
+                    //worker.DoWork += worker_DoWork;
+
+                    //worker.DoWork += worker_DoWork;
+                    //worker.ProgressChanged += worker_ProgressChanged;
+                    //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+                    //worker.RunWorkerAsync();
+
+                    //Task.Run(async delegate
+                    //{
+                    //        await Task.Yield(); // fork the continuation into a separate work item
+                    //});
+                    await Task.Run(() => getDefault());
+                    MARKET_DATE = DateTime.Parse(DefaultData[0]);
+                    txtDate.Text = "DATE: " + MARKET_DATE.ToString("dddd, dd MMMM yyyy hh:mm tt");
+                    MARKET_STATUS = DefaultData[1];
+                    txtStatus.Text = "STATUS: " + MARKET_STATUS;
+
+
+
+                    //FundMarket[] data = new FundMarket[Share_Name.Count];
+
+                    col1.DisplayMemberBinding = new Binding("SERIAL");
+                    //col1.DisplayMemberBinding = new Binding("FundId");
+                    col2.DisplayMemberBinding = new Binding("NAME");
+                    //col2.DisplayMemberBinding = new Binding("Name");
+                    col3.DisplayMemberBinding = new Binding("SYMBOL");
+                    //col3.DisplayMemberBinding = new Binding("Symbol");
+                    //col4.DisplayMemberBinding = new Binding("Quantity");
+                    //col5.DisplayMemberBinding = new Binding("AveragePrice");
+                    //col6.DisplayMemberBinding = new Binding("BookCost");
+                    //col7.DisplayMemberBinding = new Binding("MarketPrice");
+                    //col8.DisplayMemberBinding = new Binding("MarketValue");
+                    //col9.DisplayMemberBinding = new Binding("AppDep");
+
+                    //gvc1.DisplayMemberBinding = new Binding("SERIAL");
+                    //gvc2.DisplayMemberBinding = new Binding("NAME");
+                    //gvc3.DisplayMemberBinding = new Binding("SYMBOL");
+                    //gvc4.DisplayMemberBinding = new Binding("CURRENT");
+                    //gvc5.DisplayMemberBinding = new Binding("LDCP");
+                    //gvc6.DisplayMemberBinding = new Binding("OPEN");
+                    //gvc7.DisplayMemberBinding = new Binding("CHANGE");
+                    //gvc8.DisplayMemberBinding = new Binding("VOLUME");
+                    //gvc9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
+
+
+                    list1.Items.Clear();
+
+                    FundImage.Visibility = Visibility.Hidden;
+                    loadingImage.Visibility = Visibility.Hidden;
+                    list1.Visibility = Visibility.Visible;
+
+                    //int total = 0;
 
 
 
 
-                FundImage.Visibility = Visibility.Hidden;
-                list1.Visibility = Visibility.Visible;
+                    for (int i = 0; i < spFundDetial.Count; i++)
+                    {
+                        if (spFundDetial[i].Name == null) { }
+                        else
+                        {
 
-                loadingImage.Visibility = Visibility.Hidden;
+                            //if (Appreciation_Depreciation[i].StartsWith('('))
+                            //{
+                            //    //var bc = new BrushConverter();
 
-                bool DataSaved = await Task.Run(() => SavingDataToDatabase(MARKET_STATUS, FUND_ID1, FUND_NAME1, Share_Name, Share_Symbol, QUANTITY, AVERAGE_PRICE, BOOK_COST, MARKET_PRICE, MARKET_VALUE, APPRECIATION_DEPRECIATION));
-
-                if (!DataSaved)
-                    Debug.WriteLine("Unable to Save Data.");
-
-                var image2 = new BitmapImage();
-                image2.BeginInit();
-                image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
-                image2.EndInit();
-                ImageBehavior.SetAnimatedSource(imgStatus, image2);
-
-                lblStatus.Text = "Status: Ready";
-
-                DispatcherTimer dispatcherTimer = new DispatcherTimer();
-                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-                dispatcherTimer.Start();
+                            //    //myGridView.AllowsColumnReorder = true;
+                            //    //myGridView.ColumnHeaderToolTip = "Fund Market Information";
 
 
+                            //    //gvc1.DisplayMemberBinding = new Binding("SERIAL");
+                            //    //gvc1.Header = "Sr. No.";
+                            //    //gvc1.Width = 50;
+                            //    //myGridView.Columns.Add(gvc1);
+                            //    ////GridViewColumn gvc2 = new GridViewColumn();
+                            //    //gvc2.DisplayMemberBinding = new Binding("NAME");
+                            //    //gvc2.Header = "NAME";
+                            //    //gvc2.Width = 250;
+                            //    //myGridView.Columns.Add(gvc2);
+                            //    ////GridViewColumn gvc3 = new GridViewColumn();
+                            //    //gvc3.DisplayMemberBinding = new Binding("SYMBOL");
+                            //    //gvc3.Header = "SYMBOL";
+                            //    //gvc3.Width = 60;
+                            //    //myGridView.Columns.Add(gvc3);
+                            //    ////GridViewColumn gvc4 = new GridViewColumn();
+                            //    //gvc4.DisplayMemberBinding = new Binding("CURRENT");
+                            //    //gvc4.Header = "Quantity";
+                            //    //gvc4.Width = 70;
+                            //    //myGridView.Columns.Add(gvc4);
+                            //    ////GridViewColumn gvc5 = new GridViewColumn();
+                            //    //gvc5.DisplayMemberBinding = new Binding("LDCP");
+                            //    //gvc5.Header = "Avg. Price";
+                            //    //gvc5.Width = 80;
+                            //    //myGridView.Columns.Add(gvc5);
+                            //    ////GridViewColumn gvc6 = new GridViewColumn();
+                            //    //gvc6.DisplayMemberBinding = new Binding("OPEN");
+                            //    //gvc6.Header = "Book Cost";
+                            //    //gvc6.Width = 80;
+                            //    //myGridView.Columns.Add(gvc6);
+                            //    ////GridViewColumn gvc7 = new GridViewColumn();
+                            //    //gvc7.DisplayMemberBinding = new Binding("CHANGE");
+                            //    //gvc7.Header = "Market Price";
+                            //    //gvc7.Width = 85;
+                            //    //myGridView.Columns.Add(gvc7);
+                            //    ////GridViewColumn gvc8 = new GridViewColumn();
+                            //    //gvc8.DisplayMemberBinding = new Binding("VOLUME");
+                            //    //gvc8.Header = "Market Value";
+                            //    //gvc8.Width = 100;
+                            //    //myGridView.Columns.Add(gvc8);
+                            //    ////GridViewColumn gvc9 = new GridViewColumn();
+                            //    //gvc9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
+                            //    //gvc9.Header = "App. / Dep.";
+                            //    //gvc9.Width = 80;
+                            //    ////gvc9..ItemStyle.BackColor = System.Drawing.Color.Red;
+                            //    //myGridView.Columns.Add(gvc9);
+                            //    //list1.View = myGridView;
+                            //    //HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
 
+                            //    //Style style = new Style();
+                            //    //style.TargetType = typeof(GridViewColumn);
+                            //    ////style.Setters.Add(new Setter(GridViewColumn.BackgroundProperty, (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500")));
+                            //    //list1.ItemContainerStyle = style;
+
+                            //    ////gvc9.S
+
+                            //    //Style style2 = new Style();
+                            //    //style2.TargetType = typeof(ListViewItem);
+                            //    //style2.Setters.Add(new Setter(ListViewItem.ForegroundProperty, System.Drawing.Brushes.Red));
+                            //    //list1.SelectedItem = style2;
+                            //    ////ItemsSource is ObservableCollection of EmployeeInfo objects;
+                            //    //list1.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF0000");
+                            //    //list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
+                            //    ////list1.Items.Add(new SHARE{ total + 1, Share_Name[i] });
+                            //    //list1.View = myGridView;
+
+
+                            //}
+                            //else
+                            //{
+                            //    //var bc = new BrushConverter();
+                            //    //Style style = new Style();
+                            //    //style.TargetType = typeof(ListViewItem);
+                            //    //style.Setters.Add(new Setter(ListViewItem.ForegroundProperty, Brushes.DarkGray));
+                            //    //list1.SelectedItem = style;
+                            //    //list1.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#000000");
+                            //    //list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
+
+                            //    //list1.View = myGridView;
+                            //}
+                            list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
+                            //list1.Items.Add(new FundMarket { SERIAL = Convert.ToInt32(spFundDetial[i].FundId), NAME = spFundDetial[i].Name, SYMBOL = spFundDetial[i].Symbol, CURRENT = spFundDetial[i].Quantity.ToString("#"), LDCP = spFundDetial[i].AveragePrice.ToString(), OPEN = spFundDetial[i].BookCost.ToString(), CHANGE = spFundDetial[i].MarketPrice, VOLUME = spFundDetial[i].MarketValue.ToString(), APPRECIATION_DEPRECIATION = spFundDetial[i].AppDep   } );
+                            //list1.Items.Add(new SpecificFundDetail { FundId = spFundDetial[i].FundId, Name = spFundDetial[i].Name, Symbol = spFundDetial[i].Symbol, Quantity = spFundDetial[i].Quantity, AveragePrice = spFundDetial[i].AveragePrice, BookCost = spFundDetial[i].BookCost, MarketPrice = spFundDetial[i].MarketPrice, MarketValue = spFundDetial[i].MarketValue, AppDep = spFundDetial[i].AppDep });
+                            // 
+                        }
+                    }
+
+
+
+
+                    FundImage.Visibility = Visibility.Hidden;
+                    list1.Visibility = Visibility.Visible;
+
+                    loadingImage.Visibility = Visibility.Hidden;
+
+                    //bool DataSaved = await Task.Run(() => SavingDataToDatabase(MARKET_STATUS, FUND_ID1, FUND_NAME1, Share_Name, Share_Symbol, QUANTITY, AVERAGE_PRICE, BOOK_COST, MARKET_PRICE, MARKET_VALUE, APPRECIATION_DEPRECIATION));
+
+                    //if (!DataSaved)
+                    //    Debug.WriteLine("Unable to Save Data.");
+
+                    var image2 = new BitmapImage();
+                    image2.BeginInit();
+                    image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
+                    image2.EndInit();
+                    ImageBehavior.SetAnimatedSource(imgStatus, image2);
+
+                    lblStatus.Text = "Status: Ready";
+
+                    DispatcherTimer dispatcherTimer = new DispatcherTimer();
+                    dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                    dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                    dispatcherTimer.Start();
+                    resetFlag = true;
+
+                }
 
             }
-
-            
+            catch (WebException ex)
+            {
+                Debug.WriteLine("Web Exception: " + ex.Message);
+            }
+            catch (SqlException ex)
+            {
+                Debug.WriteLine("SQL Exception: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception: " + ex.Message);
+            }
 
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             countTimer++;
-            if (countTimer % 25 == 0)
+            if (countTimer % 25 == 0 && resetFlag == true)
             {
                 ButtonAutomationPeer peer = new ButtonAutomationPeer(btnReset);
                 IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
@@ -630,6 +602,8 @@ namespace PSXDataFetchingApp
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SqlConnection connIpams = new SqlConnection();
             connIpams.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
+
+            spFundDetial = new List<SpecificFundDetail>();
 
             try
             {
@@ -721,6 +695,7 @@ namespace PSXDataFetchingApp
                 MARKET_VALUE = new List<Decimal>();
                 APPRECIATION_DEPRECIATION = new List<String>();
                 //
+                int total = 0;
                 using (SqlDataReader rdr = cmdforFetchingShare.ExecuteReader())
                 {
                     while (rdr.Read())
@@ -731,6 +706,7 @@ namespace PSXDataFetchingApp
                             // Quantity is not 0
                             if (rdr.GetDecimal(5) != 0)
                             {
+                                
                                 Share_Name.Add(rdr.GetString(0).ToString());
                                 Share_Symbol.Add(rdr.GetString(1).ToString());
                                 DateCostLastUpdated.Add(rdr.GetDateTime(2).ToString());
@@ -748,15 +724,16 @@ namespace PSXDataFetchingApp
                                 decimal localValue = 0;
                                 if (getSymbolStatus(rdr.GetString(1).ToString()))
                                 {
-                                    for (int i = 0; i < testShare.Length; i++)
+                                    for (int i = 0; i < testShare.Count; i++)
                                     {
                                         if (rdr.GetString(1).ToString().Equals(testShare[i].SHARE_SYMBOL.ToString()))
                                         {
                                             localSymbol = testShare[i].SHARE_SYMBOL.ToString();
-                                            localCurrent = testShare[i].SHARE_CURRENT.ToString();
+                                            localCurrent = String.Format("{0:d}",testShare[i].SHARE_CURRENT);
                                             MARKET_PRICE.Add(Decimal.Parse(testShare[i].SHARE_CURRENT));
                                             localValue = Convert.ToDecimal(testShare[i].SHARE_CURRENT) * rdr.GetDecimal(5);
                                             MARKET_VALUE.Add(localValue);
+
                                         }
                                     }
                                 }
@@ -770,11 +747,25 @@ namespace PSXDataFetchingApp
                                 if (appreciation < 0)
                                 {
                                     localAppreciate = "(" + localAppreciate.Replace("-", "") + ")";
-
-
                                 }
-
                                 Appreciation_Depreciation.Add(localAppreciate.ToString());
+
+                                //New Edition 11/17/2020
+                                //By Saad
+                                total++;
+                                spFundDetial.Add( new SpecificFundDetail {
+                                        FundId = total,
+                                        Name = rdr.GetString(0),
+                                        Symbol = rdr.GetString(1),
+                                        Quantity = Decimal.Round(rdr.GetDecimal(5), 0),
+                                        AveragePrice = Decimal.Round(rdr.GetDecimal(3), 2),
+                                        BookCost = Decimal.Round(rdr.GetDecimal(4), 2),
+                                        MarketPrice = localCurrent == "" ? "0" : localCurrent,
+                                        MarketValue = Decimal.Round(localValue, 2),
+                                        AppDep = String.Format("{0:N0}", localAppreciate)  
+                                    }
+                                );
+
                             }
                         }
                         else { }
@@ -783,11 +774,17 @@ namespace PSXDataFetchingApp
 
                 connIpams.Close();
 
+                //foreach (SpecificFundDetail detail in spFundDetial)
+                //{
+                //    Debug.WriteLine("Name: " + detail.Name);
+                //}
+
+
             }
             catch (SqlException ex)
             {
                 MessageBox.Show(ex.Message, "Database Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
-                Debug.WriteLine("SQL Exception: " + ex.Message);
+                Debug.WriteLine("SQL Exception DB: " + ex.Message);
 
             }
             catch (WebException ex)
@@ -812,25 +809,31 @@ namespace PSXDataFetchingApp
             SqlConnection conn = new SqlConnection();
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             conn.Open();
-            SqlCommand cmd = new SqlCommand("spInsertFund", conn);
-            cmd.Parameters.AddWithValue("@FUND_CODE", txtFundID.Text);
-            cmd.Parameters.AddWithValue("@FUND_NAME", txtFund.Text);
-            cmd.Parameters.AddWithValue("@FUND_SYMBOL", txtFund.Text);
-            cmd.Parameters.AddWithValue("@FUND_DESC", txtFund.Text);
+            SqlCommand cmd = new SqlCommand("spINSERT_FUND_INFO", conn);
+            cmd.Parameters.AddWithValue("@FI_CODE", txtFundID.Text);
+            cmd.Parameters.AddWithValue("@FI_NAME", txtFund.Text);
+            cmd.Parameters.AddWithValue("@FI_SYMBOL", txtFund.Text);
+            cmd.Parameters.AddWithValue("@FI_DESC", txtFund.Text);
             cmd.CommandType = CommandType.StoredProcedure;
 
             try
             {
                 cmd.ExecuteReader();
+                var bc = new BrushConverter();
+                btnAdd.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#32CD32"); 
             }
 
             catch (SqlException ex)
             {
                 Debug.WriteLine("SQL Exception Occured: " + ex.Message);
+                var bc = new BrushConverter();
+                btnAdd.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FF6347");
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception: " + ex.Message);
+                var bc = new BrushConverter();
+                btnAdd.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#FF6347");
             }
             finally
             {
@@ -839,22 +842,21 @@ namespace PSXDataFetchingApp
 
             comboFund.Items.Clear();
 
-            SqlConnection conn3 = new SqlConnection();
-            SqlConnection conn2 = new SqlConnection();
-            conn3.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
-            conn2.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            List<String> fundName = HasRows(conn2, 2);
-            List<String> fundName2 = HasRows(conn3, 1);
+            SqlConnection connDefault = new SqlConnection();
+            SqlConnection connIpams = new SqlConnection();
+
+            connDefault.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            connIpams.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
+            
+            List<String> fundName = getFundNameList(connDefault, true);
+            fundName.AddRange(getFundNameList(connIpams, false));
+
             for (int i = 0; i < fundName.Count; i++)
             {
                 comboFund.Items.Add(fundName[i]);
             }
-            for (int i = 0; i < fundName2.Count; i++)
-            {
-                comboFund.Items.Add(fundName2[i]);
-            }
-            comboFund.SelectedItem = fundName[0];
 
+            comboFund.SelectedItem = fundName[0];
         }
 
         private void comboFund_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -887,7 +889,7 @@ namespace PSXDataFetchingApp
             lblStatus.Text = "Status: Processing";
 
             string FundName = comboFund.Text;
-            if (list1.Visibility == Visibility.Visible)
+            if (list1.Visibility == Visibility.Visible && resetFlag == true)
             {
 
                 await Task.Run(() => mustWork(FundName));
@@ -895,8 +897,11 @@ namespace PSXDataFetchingApp
                 FundMarket[] data = new FundMarket[Share_Name.Count];
 
                 col1.DisplayMemberBinding = new Binding("SERIAL");
+                //col1.DisplayMemberBinding = new Binding("FundId");
                 col2.DisplayMemberBinding = new Binding("NAME");
+                //col2.DisplayMemberBinding = new Binding("Name");
                 col3.DisplayMemberBinding = new Binding("SYMBOL");
+                //col3.DisplayMemberBinding = new Binding("Symbol");
                 //col4.DisplayMemberBinding = new Binding("CURRENT");
                 //col5.DisplayMemberBinding = new Binding("LDCP");
                 //col6.DisplayMemberBinding = new Binding("OPEN");
@@ -922,6 +927,7 @@ namespace PSXDataFetchingApp
                     else
                     {
                         list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
+                        //list1.Items.Add(new SpecificFundDetail { FundId = spFundDetial[i].FundId, Name = spFundDetial[i].Name, Symbol = spFundDetial[i].Symbol, Quantity = spFundDetial[i].Quantity, AveragePrice = spFundDetial[i].AveragePrice, BookCost = spFundDetial[i].BookCost, MarketPrice = spFundDetial[i].MarketPrice, MarketValue = spFundDetial[i].MarketValue, AppDep = spFundDetial[i].AppDep });
                     }
                 }
 
@@ -978,7 +984,7 @@ namespace PSXDataFetchingApp
                         //else
                         //{
 
-                        SqlCommand cmd = new SqlCommand("spInsertFundMarketSummary", conn);
+                        SqlCommand cmd = new SqlCommand("spINSERT_FUND_MARKET_SUMMARY", conn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("@MARKET_STATUS", SqlDbType.VarChar, 500);
                         cmd.Parameters["@MARKET_STATUS"].Value = MARKET_STATUS;
@@ -1203,7 +1209,7 @@ namespace PSXDataFetchingApp
                 package.Dispose();
             }
             Debug.WriteLine("Excel Sheet Created.");
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
             if (File.Exists("FundMarketSummary.xlsx"))
             {
                 try

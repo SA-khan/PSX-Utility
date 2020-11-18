@@ -8,7 +8,7 @@ namespace PSXDataFetchingApp.Model
     {
         public int SERIAL { get; set; }
         public  string NAME { get; set; }
-            public  string SYMBOL { get; set; }
+        public  string SYMBOL { get; set; }
         public  string LDCP { get; set; }
         public  string OPEN { get; set; }
         public  string HIGH { get; set; }

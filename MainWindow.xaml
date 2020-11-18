@@ -29,7 +29,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="2*" />
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="lblDemo" Foreground="Black" Text="Demo Version v4.0.9" FontFamily="/Fonts/#Raleway-Bold" FontWeight="Bold" Padding="2"/>
+                    <TextBlock x:Name="lblDemo" Foreground="Black" Text="Demo Version v4.0.10" FontFamily="/Fonts/#Raleway-Bold" FontWeight="Bold" Padding="2"/>
                     <Border Margin="0 5 0 0" Grid.Row="1" Padding="2">
                     <Image x:Name="ClientLogo"  Source="Images/BOP.png" MaxWidth="120" MaxHeight="120" />
                     </Border>
@@ -287,7 +287,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Grid.Column="2" IsEnabled="False" x:Name="btnMufapGetPKRV" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" FontSize="14" Click="btnMufapGetPKRV_Click"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <Button Grid.Column="2" x:Name="btnMufapGetPKRV" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" FontSize="14" Click="btnMufapGetPKRV_Click"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
                     <Button.Content>
                         <StackPanel>
                             <TextBlock Text="MUFAP" FontSize="20" />
@@ -329,7 +329,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Grid.Column="3" IsEnabled="False" x:Name="btnMufapGetPKFRV" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" FontSize="14" Click="btnMufapGetPKFRV_Click"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <Button Grid.Column="3" x:Name="btnMufapGetPKFRV" Margin="10 0 0 0" Width="200" Height="50" FontFamily="Arial" FontSize="14" Click="btnMufapGetPKFRV_Click"  HorizontalAlignment="Center" VerticalAlignment="Bottom">
                     <Button.Content>
                         <StackPanel>
                             <TextBlock Text="MUFAP" FontSize="20" />

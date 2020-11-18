@@ -718,14 +718,14 @@ namespace PSXDataFetchingApp
                 int j = 0;
                 int l = 0;
 
-                //Clear Data
+                //Clear Truncate Current Market Summary Data
 
-                SqlCommand cmdspClearTableData = new SqlCommand("ClearTableData", conn);
+                SqlCommand cmdspClearTableData = new SqlCommand("spTRUNCATE_CURRENT_MARKET_SUMMARY", conn);
                 cmdspClearTableData.CommandType = CommandType.StoredProcedure;
 
                 //
 
-                SqlCommand cmdspInsertMarketSummaryOverview = new SqlCommand("spInsertMarketSummaryOverview", conn);
+                SqlCommand cmdspInsertMarketSummaryOverview = new SqlCommand("spINSERT_CURRENT_MARKET_OVERVIEW", conn);
                 cmdspInsertMarketSummaryOverview.CommandType = CommandType.StoredProcedure;
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@DATE", SqlDbType.DateTime);
                 cmdspInsertMarketSummaryOverview.Parameters["@DATE"].Value = RequestDate;
@@ -740,26 +740,10 @@ namespace PSXDataFetchingApp
 
                 //
 
-                SqlCommand cmdspInsertMarketSummaryOverviewHistory = new SqlCommand("spInsertMarketSummaryOverviewHistory", conn);
-                cmdspInsertMarketSummaryOverviewHistory.CommandType = CommandType.StoredProcedure;
-                cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@DATE", SqlDbType.DateTime);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@DATE"].Value = RequestDate;
-                cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@STATUS", SqlDbType.VarChar, 300);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@STATUS"].Value = RequestStatus;
-
-                cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@VOLUME", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@VOLUME"].Value = RequestVolume;
-                cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@VALUE", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@VALUE"].Value = RequestValue;
-
-                cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@TRADES", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverviewHistory.Parameters["@TRADES"].Value = RequestTrades;
-
                 try
                 {
                     
                     isDataCleared = cmdspClearTableData.ExecuteNonQuery();
-                    i = cmdspInsertMarketSummaryOverviewHistory.ExecuteNonQuery();
                     k = cmdspInsertMarketSummaryOverview.ExecuteNonQuery();
                     
                 }
@@ -783,11 +767,13 @@ namespace PSXDataFetchingApp
                         }
                         else
                         {
-                            SqlCommand cmdspInsertMarketSummary = new SqlCommand("spInsertMarketSummary", conn);
+                            SqlCommand cmdspInsertMarketSummary = new SqlCommand("spINSERT_CURRENT_MARKET_SUMMARY", conn);
                             cmdspInsertMarketSummary.CommandType = CommandType.StoredProcedure;
-                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_NAME", SqlDbType.VarChar, 300);
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SECTOR", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_SECTOR"].Value = "-";
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_NAME", SqlDbType.VarChar, -1);
                             cmdspInsertMarketSummary.Parameters["@COMPANY_NAME"].Value = companyName[m];
-                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, 300);
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, -1);
                             cmdspInsertMarketSummary.Parameters["@COMPANY_SYMBOL"].Value = companySymbol[m];
 
                             cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LDCP", SqlDbType.Float);
@@ -862,7 +848,7 @@ namespace PSXDataFetchingApp
 
                 //
 
-                if (i == 1 && j == 1 && k == 1 && l == 1)
+                if (j == 1 && k == 1 && l == 1)
                 {
                     Debug.WriteLine("Data successfully saved.");
                     return true;
@@ -1077,7 +1063,7 @@ namespace PSXDataFetchingApp
             Debug.WriteLine(ExpiredTime);
             if (ExpiredTime <= CurrentTime)
             {
-                //MessageBox.Show("Application is expired.");
+                MessageBox.Show("Application is expired.");
                 Debug.WriteLine("Computer Date: " + ExpiredTime);
             }
             else
@@ -1086,72 +1072,44 @@ namespace PSXDataFetchingApp
                 window.Show();
                 this.Hide();
             }
-            //HtmlNodeCollection name_nodes = FetchDataFromPSX("https://dps.psx.com.pk/downloads", "//td");
-            //string[] result = new string[name_nodes.Count];
-            //string[] AllTableRowData = new string[name_nodes.Count];
-
-            //int counter = 0;
-            //int StartCapturingflag = 0;
-
-            //foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
-            //{
-            //    if (StartCapturingflag == 1)
-            //    {
-            //        AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
-            //    }
-            //    else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
-            //    {
-            //        StartCapturingflag = 1;
-            //    }
-            //    else
-            //    {
-
-            //    }
-            //}
-            //int counter2 = 0;
-            //for (int j = 7; j < AllTableRowData.Count(); j = j + 8)
-            //{
-            //    if (AllTableRowData[j] != null)
-            //    {
-            //        if (AllTableRowData[j].Trim().Equals("VOLUME"))
-            //        {
-            //            //result[counter2++] += AllTableRowData[j];
-            //        }
-            //        else
-            //        {
-            //            result[counter2++] += AllTableRowData[j];
-            //        }
-            //    }
-            //}
-            ////return result;
         }
 
         private void btnMufapGetPKRV_Click(object sender, RoutedEventArgs e)
         {
-            string URL = "http://www.mufap.com.pk/industry.php?tab=" + DateTime.Today.Year.ToString() + "1";
-            HtmlNodeCollection name_nodes = FetchDataFromPSX(URL, "//div");
-            string[] result = new string[name_nodes.Count];
-            string text = String.Empty;
-
-            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            DateTime CurrentTime = DateTime.Now;
+            Debug.WriteLine(CurrentTime);
+            DateTime ExpiredTime = ExpiryDate;
+            Debug.WriteLine(ExpiredTime);
+            if (ExpiredTime <= CurrentTime)
             {
-                if(node.InnerText != null)
-                 text += node.InnerText.ToString();
-
+                MessageBox.Show("Application is expired.");
+                Debug.WriteLine("Computer Date: " + ExpiredTime);
             }
-            
-            for(int i = 0; i < result.Length; i++)
+            else
             {
-                text += result[i] + "\n";
+                MufapPKRV window = new MufapPKRV();
+                window.Show();
+                this.Hide();
             }
-
-            MessageBox.Show(text);
-
         }
 
         private void btnMufapGetPKFRV_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(DateTime.Today.Year.ToString());
+            DateTime CurrentTime = DateTime.Now;
+            Debug.WriteLine(CurrentTime);
+            DateTime ExpiredTime = ExpiryDate;
+            Debug.WriteLine(ExpiredTime);
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("Application is expired.");
+                Debug.WriteLine("Computer Date: " + ExpiredTime);
+            }
+            else
+            {
+                MufapPKFRV window = new MufapPKFRV();
+                window.Show();
+                this.Hide();
+            }
         }
 
         private void btnMufapGetMarketSummary_Click(object sender, RoutedEventArgs e)
@@ -1162,7 +1120,7 @@ namespace PSXDataFetchingApp
             Debug.WriteLine(ExpiredTime);
             if (ExpiredTime <= CurrentTime)
             {
-                //MessageBox.Show("Application is expired.");
+                MessageBox.Show("Application is expired.");
                 Debug.WriteLine("Computer Date: " + ExpiredTime);
             }
             else
@@ -1171,11 +1129,6 @@ namespace PSXDataFetchingApp
                 window.Show();
                 this.Hide();
             }
-            //Debug.WriteLine("Click!");
-            ////
-            //getMUFAPMarketSummaryRates("Money Market");
-            ////MessageBox.Show(text);
-            //Debug.WriteLine("End!");
         }
 
         
