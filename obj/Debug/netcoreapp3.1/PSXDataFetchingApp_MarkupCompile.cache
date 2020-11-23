@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\App.xaml
-9851830903
+10-1020792439
 
-18-1123527995
+20531364042
 216901034354
-Configuration.xaml;FundPreviewWindow.xaml;MainWindow.xaml;MUFAPMarketSummary.xaml;MufapPKFRV.xaml;MufapPKRV.xaml;PreviewWindow.xaml;Report.xaml;UploadPSXData.xaml;
+Configuration.xaml;FundPopupWindow.xaml;FundPreviewWindow.xaml;MainWindow.xaml;MUFAPMarketSummary.xaml;MufapPKFRV.xaml;MufapPKRV.xaml;PreviewWindow.xaml;Report.xaml;UploadPSXData.xaml;
 
 False
 

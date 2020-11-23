@@ -64,45 +64,55 @@ namespace PSXDataFetchingApp
 
         public string getMUFAPMarketSummaryRates(string tag)
         {
-
-            string URL = "http://www.mufap.com.pk/nav_returns_performance.php?tab=01";
-            HtmlNodeCollection name_nodes = FetchDataFromPSX(URL, "//td");
-
-            string[] result = new string[name_nodes.Count];
+            string[] result = null;
             string text = String.Empty;
-            int startCapture = 0;
-
-            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            try
             {
-                if (node.InnerText != null)
+
+                string URL = "http://www.mufap.com.pk/nav_returns_performance.php?tab=01";
+                HtmlNodeCollection name_nodes = FetchDataFromPSX(URL, "//td");
+
+                result = new string[name_nodes.Count];
+                
+                int startCapture = 0;
+
+                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
                 {
-                    //if (node.InnerText.Contains(tag))
-                    //{
-                    if (node.InnerText.ToString() == "S&M**")
+                    if (node.InnerText != null)
                     {
-                        startCapture = 1;
+                        //if (node.InnerText.Contains(tag))
+                        //{
+                        if (node.InnerText.ToString() == "S&M**")
+                        {
+                            startCapture = 1;
+                        }
+                        else if (node.InnerText.ToString().Trim().Contains("Capital") && node.InnerText.ToString().Trim().Contains("Protected") && node.InnerText.ToString().Trim().Contains("Absolute") && node.InnerText.ToString().Trim().Contains("Return"))
+                        {
+                            startCapture = 0;
+                            break;
+                        }
+                        else if (startCapture == 1)
+                        {
+                            text += node.InnerText.ToString();
+                        }
+                        //}
+
                     }
-                    else if (node.InnerText.ToString().Trim().Contains("Capital") && node.InnerText.ToString().Trim().Contains("Protected") && node.InnerText.ToString().Trim().Contains("Absolute") && node.InnerText.ToString().Trim().Contains("Return"))
-                    {
-                        startCapture = 0;
-                        break;
-                    }
-                    else if (startCapture == 1)
-                    {
-                        text += node.InnerText.ToString();
-                    }
-                    //}
 
                 }
 
+                for (int i = 0; i < result.Length; i++)
+                {
+                    text += result[i] + "\n";
+
+                }
             }
-
-            for (int i = 0; i < result.Length; i++)
+            catch(WebException ex)
             {
-                text += result[i] + "\n";
-
+                MessageBox.Show("Internet Exception: "+ ex.Message);
             }
             return text;
+
         }
 
     }

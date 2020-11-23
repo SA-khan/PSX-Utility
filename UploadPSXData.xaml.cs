@@ -32,12 +32,12 @@ namespace PSXDataFetchingApp
         private void btnGet_Click(object sender, RoutedEventArgs e)
         {
             string text = String.Empty;
-            String[] result = FirstMethod();
-            foreach(string data in result)
-            {
-                text += "=> " + data + " - "; 
-            }
-            MessageBox.Show(text);
+            List<string> result = FirstMethod();
+            //foreach(string data in result)
+            //{
+            //    text += "=> " + data + " - "; 
+            //}
+            //MessageBox.Show(text);
         }
 
         private HtmlNodeCollection FetchDataFromPSX(string url, string param)
@@ -58,46 +58,65 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        public String[] FirstMethod()
+        public List<string> FirstMethod()
         {
-            HtmlNodeCollection name_nodes = FetchDataFromPSX("https://dps.psx.com.pk/downloads", "//td");
-            string[] result = new string[name_nodes.Count];
-            string[] AllTableRowData = new string[name_nodes.Count];
+            //https://dps.psx.com.pk/download/mkt_summary/2020-11-18.Z
+            //HtmlNodeCollection nodes = FetchDataFromPSX("https://dps.psx.com.pk/downloads", "//div");
+            //List<string> result = new List<string>();
+            //List<string> AllTableRowData = new List<string>();
 
-            int counter = 0;
-            int StartCapturingflag = 0;
+            //int StartCapturingflag = 0;
+            //if (nodes != null)
+            //{
+            //    foreach (HtmlAgilityPack.HtmlNode node in nodes)
+            //    {
+            //        if (StartCapturingflag == 1)
+            //        {
+            //            //AllTableRowData.Add( node.InnerText.ToString() + "\n");
+            //        }
+            //        else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+            //        {
+            //            StartCapturingflag = 1;
+            //        }
+            //        else
+            //        {
+            //            AllTableRowData.Add(node.InnerText.ToString() + "\n");
+            //        }
+            //    }
+            //}
 
-            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            //for (int j = 7; j < AllTableRowData.Count; j = j + 8)
+            //{
+            //    if (AllTableRowData[j] != null)
+            //    {
+            //        if (AllTableRowData[j].Trim().Equals("VOLUME"))
+            //        {
+            //            //result[counter2++] += AllTableRowData[j];
+            //        }
+            //        else
+            //        {
+            //            result.Add(AllTableRowData[j]);
+            //        }
+            //    }
+            //}
+            //return result;
+            using (WebClient wc = new WebClient())
             {
-                if (StartCapturingflag == 1)
-                {
-                    AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
-                }
-                else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
-                {
-                    StartCapturingflag = 1;
-                }
-                else
-                {
+                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                wc.DownloadFileAsync(
+                    // Param1 = Link of file
+                    new System.Uri("https://dps.psx.com.pk/download/mkt_summary/2020-11-18.Z"),
+                    // Param2 = Path to save
+                    ".\\Downloads\\current.rar"
+                );
+            }
+            return null;
+        }
 
-                }
-            }
-            int counter2 = 0;
-            for (int j = 7; j < AllTableRowData.Length; j = j + 8)
-            {
-                if (AllTableRowData[j] != null)
-                {
-                    if (AllTableRowData[j].Trim().Equals("VOLUME"))
-                    {
-                        //result[counter2++] += AllTableRowData[j];
-                    }
-                    else
-                    {
-                        result[counter2++] += AllTableRowData[j];
-                    }
-                }
-            }
-            return result;
+        // Event to track the progress
+        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            progressBar.Value = e.ProgressPercentage;
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)

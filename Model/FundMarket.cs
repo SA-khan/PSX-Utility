@@ -18,5 +18,6 @@ namespace PSXDataFetchingApp.Model
         public  string VOLUME { get; set; }
 
         public string APPRECIATION_DEPRECIATION { get; set; }
+        public string PERCENTAGE_CLOSING { get; set; }
     }
 }

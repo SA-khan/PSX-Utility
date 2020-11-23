@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PSXDataFetchingApp"
         mc:Ignorable="d"
-        Title="Data Extractor Utility" FontFamily="/Fonts/#Lato" Height="650" Width="1020" Icon="/Images/web-scrap2.png" WindowStartupLocation="CenterScreen"
+        Title="Data Extractor Utility" FontFamily="/Fonts/#Lato" Height="650" Width="1120" Icon="/Images/web-scrap2.png" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
         
     <Window.Resources>
@@ -203,6 +203,18 @@
                                 <ItemContainerTemplate>
                                     <Grid HorizontalAlignment="Right" Width="80">
                                         <TextBlock Text="{Binding APPRECIATION_DEPRECIATION}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col10" Width="105">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="% Closing" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="80">
+                                        <TextBlock Text="{Binding PERCENTAGE_CLOSING}" HorizontalAlignment="Right"/>
                                     </Grid>
                                 </ItemContainerTemplate>
                             </GridViewColumn.CellTemplate>

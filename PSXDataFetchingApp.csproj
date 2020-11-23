@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Downloads\notification.mp3" />
     <None Remove="Fonts\Lato-Black.ttf" />
     <None Remove="Fonts\Lato-BlackItalic.ttf" />
     <None Remove="Fonts\Lato-Bold.ttf" />
@@ -75,6 +76,7 @@
     <None Remove="Images\uploadPSX.jpg" />
     <None Remove="Images\web-scrap.PNG" />
     <None Remove="Images\web-scrap2.png" />
+    <None Remove="notification.wav" />
     <None Include="Images\web-scrap2.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -95,6 +97,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="notification.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Fonts\Lato-Black.ttf" />
     <Resource Include="Fonts\Lato-BlackItalic.ttf" />
     <Resource Include="Fonts\Lato-Bold.ttf" />
@@ -158,6 +163,9 @@
     <Resource Include="Images\uploadPSX.jpg" />
     <Resource Include="Images\web-scrap.PNG" />
     <Resource Include="Images\web-scrap2.png" />
+    <EmbeddedResource Include="notification.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
