@@ -293,6 +293,10 @@ namespace PSXDataFetchingApp
             {
                 //setting background task to off
                 resetFlag = false;
+
+                //setting bucket buttun to hide
+                btnBorderBucket.Visibility = Visibility.Hidden;
+
                 ///Hiding txtboxes and add button
                 ///
                 if (!comboFund.Text.Contains("ADD NEW FUND"))
@@ -527,28 +531,37 @@ namespace PSXDataFetchingApp
 
                             //    //list1.View = myGridView;
                             //}
-                            decimal lappdepp = Convert.ToDecimal(Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
+                            decimal lappdepp;
+                            if (Appreciation_Depreciation[i].Contains("("))
+                            {
+                                lappdepp = Convert.ToDecimal("-" + Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
+                            }
+                            else
+                            {
+                                lappdepp = Convert.ToDecimal(Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
+                            }
+
                             decimal lbookcost = Convert.ToDecimal(LastUpdatedCost[i].Replace(",", ""));
                             decimal closing = lappdepp / lbookcost;
                             if (closing >= CLOSING_PERCENTAGE)
                             {
                                 FundPopUpWindowFlag = true;
-                                int flagBucket = SavingToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), false, getFundId(FundName), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), lappdepp, closing);
+                                int flagBucket = SavingToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), false, getFundId(FundName), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), Convert.ToDecimal(lappdepp), Convert.ToDecimal(closing));
                                 //Debug.WriteLine("Insert Fund Bucker Record Count: " + flagBucket);
-                                if (flagBucket != 0)
-                                {
+                                //if (flagBucket != 0)
+                                //{
 
                                     //FundPopupWindow popupWindow = new FundPopupWindow(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), false, FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), lappdepp, closing);
                                     //popupWindow.Show();
 
                                     // Debug.WriteLine("Insert Fund Bucker Record Count: " + flagBucket);
                                     //MessageBox.Show("INSERTED!");
-                                }
-                                else
-                                {
+                                //}
+                                //else
+                                //{
                                     //Debug.WriteLine("Insert Fund Bucker Record Count: " + flagBucket);
                                     //MessageBox.Show("NOT INSERTED!");
-                                }
+                                //}
                             }
                             list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}" , Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("0.##") + "%") });
                             //list1.Items.Add(new FundMarket { SERIAL = Convert.ToInt32(spFundDetial[i].FundId), NAME = spFundDetial[i].Name, SYMBOL = spFundDetial[i].Symbol, CURRENT = spFundDetial[i].Quantity.ToString("#"), LDCP = spFundDetial[i].AveragePrice.ToString(), OPEN = spFundDetial[i].BookCost.ToString(), CHANGE = spFundDetial[i].MarketPrice, VOLUME = spFundDetial[i].MarketValue.ToString(), APPRECIATION_DEPRECIATION = spFundDetial[i].AppDep   } );
@@ -573,7 +586,8 @@ namespace PSXDataFetchingApp
                         Debug.WriteLine("Fund Market Summary Data Inserted..: " + DataSaved);
                     }
 
-                    
+                    txtBucketCount.Text = " (" + getCountFundBucket().ToString() + ") ";
+                    btnBorderBucket.Visibility = Visibility.Visible;
 
                     //if (!DataSaved)
                     //    Debug.WriteLine("Unable to Save Data.");
@@ -997,13 +1011,40 @@ namespace PSXDataFetchingApp
                         {
                             FundPopUpWindowFlag = true;
                             string getSymbol = getFundSymbolExist(Share_Symbol[i]);
+                            Debug.WriteLine("SYMBOL GOT: " + getSymbol);
                             if (getSymbol != "Nil")
                             {
-                                int flagBucket = UpdateToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), getFundId(FundName), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), lappdepp, closing);
+                                Debug.WriteLine("Date: " + DefaultData[0] + " - " + DefaultData[0].GetType());
+                                Debug.WriteLine("Status: " + DefaultData[1] + " - " + DefaultData[1].GetType());
+                                Debug.WriteLine("Fund Id: " + getFundId(FundName) + " - " + getFundId(FundName).GetType());
+                                Debug.WriteLine("Fund Name: " + FundName + " - " + FundName.GetType());
+                                Debug.WriteLine("Share Name: " + Share_Name[i] + " - " + Share_Name[i].GetType());
+                                Debug.WriteLine("Share Symbol: " + Share_Symbol[i] + " - " + Share_Symbol[i].GetType());
+                                Debug.WriteLine("Quantity: " + LastUpdatedHolding[i] + " - " + LastUpdatedHolding[i].GetType());
+                                Debug.WriteLine("Average Price: " + LastUpdatedPerUnitCost[i] + " - " + LastUpdatedPerUnitCost[i].GetType());
+                                Debug.WriteLine("Book Cost: " + lbookcost + " - " + lbookcost.GetType());
+                                Debug.WriteLine("Market Price: " + MarketPriceCurrent[i] + " - " + MarketPriceCurrent[i].GetType());
+                                Debug.WriteLine("Market Value: " + MarketValue[i] + " - " + MarketValue[i].GetType());
+                                Debug.WriteLine("App Dep: " + lappdepp + " - " + lappdepp.GetType());
+                                Debug.WriteLine("Closing Percentage: " + closing + " - " + closing.GetType());
+                                int flagBucket = UpdateToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), Convert.ToInt64(getFundId(FundName)), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i].Replace(",","")), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i] == "" ? "0" : MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), Convert.ToDecimal(lappdepp), Convert.ToDecimal(closing));
                             }
                             else
                             {
-                                int flagBucket = SavingToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), false, getFundId(FundName), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), lappdepp, closing);
+                                Debug.WriteLine("Date: " + DefaultData[0] + " - " + DefaultData[0].GetType());
+                                Debug.WriteLine("Status: " + DefaultData[1] + " - " + DefaultData[1].GetType());
+                                Debug.WriteLine("Fund Id: " + getFundId(FundName) + " - " + getFundId(FundName).GetType());
+                                Debug.WriteLine("Fund Name: " + FundName + " - " + FundName.GetType());
+                                Debug.WriteLine("Share Name: " + Share_Name[i] + " - " + Share_Name[i].GetType());
+                                Debug.WriteLine("Share Symbol: " + Share_Symbol[i] + " - " + Share_Symbol[i].GetType());
+                                Debug.WriteLine("Quantity: " + LastUpdatedHolding[i] + " - " + LastUpdatedHolding[i].GetType());
+                                Debug.WriteLine("Average Price: " + LastUpdatedPerUnitCost[i] + " - " + LastUpdatedPerUnitCost[i].GetType());
+                                Debug.WriteLine("Book Cost: " + lbookcost + " - " + lbookcost.GetType());
+                                Debug.WriteLine("Market Price: " + MarketPriceCurrent[i] + " - " + MarketPriceCurrent[i].GetType());
+                                Debug.WriteLine("Market Value: " + MarketValue[i] + " - " + MarketValue[i].GetType());
+                                Debug.WriteLine("App Dep: " + lappdepp + " - " + lappdepp.GetType());
+                                Debug.WriteLine("Closing Percentage: " + closing + " - " + closing.GetType());
+                                int flagBucket = SavingToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), false, Convert.ToInt64(getFundId(FundName)), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i].Replace(",", "")), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i] == "" ? "0" : MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), Convert.ToDecimal(lappdepp), Convert.ToDecimal(closing));
                             }
                             
                         }
@@ -1048,8 +1089,11 @@ namespace PSXDataFetchingApp
                     List<Int64> bucketFundId = getFundScripBucketId();
                     foreach (Int64 id in bucketFundId)
                     {
-                        FundPopupWindow popupWindow = new FundPopupWindow(id);
-                        popupWindow.Show();
+                        if (!getFundScripBucketReadingStatus(id))
+                        {
+                            FundPopupWindow popupWindow = new FundPopupWindow(id);
+                            popupWindow.Show();
+                        }
                     }
                 }
             }
@@ -1645,11 +1689,65 @@ namespace PSXDataFetchingApp
             return bucket;
         }
 
+        public bool getFundScripBucketReadingStatus(Int64 id)
+        {
+            bool status = false;
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("spGET_FUND_SCRIP_BUCKET_READING_STATUS", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@ID", id));
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+                while (rdr.Read())
+                {
+                    Debug.WriteLine("Reading Status: " + rdr.GetBoolean(0));
+                    status = rdr.GetBoolean(0);
+                }
+            }
+            conn.Close();
+            return status;
+        }
+
+        public int getCountFundBucket()
+        {
+            int _id = 0;
+
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            conn.Open();
+            // 1.  create a command object identifying the stored procedure
+            SqlCommand cmd = new SqlCommand("spCOUNT_FUND_SCRIP_BUCKET", conn);
+
+            // 2. set the command object so it knows to execute a stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // 3. add parameter to command, which will be passed to the stored procedure
+            //cmd.Parameters.Add(new SqlParameter("@FUND_NAME", _fundName));
+
+            // execute the command
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+                // iterate through results, printing each to console
+                while (rdr.Read())
+                {
+                    _id = rdr.GetInt32(0);
+                    //Debug.WriteLine("FUND_ID in Default DB: " + FUND_ID);
+                }
+            }
+
+            conn.Close();
+
+            return _id;
+        }
+
+
         private void btnViewBucket_Click(object sender, RoutedEventArgs e)
         {
             FundBucket window = new FundBucket();
             window.Show();
-            this.Hide();
+            //this.Hide();
         }
     }
     

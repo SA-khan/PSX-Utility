@@ -47,10 +47,11 @@ namespace PSXDataFetchingApp
         }
         public FundPopupWindow(long id)
         {
-            InitializeComponent();
             SpecificFundBucket bucket = getFundBucketData(id);
-            if (bucket != null && bucket.FSB_READING_STATUS == true)
+            if (bucket != null && bucket.FSB_READING_STATUS == false)
             {
+                InitializeComponent();
+            
                 //this.Close();
                 txtDate.Text = bucket.FSB_DATE.ToString();
                 txtFundName.Text = bucket.FSB_FUND_NAME;
@@ -81,7 +82,7 @@ namespace PSXDataFetchingApp
             }
             else
             {
-                this.Close();
+                //this.Close();
             }
 
         }
@@ -147,10 +148,10 @@ namespace PSXDataFetchingApp
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            string shareName = txtShareName.Text;
-            Debug.WriteLine("Share Name: " + shareName);
+            string _symbol = txtShareSymbol.Text;
+            Debug.WriteLine("Share Symbol: " + _symbol);
 
-            long id = getFundBucketId(shareName);
+            long id = getFundBucketIdBySymbol(_symbol);
             Debug.WriteLine("Share ID: " + id);
 
                 SqlConnection conn = new SqlConnection();
@@ -253,6 +254,27 @@ namespace PSXDataFetchingApp
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@Name", SqlDbType.VarChar, -1);
             cmd.Parameters["@Name"].Value = _shareName;
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+                while (rdr.Read())
+                {
+                    bucket = rdr.GetInt64(0);
+                }
+            }
+            conn.Close();
+            return bucket;
+        }
+
+        public Int64 getFundBucketIdBySymbol(string _symbol)
+        {
+            Int64 bucket = 0;
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = defaultConnectionString;
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("spGET_SPECIFIC_FUND_SCRIP_BUCKET_ID_BY_SYMBOL", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@Symbol", SqlDbType.VarChar, -1);
+            cmd.Parameters["@Symbol"].Value = _symbol;
             using (SqlDataReader rdr = cmd.ExecuteReader())
             {
                 while (rdr.Read())

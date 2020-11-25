@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PSXDataFetchingApp"
         mc:Ignorable="d"
-        Title="Data Extractor Utility" FontFamily="/Fonts/#Lato" Height="650" Width="1120" Icon="/Images/web-scrap2.png" WindowStartupLocation="CenterScreen"
+        Title="Data Extractor Utility" FontFamily="/Fonts/#Lato" Height="650" Width="1107" Icon="/Images/web-scrap2.png" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
         
     <Window.Resources>
@@ -100,15 +100,20 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button x:Name="btnViewBucket" Grid.Column="9" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="40" MinWidth="40" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnViewBucket_Click" Background="White" BorderBrush="Transparent">
+                <Border x:Name="btnBorderBucket" Grid.Column="9" Visibility="Hidden"  Background="DarkGray" MaxWidth="45" MinWidth="45" Height="30" HorizontalAlignment="Right">
+                    <Button x:Name="btnViewBucket" Background="BlanchedAlmond" Padding="1" FontFamily="/Fonts/#Lato-Bold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnViewBucket_Click" BorderBrush="Transparent">
                     <Button.Content>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Images/bucket.png" Margin="1" Stretch="Uniform" MaxHeight="25" ToolTip="Fund Bucket" >
-                            </Image>
-                        </StackPanel>
+                            <Grid Width="40">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="txtBucketCount" Text=" () " HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <Image Grid.Column="1" Source="Images/bucket.png" Stretch="Uniform" HorizontalAlignment="Right" MaxHeight="20" ToolTip="Fund Bucket" />
+                        </Grid>
                     </Button.Content>
                 </Button>
-                
+                </Border>
                 
                 
                 
