@@ -43,9 +43,11 @@
     <None Remove="Fonts\Raleway-Thin.ttf" />
     <None Remove="Fonts\Raleway-ThinItalic.ttf" />
     <None Remove="Fonts\Raleway-VariableFont_wght.ttf" />
+    <None Remove="Images\add.jpg" />
     <None Remove="Images\back.png" />
     <None Remove="Images\bop.gif" />
     <None Remove="Images\BOP.png" />
+    <None Remove="Images\bucket.png" />
     <None Remove="Images\exclaimation.png" />
     <None Remove="Images\fundImage.jpg" />
     <None Remove="Images\HBL.gif" />
@@ -97,6 +99,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\add.jpg" />
+    <Resource Include="Images\bucket.png" />
     <Resource Include="notification.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

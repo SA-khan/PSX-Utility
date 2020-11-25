@@ -12,6 +12,9 @@
     <Compile Update="Configuration.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="FundBucket.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="FundPopupWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -36,6 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Configuration.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="FundBucket.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="FundPopupWindow.xaml">

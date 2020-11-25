@@ -25,7 +25,7 @@ namespace PSXDataFetchingApp
     {
         string defaultConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
         public List<SpecificFundBucket> data;
-        static int flag = 0;
+        public static int flag = 0;
         public FundPopupWindow()
         {
             InitializeComponent();
@@ -49,25 +49,40 @@ namespace PSXDataFetchingApp
         {
             InitializeComponent();
             SpecificFundBucket bucket = getFundBucketData(id);
-            if (bucket != null && bucket.FSB_READING_STATUS != true)
+            if (bucket != null && bucket.FSB_READING_STATUS == true)
             {
+                //this.Close();
                 txtDate.Text = bucket.FSB_DATE.ToString();
                 txtFundName.Text = bucket.FSB_FUND_NAME;
                 txtShareName.Text = bucket.FSB_SHARE_NAME;
                 txtShareSymbol.Text = bucket.FSB_SHARE_SYMBOL;
-                txtShareQuantity.Text = bucket.FSB_SHARE_QUANTITY.ToString("F");
+                txtShareQuantity.Text = bucket.FSB_SHARE_QUANTITY;
                 txtShareAveragePrice.Text = bucket.FSB_SHARE_AVG_PRICE.ToString("F");
-                txtShareBookCost.Text = bucket.FSB_SHARE_BOOK_COST.ToString("F");
+                txtShareBookCost.Text = bucket.FSB_SHARE_BOOK_COST;
                 txtShareMarketPrice.Text = bucket.FSB_SHARE_MARKET_PRICE.ToString("F");
-                txtShareMarketValue.Text = bucket.FSB_SHARE_MARKET_VALUE.ToString("F");
-                txtShareAppDep.Text = bucket.FSB_SHARE_APP_DEP.ToString("F");
+                txtShareMarketValue.Text = bucket.FSB_SHARE_MARKET_VALUE;
+                txtShareAppDep.Text = bucket.FSB_SHARE_APP_DEP;
                 txtShareClosingPercentage.Text = bucket.FSB_SHARE_PERCENTAGE_CLOSING.ToString("F");
-            }
 
-            SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = "notification.wav";
-            player.Load();
-            player.Play();
+
+
+                //System.Uri uri = new System.Uri("notification.wav");
+                try
+                {
+                    SoundPlayer player = new SoundPlayer();
+                    player.SoundLocation = "notification.wav";
+                    player.Load();
+                    player.Play();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception while playing sound: " + ex.Message);
+                }
+            }
+            else
+            {
+                this.Close();
+            }
 
         }
 
@@ -75,24 +90,24 @@ namespace PSXDataFetchingApp
         {
             try
             {
-                if (flag > 0)
-                {
-                    flag--;
-                    if (data != null && data[flag].FSB_READING_STATUS != true)
-                    {
-                        txtDate.Text = data[flag].FSB_DATE.ToString();
-                        txtFundName.Text = data[flag].FSB_FUND_NAME;
-                        txtShareName.Text = data[flag].FSB_SHARE_NAME;
-                        txtShareSymbol.Text = data[flag].FSB_SHARE_SYMBOL;
-                        txtShareQuantity.Text = data[flag].FSB_SHARE_QUANTITY.ToString();
-                        txtShareAveragePrice.Text = data[flag].FSB_SHARE_AVG_PRICE.ToString();
-                        txtShareBookCost.Text = data[flag].FSB_SHARE_BOOK_COST.ToString();
-                        txtShareMarketPrice.Text = data[flag].FSB_SHARE_MARKET_PRICE.ToString();
-                        txtShareMarketValue.Text = data[flag].FSB_SHARE_MARKET_VALUE.ToString();
-                        txtShareAppDep.Text = data[flag].FSB_SHARE_APP_DEP.ToString();
-                        txtShareClosingPercentage.Text = data[flag].FSB_SHARE_PERCENTAGE_CLOSING.ToString();
-                    }
-                }
+                //if (flag > 0)
+                //{
+                //    flag--;
+                //    if (data != null && data[flag].FSB_READING_STATUS != true)
+                //    {
+                //        txtDate.Text = data[flag].FSB_DATE.ToString();
+                //        txtFundName.Text = data[flag].FSB_FUND_NAME;
+                //        txtShareName.Text = data[flag].FSB_SHARE_NAME;
+                //        txtShareSymbol.Text = data[flag].FSB_SHARE_SYMBOL;
+                //        txtShareQuantity.Text = data[flag].FSB_SHARE_QUANTITY.ToString();
+                //        txtShareAveragePrice.Text = data[flag].FSB_SHARE_AVG_PRICE.ToString();
+                //        txtShareBookCost.Text = data[flag].FSB_SHARE_BOOK_COST.ToString();
+                //        txtShareMarketPrice.Text = data[flag].FSB_SHARE_MARKET_PRICE.ToString();
+                //        txtShareMarketValue.Text = data[flag].FSB_SHARE_MARKET_VALUE.ToString();
+                //        txtShareAppDep.Text = data[flag].FSB_SHARE_APP_DEP.ToString();
+                //        txtShareClosingPercentage.Text = data[flag].FSB_SHARE_PERCENTAGE_CLOSING.ToString();
+                //    }
+                //}
             }
             catch(Exception ex)
             {
@@ -104,24 +119,24 @@ namespace PSXDataFetchingApp
         {
             try
             {
-                if (flag < data.Count)
-                {
-                    flag++;
-                    if (data != null && data[flag].FSB_READING_STATUS != true)
-                    {
-                        txtDate.Text = data[flag].FSB_DATE.ToString();
-                        txtFundName.Text = data[flag].FSB_FUND_NAME;
-                        txtShareName.Text = data[flag].FSB_SHARE_NAME;
-                        txtShareSymbol.Text = data[flag].FSB_SHARE_SYMBOL;
-                        txtShareQuantity.Text = data[flag].FSB_SHARE_QUANTITY.ToString();
-                        txtShareAveragePrice.Text = data[flag].FSB_SHARE_AVG_PRICE.ToString();
-                        txtShareBookCost.Text = data[flag].FSB_SHARE_BOOK_COST.ToString();
-                        txtShareMarketPrice.Text = data[flag].FSB_SHARE_MARKET_PRICE.ToString();
-                        txtShareMarketValue.Text = data[flag].FSB_SHARE_MARKET_VALUE.ToString();
-                        txtShareAppDep.Text = data[flag].FSB_SHARE_APP_DEP.ToString();
-                        txtShareClosingPercentage.Text = data[flag].FSB_SHARE_PERCENTAGE_CLOSING.ToString();
-                    }
-                }
+                //if (flag < data.Count)
+                //{
+                //    flag++;
+                //    if (data != null && data[flag].FSB_READING_STATUS != true)
+                //    {
+                //        txtDate.Text = data[flag].FSB_DATE.ToString();
+                //        txtFundName.Text = data[flag].FSB_FUND_NAME;
+                //        txtShareName.Text = data[flag].FSB_SHARE_NAME;
+                //        txtShareSymbol.Text = data[flag].FSB_SHARE_SYMBOL;
+                //        txtShareQuantity.Text = data[flag].FSB_SHARE_QUANTITY.ToString();
+                //        txtShareAveragePrice.Text = data[flag].FSB_SHARE_AVG_PRICE.ToString();
+                //        txtShareBookCost.Text = data[flag].FSB_SHARE_BOOK_COST.ToString();
+                //        txtShareMarketPrice.Text = data[flag].FSB_SHARE_MARKET_PRICE.ToString();
+                //        txtShareMarketValue.Text = data[flag].FSB_SHARE_MARKET_VALUE.ToString();
+                //        txtShareAppDep.Text = data[flag].FSB_SHARE_APP_DEP.ToString();
+                //        txtShareClosingPercentage.Text = data[flag].FSB_SHARE_PERCENTAGE_CLOSING.ToString();
+                //    }
+                //}
             }
             catch(Exception ex)
             {
@@ -132,11 +147,12 @@ namespace PSXDataFetchingApp
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            long id = 0;
-            if (data != null && data[flag].SB_ID != 0)
-            {
-                id = data[flag].SB_ID;
-                Debug.WriteLine("ID: " + id);
+            string shareName = txtShareName.Text;
+            Debug.WriteLine("Share Name: " + shareName);
+
+            long id = getFundBucketId(shareName);
+            Debug.WriteLine("Share ID: " + id);
+
                 SqlConnection conn = new SqlConnection();
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
@@ -164,8 +180,6 @@ namespace PSXDataFetchingApp
                 {
                     conn.Close();
                 }
-
-            }
             this.Close();
 
         }
@@ -187,7 +201,7 @@ namespace PSXDataFetchingApp
             {
                 while (rdr.Read())
                 {
-                    bucket.Add(new SpecificFundBucket { SB_ID = rdr.GetInt64(0), FSB_DATE = rdr.GetDateTime(1), FSB_STATUS = rdr.GetString(2), FSB_READING_STATUS = rdr.GetBoolean(3), FSB_FUND_ID = rdr.GetInt64(4), FSB_FUND_NAME = rdr.GetString(5), FSB_SHARE_NAME = rdr.GetString(6), FSB_SHARE_SYMBOL = rdr.GetString(7), FSB_SHARE_QUANTITY = rdr.GetDecimal(8), FSB_SHARE_AVG_PRICE = rdr.GetDecimal(9), FSB_SHARE_BOOK_COST = rdr.GetDecimal(10), FSB_SHARE_MARKET_PRICE = rdr.GetDecimal(11), FSB_SHARE_MARKET_VALUE = rdr.GetDecimal(12), FSB_SHARE_APP_DEP = rdr.GetDecimal(13), FSB_SHARE_PERCENTAGE_CLOSING = rdr.GetDecimal(14) });
+                    bucket.Add(new SpecificFundBucket { SB_ID = rdr.GetInt64(0), FSB_DATE = rdr.GetDateTime(1), FSB_STATUS = rdr.GetString(2), FSB_READING_STATUS = rdr.GetBoolean(3), FSB_FUND_ID = rdr.GetInt64(4), FSB_FUND_NAME = rdr.GetString(5), FSB_SHARE_NAME = rdr.GetString(6), FSB_SHARE_SYMBOL = rdr.GetString(7), FSB_SHARE_QUANTITY = rdr.GetDecimal(8).ToString(), FSB_SHARE_AVG_PRICE = rdr.GetDecimal(9), FSB_SHARE_BOOK_COST = rdr.GetDecimal(10).ToString(), FSB_SHARE_MARKET_PRICE = rdr.GetDecimal(11), FSB_SHARE_MARKET_VALUE = rdr.GetDecimal(12).ToString(), FSB_SHARE_APP_DEP = rdr.GetDecimal(13).ToString(), FSB_SHARE_PERCENTAGE_CLOSING = rdr.GetDecimal(14) });
                 }
             }
             conn.Close();
@@ -216,13 +230,34 @@ namespace PSXDataFetchingApp
                     bucket.FSB_FUND_NAME = rdr.GetString(5);
                     bucket.FSB_SHARE_NAME = rdr.GetString(6);
                     bucket.FSB_SHARE_SYMBOL = rdr.GetString(7);
-                    bucket.FSB_SHARE_QUANTITY = rdr.GetDecimal(8);
+                    bucket.FSB_SHARE_QUANTITY = rdr.GetDecimal(8).ToString();
                     bucket.FSB_SHARE_AVG_PRICE = rdr.GetDecimal(9);
-                    bucket.FSB_SHARE_BOOK_COST = rdr.GetDecimal(10);
+                    bucket.FSB_SHARE_BOOK_COST = Math.Round(rdr.GetDecimal(10), MidpointRounding.AwayFromZero).ToString("0.##");
                     bucket.FSB_SHARE_MARKET_PRICE = rdr.GetDecimal(11);
-                    bucket.FSB_SHARE_MARKET_VALUE = rdr.GetDecimal(12);
-                    bucket.FSB_SHARE_APP_DEP = rdr.GetDecimal(13);
+                    bucket.FSB_SHARE_MARKET_VALUE = rdr.GetDecimal(12).ToString();
+                    bucket.FSB_SHARE_APP_DEP = rdr.GetDecimal(13).ToString();
                     bucket.FSB_SHARE_PERCENTAGE_CLOSING = rdr.GetDecimal(14);
+                }
+            }
+            conn.Close();
+            return bucket;
+        }
+
+        public Int64 getFundBucketId(string _shareName)
+        {
+            Int64 bucket = 0;
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = defaultConnectionString;
+            conn.Open();
+            SqlCommand cmd = new SqlCommand("spGET_SPECIFIC_FUND_SCRIP_BUCKET_ID", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@Name", SqlDbType.VarChar, -1);
+            cmd.Parameters["@Name"].Value = _shareName;
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+                while (rdr.Read())
+                {
+                    bucket = rdr.GetInt64(0);
                 }
             }
             conn.Close();

@@ -7,7 +7,7 @@
         x:Name="MainWindow1"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Configuration" Height="450" Width="800">
+        Title="Configuration" Height="650" Width="800">
     <Border Margin="2" Background="DarkGray">
         <Grid>
             <Grid.RowDefinitions>
@@ -70,6 +70,8 @@
             <Grid Grid.Row="2" x:Name="Body">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*" MinHeight="40" MaxHeight="40"/>
+                    <RowDefinition Height="*" MinHeight="40" MaxHeight="40"/>
                     <RowDefinition Height="*" MinHeight="40" MaxHeight="40"/>
                     <RowDefinition Height="*" MinHeight="40" MaxHeight="40"/>
                     <RowDefinition Height="*" MinHeight="40" MaxHeight="40"/>
@@ -146,6 +148,30 @@
                     <TextBox Grid.Column="2" x:Name="txtCompanyNameSecondary" Height="30" TextAlignment="Left" FontSize="15" Padding="5" Margin="5 0 5 0" />
                     <Button Grid.Column="3" x:Name="btnCompanySymbolCheckSecondary" Height="30" Width="80" MaxWidth="80" HorizontalAlignment="Left" Content="CHECK" Click="btnCompanySymbolCheckSecondary_Click" />
                     <TextBlock Grid.Column="1" x:Name="lblCompanySymbolCheckSecondary" Text="STATUS " FontSize="14" FontFamily="Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="5"  />
+                </Grid>
+                <Grid Grid.Row="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1" Text="Popup Alert " FontSize="14" FontFamily="Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="5"  />
+                    <CheckBox Grid.Column="2" x:Name="checkAlert" Height="15" FontSize="15" Margin="15 5 5 5" VerticalAlignment="Center" />
+                    <Button Grid.Column="3" x:Name="btnAlert" Height="30" Width="80" MaxWidth="80" HorizontalAlignment="Left" Content="UPDATE" Click="btnAlert_Click" />
+                    <TextBlock Grid.Column="1" x:Name="lblAltert" Text=" " FontSize="14" FontFamily="Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="5"  />
+                </Grid>
+                <Grid Grid.Row="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1" Text="Fund Closing Percentage " FontSize="14" FontFamily="Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="5"  />
+                    <TextBox Grid.Column="2" x:Name="txtClosingPercentage" Height="30" TextAlignment="Left" FontSize="15" Margin="5 0 5 0" />
+                    <Button Grid.Column="3" x:Name="btnClosingPercentage" Height="30" Width="80" MaxWidth="80" HorizontalAlignment="Left" Content="UPDATE" Click="btnClosingPercentage_Click" />
+                    <TextBlock Grid.Column="1" x:Name="lblClosingPercentage" Text=" " FontSize="14" FontFamily="Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="5"  />
                 </Grid>
             </Grid>
             <Grid x:Name="statusBar" Grid.Row="3" Background="DarkGray">

@@ -1,0 +1,9 @@
+/****** Script for SelectTopNRows command from SSMS  ******/
+CREATE PROC spGET_SPECIFIC_FUND_SCRIP_BUCKET_ID
+	@Name varchar(MAX)
+AS
+BEGIN
+SELECT [SB_ID]
+  FROM [PSXDataWarehouse].[dbo].[FUND_SCRIP_BUCKET]
+  WHERE FSB_SHARE_NAME like @Name
+END

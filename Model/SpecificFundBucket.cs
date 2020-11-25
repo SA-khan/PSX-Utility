@@ -14,12 +14,12 @@ namespace PSXDataFetchingApp.Model
         public string FSB_FUND_NAME { get; set; }
         public string FSB_SHARE_NAME { get; set; }
         public string FSB_SHARE_SYMBOL { get; set; }
-        public decimal FSB_SHARE_QUANTITY { get; set; }
+        public string FSB_SHARE_QUANTITY { get; set; }
         public decimal FSB_SHARE_AVG_PRICE { get; set; }
-        public decimal FSB_SHARE_BOOK_COST { get; set; }
+        public string FSB_SHARE_BOOK_COST { get; set; }
         public decimal FSB_SHARE_MARKET_PRICE { get; set; }
-        public decimal FSB_SHARE_MARKET_VALUE { get; set; }
-        public decimal FSB_SHARE_APP_DEP { get; set; }
+        public string FSB_SHARE_MARKET_VALUE { get; set; }
+        public string FSB_SHARE_APP_DEP { get; set; }
         public decimal FSB_SHARE_PERCENTAGE_CLOSING { get; set; }
     }
 }

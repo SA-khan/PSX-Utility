@@ -92,8 +92,22 @@
                 <TextBox Grid.Column="6" Name="txtFundID" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
                 <TextBlock x:Name="lblFundNAME" Grid.Column="7" Text="FUND NAME:" Visibility="Hidden" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
                 <TextBox Grid.Column="8" Name="txtFund" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
-                <Button x:Name="btnAdd" Grid.Column="9" Visibility="Hidden" Margin="5" Content="ADD" IsEnabled="False" FontFamily="/Fonts/#Lato" FontSize="13" MinWidth="70" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="btnAdd_Click"></Button>
-                
+                <Button x:Name="btnAdd" Visibility="Hidden" Grid.Column="9" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="40" MinWidth="40" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btnAdd_Click" Background="White" BorderBrush="Transparent">
+                    <Button.Content>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Source="Images/add.jpg" Margin="1" Stretch="Uniform" MaxHeight="20" ToolTip="Fund Bucket" >
+                            </Image>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button x:Name="btnViewBucket" Grid.Column="9" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="40" MinWidth="40" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnViewBucket_Click" Background="White" BorderBrush="Transparent">
+                    <Button.Content>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Source="Images/bucket.png" Margin="1" Stretch="Uniform" MaxHeight="25" ToolTip="Fund Bucket" >
+                            </Image>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
                 
                 
                 

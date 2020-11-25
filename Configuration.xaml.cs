@@ -98,6 +98,15 @@ namespace PSXDataFetchingApp
             txtClient.Text = ConfigurationManager.AppSettings["Client"].ToString();
             txtPrimaryConnection.Text = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
             txtSecondaryConnection.Text = ConfigurationManager.ConnectionStrings["IpamsConnection"].ToString();
+            if(ConfigurationManager.AppSettings["Alert"].ToString() == "1")
+            {
+                checkAlert.IsChecked = true;
+            }
+            else
+            {
+                checkAlert.IsChecked = false;
+            }
+            txtClosingPercentage.Text = ConfigurationManager.AppSettings["FundClosingPercentage"].ToString();
 
         }
 
@@ -377,6 +386,85 @@ namespace PSXDataFetchingApp
             finally
             {
                 conn.Close();
+            }
+        }
+
+        private void btnAlert_Click(object sender, RoutedEventArgs e)
+        {
+            bool _status = false;
+            if (checkAlert.IsChecked == true) {
+                ConfigurationManager.AppSettings["Alert"] = "1";
+                _status = true;
+            }
+            else { 
+                ConfigurationManager.AppSettings["Alert"] = "0";
+                _status = false;
+            }
+
+            System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            // Update the setting.
+            if (checkAlert.IsChecked == true)
+            {
+                config.AppSettings.Settings["Alert"].Value = "1";
+                _status = true;
+                Debug.WriteLine("Closing Percentage " + _status);
+            }
+            else
+            {
+                config.AppSettings.Settings["Alert"].Value = "0";
+                _status = false;
+                Debug.WriteLine("Closing Percentage " + _status);
+            }
+
+            // Save the configuration file.
+            config.Save(ConfigurationSaveMode.Modified);
+
+            // Force a reload of the changed section.
+            ConfigurationManager.RefreshSection("appSettings");
+
+            bool _what = ConfigurationManager.AppSettings["Alert"].ToString() == "1" ? true : false;
+
+            if ( _what == _status)
+            {
+                var bc = new BrushConverter();
+                btnAlert.Background = (Brush)bc.ConvertFrom("#32CD32");
+            }
+            else
+            {
+                var bc = new BrushConverter();
+                btnAlert.Background = (Brush)bc.ConvertFrom("#FF6347");
+            }
+        }
+
+        private void btnClosingPercentage_Click(object sender, RoutedEventArgs e)
+        {
+            string _percentage = txtClosingPercentage.Text;
+            Debug.WriteLine("Closing Percentage " + _percentage);
+
+            //ConfigurationManager.AppSettings["FundClosingPercentage"].Value = _percentage;
+
+
+            System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            // Update the setting.
+            config.AppSettings.Settings["FundClosingPercentage"].Value = _percentage;
+
+            // Save the configuration file.
+            config.Save(ConfigurationSaveMode.Modified);
+
+            // Force a reload of the changed section.
+            ConfigurationManager.RefreshSection("appSettings");
+
+            if (ConfigurationManager.AppSettings["FundClosingPercentage"] == _percentage)
+            {
+                var bc = new BrushConverter();
+                btnClosingPercentage.Background = (Brush)bc.ConvertFrom("#32CD32");
+            }
+            else
+            {
+                var bc = new BrushConverter();
+                btnClosingPercentage.Background = (Brush)bc.ConvertFrom("#FF6347");
             }
         }
     }

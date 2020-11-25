@@ -189,7 +189,7 @@ namespace PSXDataFetchingApp
                 using (connectionName)
                 {
                     connectionName.Open();
-                    SqlCommand cmd = new SqlCommand("spGetFundNames", connectionName); // Read user-> stored procedure name
+                    SqlCommand cmd = new SqlCommand("spGET_FUND_NAMES", connectionName); // Read user-> stored procedure name
                     cmd.CommandType = CommandType.StoredProcedure;
                     using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
@@ -422,15 +422,14 @@ namespace PSXDataFetchingApp
                     //int total = 0;
 
                     int flagClearBucket = ClearFundBacket();
+                    Debug.WriteLine("Clear Table Status: " + flagClearBucket);
                     //Debug.WriteLine("Clear Fund Bucker Data Count: " + flagClearBucket);
                     if (flagClearBucket != 0)
                     {
-                        Debug.WriteLine("Clear Table Status: " + flagClearBucket);
                         //MessageBox.Show("Cleared!");
                     }
                     else
                     {
-                        Debug.WriteLine("Clear Table Status: " + flagClearBucket);
                         //MessageBox.Show("Not Cleared!");
                     }
 
@@ -566,7 +565,15 @@ namespace PSXDataFetchingApp
 
                     loadingImage.Visibility = Visibility.Hidden;
 
-                    //bool DataSaved = await Task.Run(() => SavingDataToDatabase(MARKET_STATUS, FUND_ID1, FUND_NAME1, Share_Name, Share_Symbol, QUANTITY, AVERAGE_PRICE, BOOK_COST, MARKET_PRICE, MARKET_VALUE, APPRECIATION_DEPRECIATION));
+                    int clearData = await Task.Run(() => ClearFundMarketSummary());
+                    Debug.WriteLine("Fund Market Summary Data Cleared..: " + clearData);
+                    if(clearData == -1)
+                    {
+                        int DataSaved = await Task.Run(() => SavingDataToDatabase(MARKET_STATUS, FUND_ID1, FUND_NAME1, Share_Name, Share_Symbol, QUANTITY, AVERAGE_PRICE, BOOK_COST, MARKET_PRICE, MARKET_VALUE, APPRECIATION_DEPRECIATION));
+                        Debug.WriteLine("Fund Market Summary Data Inserted..: " + DataSaved);
+                    }
+
+                    
 
                     //if (!DataSaved)
                     //    Debug.WriteLine("Unable to Save Data.");
@@ -579,13 +586,17 @@ namespace PSXDataFetchingApp
 
                     lblStatus.Text = "Status: Ready";
 
-                    if (FundPopUpWindowFlag)
+                    if (ConfigurationManager.AppSettings["Alert"] == "1")
                     {
-                        List<Int64> bucketFundId = getFundScripBucketId();
-                        foreach (Int64 id in bucketFundId)
+
+                        if (FundPopUpWindowFlag)
                         {
-                            FundPopupWindow popupWindow = new FundPopupWindow(id);
-                            popupWindow.Show();
+                            List<Int64> bucketFundId = getFundScripBucketId();
+                            foreach (Int64 id in bucketFundId)
+                            {
+                                FundPopupWindow popupWindow = new FundPopupWindow(id);
+                                popupWindow.Show();
+                            }
                         }
                     }
 
@@ -982,7 +993,22 @@ namespace PSXDataFetchingApp
                         decimal lappdepp = Convert.ToDecimal(Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
                         decimal lbookcost = Convert.ToDecimal(LastUpdatedCost[i].Replace(",", ""));
                         decimal closing = lappdepp / lbookcost;
+                        if (closing >= CLOSING_PERCENTAGE)
+                        {
+                            FundPopUpWindowFlag = true;
+                            string getSymbol = getFundSymbolExist(Share_Symbol[i]);
+                            if (getSymbol != "Nil")
+                            {
+                                int flagBucket = UpdateToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), getFundId(FundName), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), lappdepp, closing);
+                            }
+                            else
+                            {
+                                int flagBucket = SavingToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), false, getFundId(FundName), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), lappdepp, closing);
+                            }
+                            
+                        }
                         list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}", Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("0.##") + "%") });
+                        
                         //list1.Items.Add(new SpecificFundDetail { FundId = spFundDetial[i].FundId, Name = spFundDetial[i].Name, Symbol = spFundDetial[i].Symbol, Quantity = spFundDetial[i].Quantity, AveragePrice = spFundDetial[i].AveragePrice, BookCost = spFundDetial[i].BookCost, MarketPrice = spFundDetial[i].MarketPrice, MarketValue = spFundDetial[i].MarketValue, AppDep = spFundDetial[i].AppDep, Math.Round(closing, 2).ToString("0.##") + "%" });
                     }
                 }
@@ -1013,9 +1039,24 @@ namespace PSXDataFetchingApp
             ImageBehavior.SetAnimatedSource(imgStatus, image2);
 
             lblStatus.Text = "Status: Ready";
+
+            if (ConfigurationManager.AppSettings["Alert"] == "1")
+            {
+
+                if (FundPopUpWindowFlag)
+                {
+                    List<Int64> bucketFundId = getFundScripBucketId();
+                    foreach (Int64 id in bucketFundId)
+                    {
+                        FundPopupWindow popupWindow = new FundPopupWindow(id);
+                        popupWindow.Show();
+                    }
+                }
+            }
+
         }
 
-        private bool SavingDataToDatabase(string MARKET_STATUS, Int64 FUND_ID, string FUND_NAME, List<String> SHARE_NAME, List<String> SHARE_SYMBOL, List<Decimal> QUANTITY, List<Decimal> AVERAGE_PRICE, List<Decimal> BOOK_COST, List<Decimal> MARKET_PRICE, List<Decimal> MARKET_VALUE, List<String> APP_DEP)
+        private int SavingDataToDatabase(string MARKET_STATUS, Int64 FUND_ID, string FUND_NAME, List<String> SHARE_NAME, List<String> SHARE_SYMBOL, List<Decimal> QUANTITY, List<Decimal> AVERAGE_PRICE, List<Decimal> BOOK_COST, List<Decimal> MARKET_PRICE, List<Decimal> MARKET_VALUE, List<String> APP_DEP)
         {
 
             if (MARKET_STATUS != null)
@@ -1073,20 +1114,20 @@ namespace PSXDataFetchingApp
 
                         //}
                     }
-                    return true;
+                    return status;
 
                 }
                 catch (SqlException ex)
                 {
                     MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Debug.WriteLine("SQL Exception: " + ex.Message);
-                    return false;
+                    return 0;
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Debug.WriteLine("General Exception: " + ex.Message);
-                    return false;
+                    return 0;
                 }
 
 
@@ -1108,7 +1149,7 @@ namespace PSXDataFetchingApp
             }
             else
             {
-                return false;
+                return 0;
             }
         }
 
@@ -1380,6 +1421,79 @@ namespace PSXDataFetchingApp
             }
         }
 
+        public int UpdateToFundBacket(DateTime _date, string _status, Int64 _fundId, string _fundName, string _shareName, string _shareSymbol, decimal _quantity, decimal _averagePrice, decimal _bookCost, decimal _marketPrice, decimal _marketValue, decimal _appDep, decimal _percentageClosing)
+        {
+            if (_shareName != null)
+            {
+
+                SqlConnection conn = new SqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+                conn.Open();
+                int status = 0;
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("spUPDATE_FUND_SCRIP_BUCKET", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@FSB_DATE", SqlDbType.DateTime);
+                    cmd.Parameters["@FSB_DATE"].Value = _date;
+                    cmd.Parameters.Add("@FSB_STATUS", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@FSB_STATUS"].Value = _status;
+                    cmd.Parameters.Add("@FSB_FUND_ID", SqlDbType.BigInt);
+                    cmd.Parameters["@FSB_FUND_ID"].Value = _fundId;
+                    cmd.Parameters.Add("@FSB_FUND_NAME", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@FSB_FUND_NAME"].Value = _fundName;
+                    cmd.Parameters.Add("@FSB_SHARE_NAME", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@FSB_SHARE_NAME"].Value = _shareName;
+                    cmd.Parameters.Add("@FSB_SHARE_SYMBOL", SqlDbType.VarChar, 500);
+                    cmd.Parameters["@FSB_SHARE_SYMBOL"].Value = _shareSymbol;
+                    cmd.Parameters.Add("@FSB_SHARE_QUANTITY", SqlDbType.Decimal);
+                    cmd.Parameters["@FSB_SHARE_QUANTITY"].Value = _quantity;
+                    cmd.Parameters.Add("@FSB_SHARE_AVG_PRICE", SqlDbType.Decimal);
+                    cmd.Parameters["@FSB_SHARE_AVG_PRICE"].Value = _averagePrice;
+                    cmd.Parameters.Add("@FSB_SHARE_BOOK_COST", SqlDbType.Decimal);
+                    cmd.Parameters["@FSB_SHARE_BOOK_COST"].Value = _bookCost;
+                    cmd.Parameters.Add("@FSB_SHARE_MARKET_PRICE", SqlDbType.Decimal);
+                    cmd.Parameters["@FSB_SHARE_MARKET_PRICE"].Value = _marketPrice;
+                    cmd.Parameters.Add("@FSB_SHARE_MARKET_VALUE", SqlDbType.Decimal);
+                    cmd.Parameters["@FSB_SHARE_MARKET_VALUE"].Value = _marketValue;
+                    cmd.Parameters.Add("@FSB_SHARE_APP_DEP", SqlDbType.Decimal);
+                    cmd.Parameters["@FSB_SHARE_APP_DEP"].Value = _appDep;
+                    cmd.Parameters.Add("@FSB_SHARE_PERCENTAGE_CLOSING", SqlDbType.Decimal);
+                    cmd.Parameters["@FSB_SHARE_PERCENTAGE_CLOSING"].Value = _percentageClosing;
+
+                    status = cmd.ExecuteNonQuery();
+                    //if (status == 1)
+                    //{
+                    //    Debug.WriteLine("Passed!");
+                    //}
+                    //}
+                    return status;
+
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                    return 0;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         private int ClearFundBacket()
         {
             SqlConnection conn = new SqlConnection();
@@ -1411,6 +1525,39 @@ namespace PSXDataFetchingApp
                 conn.Close();
             }
         
+        }
+
+        private int ClearFundMarketSummary()
+        {
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            conn.Open();
+            int status = 0;
+            try
+            {
+                SqlCommand cmd = new SqlCommand("spTRUNCATE_FUND_MARKET_SUMMARY", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                status = cmd.ExecuteNonQuery();
+                return status;
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("SQL Exception: " + ex.Message);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("General Exception: " + ex.Message);
+                return 0;
+            }
+            finally
+            {
+                conn.Close();
+            }
+
         }
 
         ///Get Fund ID By Fund Name
@@ -1447,6 +1594,38 @@ namespace PSXDataFetchingApp
             return _id;
         }
 
+        public string getFundSymbolExist(string _symbol)
+        {
+            string _id = String.Empty;
+
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            conn.Open();
+            // 1.  create a command object identifying the stored procedure
+            SqlCommand cmd = new SqlCommand("spGET_FUND_SCRIP_BUCKET_SYMBOL_EXIST", conn);
+
+            // 2. set the command object so it knows to execute a stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // 3. add parameter to command, which will be passed to the stored procedure
+            cmd.Parameters.Add(new SqlParameter("@Symbol", _symbol));
+
+            // execute the command
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+                // iterate through results, printing each to console
+                while (rdr.Read())
+                {
+                    _id = rdr.GetString(0);
+                    //Debug.WriteLine("FUND_ID in Default DB: " + FUND_ID);
+                }
+            }
+
+            conn.Close();
+
+            return _id;
+        }
+
         public List<Int64> getFundScripBucketId()
         {
             List<Int64> bucket = new List<Int64>();
@@ -1466,6 +1645,12 @@ namespace PSXDataFetchingApp
             return bucket;
         }
 
+        private void btnViewBucket_Click(object sender, RoutedEventArgs e)
+        {
+            FundBucket window = new FundBucket();
+            window.Show();
+            this.Hide();
+        }
     }
     
 }

@@ -1,5 +1,3 @@
-USE [ipams_db]
-GO
 /****** Object:  StoredProcedure [dbo].[spGetShareSymbolByName]    Script Date: 11/13/2020 2:02:21 PM ******/
 SET ANSI_NULLS ON
 GO
