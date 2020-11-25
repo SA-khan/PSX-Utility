@@ -98,13 +98,21 @@ namespace PSXDataFetchingApp
             txtClient.Text = ConfigurationManager.AppSettings["Client"].ToString();
             txtPrimaryConnection.Text = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
             txtSecondaryConnection.Text = ConfigurationManager.ConnectionStrings["IpamsConnection"].ToString();
-            if(ConfigurationManager.AppSettings["Alert"].ToString() == "1")
+            if(ConfigurationManager.AppSettings["PopupAlert"].ToString() == "1")
             {
                 checkAlert.IsChecked = true;
             }
             else
             {
                 checkAlert.IsChecked = false;
+            }
+            if (ConfigurationManager.AppSettings["EmailAlert"].ToString() == "1")
+            {
+                checkEmail.IsChecked = true;
+            }
+            else
+            {
+                checkEmail.IsChecked = false;
             }
             txtClosingPercentage.Text = ConfigurationManager.AppSettings["FundClosingPercentage"].ToString();
 
@@ -392,38 +400,47 @@ namespace PSXDataFetchingApp
         private void btnAlert_Click(object sender, RoutedEventArgs e)
         {
             bool _status = false;
+            
             if (checkAlert.IsChecked == true) {
-                ConfigurationManager.AppSettings["Alert"] = "1";
+                ConfigurationManager.AppSettings["PopupAlert"] = "1";
                 _status = true;
             }
             else { 
-                ConfigurationManager.AppSettings["Alert"] = "0";
+                ConfigurationManager.AppSettings["PopupAlert"] = "0";
                 _status = false;
             }
 
-            System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            
 
+            System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            
             // Update the setting.
             if (checkAlert.IsChecked == true)
             {
-                config.AppSettings.Settings["Alert"].Value = "1";
+                config.AppSettings.Settings["PopupAlert"].Value = "1";
                 _status = true;
                 Debug.WriteLine("Closing Percentage " + _status);
             }
             else
             {
-                config.AppSettings.Settings["Alert"].Value = "0";
+                config.AppSettings.Settings["PopupAlert"].Value = "0";
                 _status = false;
                 Debug.WriteLine("Closing Percentage " + _status);
             }
 
+            
+
             // Save the configuration file.
             config.Save(ConfigurationSaveMode.Modified);
+
+            
 
             // Force a reload of the changed section.
             ConfigurationManager.RefreshSection("appSettings");
 
-            bool _what = ConfigurationManager.AppSettings["Alert"].ToString() == "1" ? true : false;
+            bool _what = ConfigurationManager.AppSettings["PopupAlert"].ToString() == "1" ? true : false;
+
+            
 
             if ( _what == _status)
             {
@@ -435,6 +452,52 @@ namespace PSXDataFetchingApp
                 var bc = new BrushConverter();
                 btnAlert.Background = (Brush)bc.ConvertFrom("#FF6347");
             }
+
+            //
+            bool _statusEmail = false;
+
+            System.Configuration.Configuration configEmail = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            if (checkEmail.IsChecked == true)
+            {
+                ConfigurationManager.AppSettings["EmailAlert"] = "1";
+                _statusEmail = true;
+            }
+            else
+            {
+                ConfigurationManager.AppSettings["EmailAlert"] = "0";
+                _statusEmail = false;
+            }
+
+            if (checkEmail.IsChecked == true)
+            {
+                configEmail.AppSettings.Settings["EmailAlert"].Value = "1";
+                _statusEmail = true;
+                Debug.WriteLine("Closing Percentage " + _statusEmail);
+            }
+            else
+            {
+                configEmail.AppSettings.Settings["EmailAlert"].Value = "0";
+                _statusEmail = false;
+                Debug.WriteLine("Closing Percentage " + _statusEmail);
+            }
+
+            //
+            configEmail.Save(ConfigurationSaveMode.Modified);
+
+            bool _whatEmail = ConfigurationManager.AppSettings["EmailAlert"].ToString() == "1" ? true : false;
+
+            if (_whatEmail == _statusEmail)
+            {
+                var bc = new BrushConverter();
+                btnAlert.Background = (Brush)bc.ConvertFrom("#32CD32");
+            }
+            else
+            {
+                var bc = new BrushConverter();
+                btnAlert.Background = (Brush)bc.ConvertFrom("#FF6347");
+            }
+
         }
 
         private void btnClosingPercentage_Click(object sender, RoutedEventArgs e)

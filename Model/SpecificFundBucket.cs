@@ -20,6 +20,6 @@ namespace PSXDataFetchingApp.Model
         public decimal FSB_SHARE_MARKET_PRICE { get; set; }
         public string FSB_SHARE_MARKET_VALUE { get; set; }
         public string FSB_SHARE_APP_DEP { get; set; }
-        public decimal FSB_SHARE_PERCENTAGE_CLOSING { get; set; }
+        public string FSB_SHARE_PERCENTAGE_CLOSING { get; set; }
     }
 }

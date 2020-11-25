@@ -40,7 +40,11 @@ namespace PSXDataFetchingApp
                     loadingImage.Visibility = Visibility.Hidden;
                     list1.Visibility = Visibility.Visible;
                     for (int i = 0; i < items.Count; i++) {
-                        list1.Items.Add(new SpecificFundBucket { SB_ID = Convert.ToInt32(items[i].SB_ID), FSB_FUND_NAME = items[i].FSB_FUND_NAME, FSB_SHARE_NAME = items[i].FSB_SHARE_NAME, FSB_SHARE_SYMBOL = items[i].FSB_SHARE_SYMBOL, FSB_SHARE_QUANTITY = String.Format("{0:n0}",items[i].FSB_SHARE_QUANTITY), FSB_SHARE_AVG_PRICE = items[i].FSB_SHARE_AVG_PRICE, FSB_SHARE_BOOK_COST = String.Format("{0:n0}", items[i].FSB_SHARE_BOOK_COST), FSB_SHARE_MARKET_PRICE = items[i].FSB_SHARE_MARKET_PRICE, FSB_SHARE_MARKET_VALUE = String.Format("{0:n0}", items[i].FSB_SHARE_MARKET_VALUE), FSB_SHARE_APP_DEP = String.Format("{0:n0}", items[i].FSB_SHARE_APP_DEP), FSB_SHARE_PERCENTAGE_CLOSING = items[i].FSB_SHARE_PERCENTAGE_CLOSING});
+                        decimal _quantity = Math.Round(Convert.ToDecimal(items[i].FSB_SHARE_QUANTITY), MidpointRounding.AwayFromZero);
+                        decimal _bookcost = Math.Round(Convert.ToDecimal(items[i].FSB_SHARE_BOOK_COST), MidpointRounding.AwayFromZero);
+                        decimal _marketvalue = Math.Round(Convert.ToDecimal(items[i].FSB_SHARE_MARKET_VALUE), MidpointRounding.AwayFromZero);
+                        decimal _appdep = Math.Round(Convert.ToDecimal(items[i].FSB_SHARE_APP_DEP), MidpointRounding.AwayFromZero);
+                        list1.Items.Add(new SpecificFundBucket { SB_ID = Convert.ToInt32(items[i].SB_ID), FSB_FUND_NAME = items[i].FSB_FUND_NAME, FSB_SHARE_NAME = items[i].FSB_SHARE_NAME, FSB_SHARE_SYMBOL = items[i].FSB_SHARE_SYMBOL, FSB_SHARE_QUANTITY = _quantity.ToString("N0"), FSB_SHARE_AVG_PRICE = items[i].FSB_SHARE_AVG_PRICE, FSB_SHARE_BOOK_COST = _bookcost.ToString("N0"), FSB_SHARE_MARKET_PRICE = items[i].FSB_SHARE_MARKET_PRICE, FSB_SHARE_MARKET_VALUE = _marketvalue.ToString("N0"), FSB_SHARE_APP_DEP = _appdep.ToString("N0"), FSB_SHARE_PERCENTAGE_CLOSING = items[i].FSB_SHARE_PERCENTAGE_CLOSING.ToString()+"%"});
                     }
                 }
                 catch(Exception ex)
@@ -71,7 +75,7 @@ namespace PSXDataFetchingApp
                 {
                     while (rdr.Read())
                     {
-                        bucket.Add(new SpecificFundBucket { SB_ID = rdr.GetInt64(0), FSB_DATE = rdr.GetDateTime(1), FSB_STATUS = rdr.GetString(2), FSB_READING_STATUS = rdr.GetBoolean(3), FSB_FUND_ID = rdr.GetInt64(4), FSB_FUND_NAME = rdr.GetString(5), FSB_SHARE_NAME = rdr.GetString(6), FSB_SHARE_SYMBOL = rdr.GetString(7), FSB_SHARE_QUANTITY = rdr.GetDecimal(8).ToString(), FSB_SHARE_AVG_PRICE = rdr.GetDecimal(9), FSB_SHARE_BOOK_COST = rdr.GetDecimal(10).ToString(), FSB_SHARE_MARKET_PRICE = rdr.GetDecimal(11), FSB_SHARE_MARKET_VALUE = rdr.GetDecimal(12).ToString(), FSB_SHARE_APP_DEP = rdr.GetDecimal(13).ToString(), FSB_SHARE_PERCENTAGE_CLOSING = rdr.GetDecimal(14) });
+                        bucket.Add(new SpecificFundBucket { SB_ID = rdr.GetInt64(0), FSB_DATE = rdr.GetDateTime(1), FSB_STATUS = rdr.GetString(2), FSB_READING_STATUS = rdr.GetBoolean(3), FSB_FUND_ID = rdr.GetInt64(4), FSB_FUND_NAME = rdr.GetString(5), FSB_SHARE_NAME = rdr.GetString(6), FSB_SHARE_SYMBOL = rdr.GetString(7), FSB_SHARE_QUANTITY = rdr.GetDecimal(8).ToString(), FSB_SHARE_AVG_PRICE = rdr.GetDecimal(9), FSB_SHARE_BOOK_COST = rdr.GetDecimal(10).ToString(), FSB_SHARE_MARKET_PRICE = rdr.GetDecimal(11), FSB_SHARE_MARKET_VALUE = rdr.GetDecimal(12).ToString(), FSB_SHARE_APP_DEP = rdr.GetDecimal(13).ToString(), FSB_SHARE_PERCENTAGE_CLOSING = rdr.GetDecimal(14).ToString() });
                     }
                 }   
             }

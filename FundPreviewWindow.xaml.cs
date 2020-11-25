@@ -31,6 +31,7 @@ using OfficeOpenXml;
 using System.Drawing;
 using OfficeOpenXml.Style;
 using System.Threading;
+using System.Net.Mail;
 
 namespace PSXDataFetchingApp
 {
@@ -563,7 +564,9 @@ namespace PSXDataFetchingApp
                                     //MessageBox.Show("NOT INSERTED!");
                                 //}
                             }
-                            list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}" , Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("0.##") + "%") });
+                            decimal laverageprice = Convert.ToDecimal(LastUpdatedPerUnitCost[i]);
+                            decimal lmarketprice = Convert.ToDecimal(MarketPriceCurrent[i]);
+                            list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = laverageprice.ToString("N2"), OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = lmarketprice.ToString("N2"), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}" , Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
                             //list1.Items.Add(new FundMarket { SERIAL = Convert.ToInt32(spFundDetial[i].FundId), NAME = spFundDetial[i].Name, SYMBOL = spFundDetial[i].Symbol, CURRENT = spFundDetial[i].Quantity.ToString("#"), LDCP = spFundDetial[i].AveragePrice.ToString(), OPEN = spFundDetial[i].BookCost.ToString(), CHANGE = spFundDetial[i].MarketPrice, VOLUME = spFundDetial[i].MarketValue.ToString(), APPRECIATION_DEPRECIATION = spFundDetial[i].AppDep   } );
                             //list1.Items.Add(new SpecificFundDetail { FundId = spFundDetial[i].FundId, Name = spFundDetial[i].Name, Symbol = spFundDetial[i].Symbol, Quantity = spFundDetial[i].Quantity, AveragePrice = spFundDetial[i].AveragePrice, BookCost = spFundDetial[i].BookCost, MarketPrice = spFundDetial[i].MarketPrice, MarketValue = spFundDetial[i].MarketValue, AppDep = spFundDetial[i].AppDep });
                             // 
@@ -611,6 +614,26 @@ namespace PSXDataFetchingApp
                                 FundPopupWindow popupWindow = new FundPopupWindow(id);
                                 popupWindow.Show();
                             }
+                        }
+                    }
+
+                    if (ConfigurationManager.AppSettings["EmailAlert"] == "1")
+                    {
+
+                        if (FundPopUpWindowFlag)
+                        {
+                            //List<Int64> bucketFundId = getFundScripBucketId();
+                            //foreach (Int64 id in bucketFundId)
+                            //{
+                            try
+                            {
+                                Email("Hello");
+                            }
+                            catch(Exception ex)
+                            {
+                                Debug.WriteLine("Email Exception: " + ex.Message);
+                            }
+                            //}
                         }
                     }
 
@@ -1004,7 +1027,15 @@ namespace PSXDataFetchingApp
                     if (Share_Name[i] == null) { }
                     else
                     {
-                        decimal lappdepp = Convert.ToDecimal(Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
+                        decimal lappdepp;
+                        if (Appreciation_Depreciation[i].Contains("("))
+                        {
+                            lappdepp = Convert.ToDecimal("-" + Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
+                        }
+                        else
+                        {
+                            lappdepp = Convert.ToDecimal(Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
+                        }
                         decimal lbookcost = Convert.ToDecimal(LastUpdatedCost[i].Replace(",", ""));
                         decimal closing = lappdepp / lbookcost;
                         if (closing >= CLOSING_PERCENTAGE)
@@ -1048,7 +1079,9 @@ namespace PSXDataFetchingApp
                             }
                             
                         }
-                        list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}", Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("0.##") + "%") });
+                        decimal laverageprice = Convert.ToDecimal(LastUpdatedPerUnitCost[i]);
+                        decimal lmarketprice = Convert.ToDecimal(MarketPriceCurrent[i]);
+                        list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = laverageprice.ToString("N2"), OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = lmarketprice.ToString("N2"), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}", Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
                         
                         //list1.Items.Add(new SpecificFundDetail { FundId = spFundDetial[i].FundId, Name = spFundDetial[i].Name, Symbol = spFundDetial[i].Symbol, Quantity = spFundDetial[i].Quantity, AveragePrice = spFundDetial[i].AveragePrice, BookCost = spFundDetial[i].BookCost, MarketPrice = spFundDetial[i].MarketPrice, MarketValue = spFundDetial[i].MarketValue, AppDep = spFundDetial[i].AppDep, Math.Round(closing, 2).ToString("0.##") + "%" });
                     }
@@ -1229,29 +1262,34 @@ namespace PSXDataFetchingApp
                     worksheet.Cells[1, 7].Value = "MARKET PRICE";
                     worksheet.Cells[1, 8].Value = "MARKET VALUE";
                     worksheet.Cells[1, 9].Value = "APPRECIATION / DEPRECIATION";
+                    worksheet.Cells[1, 10].Value = "(%) Closing";
 
                     //Add some items...
+                    List<SpecificFundDetail> items = getFundMarketSummary();
 
-                    FundMarket[] fund = new FundMarket[Share_Name.Count];
-                    for (int i = 0; i < Share_Name.Count; i++)
+                    FundMarket[] fund = new FundMarket[items.Count];
+                    for (int i = 0; i < items.Count; i++)
                     {
                         int count = i;
                         fund[i] = new FundMarket();
-                        fund[i].SERIAL = i;
-                        fund[i].NAME = Share_Name[i];
-                        fund[i].SYMBOL = Share_Symbol[i];
-                        fund[i].CURRENT = LastUpdatedHolding[i];
-                        fund[i].LDCP = LastUpdatedPerUnitCost[i];
-                        fund[i].OPEN = LastUpdatedCost[i];
-                        fund[i].CHANGE = MarketPriceCurrent[i];
-                        fund[i].VOLUME = MarketValue[i];
-                        fund[i].APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i];
+                        fund[i].SERIAL = Convert.ToInt32(items[i].FundId);
+                        fund[i].NAME = items[i].Name;
+                        fund[i].SYMBOL = items[i].Symbol;
+                        fund[i].CURRENT = items[i].Quantity.ToString("N0");
+                        decimal laverageprice = Convert.ToDecimal(items[i].AveragePrice);
+                        fund[i].LDCP = laverageprice.ToString("N2");
+                        fund[i].OPEN = items[i].BookCost.ToString("N0");
+                        decimal lmarketprice = Convert.ToDecimal(items[i].MarketPrice);
+                        fund[i].CHANGE = lmarketprice.ToString("N2");
+                        fund[i].VOLUME = items[i].MarketValue.ToString("N0");
+                        decimal lappdep = Math.Round(Convert.ToDecimal(items[i].AppDep), MidpointRounding.AwayFromZero);
+                        fund[i].APPRECIATION_DEPRECIATION = lappdep.ToString("N0");
                     }
 
                     int total = 1;
                     for (int index = 0; index < Share_Name.Count; index++)
                     {
-                        total = index + 2;
+                        total = index + 1;
                         worksheet.Cells["A" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         worksheet.Cells["A" + total].Value = fund[index].SERIAL + 1;
                         worksheet.Cells["B" + total].Value = fund[index].NAME;
@@ -1273,7 +1311,7 @@ namespace PSXDataFetchingApp
                     //EndTest
 
                     //Ok now format the values;
-                    using (var range = worksheet.Cells[1, 1, 1, 9])
+                    using (var range = worksheet.Cells[1, 1, 1, 10])
                     {
                         range.Style.Font.Bold = true;
                         range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -1346,8 +1384,8 @@ namespace PSXDataFetchingApp
             }
             finally
             {
-                xlFile.Dispose();
-                package.Dispose();
+                //xlFile.Dispose();
+                //package.Dispose();
             }
             Debug.WriteLine("Excel Sheet Created.");
             Thread.Sleep(1000);
@@ -1749,6 +1787,61 @@ namespace PSXDataFetchingApp
             window.Show();
             //this.Hide();
         }
+
+        public List<SpecificFundDetail> getFundMarketSummary()
+        {
+            List<SpecificFundDetail> items = new List<SpecificFundDetail>();
+
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            conn.Open();
+            // 1.  create a command object identifying the stored procedure
+            SqlCommand cmd = new SqlCommand("spGET_FUND_MARKET_SUMMARY", conn);
+
+            // 2. set the command object so it knows to execute a stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // 3. add parameter to command, which will be passed to the stored procedure
+            //cmd.Parameters.Add(new SqlParameter("@FUND_NAME", _fundName));
+
+            // execute the command
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+                // iterate through results, printing each to console
+                while (rdr.Read())
+                {
+                    items.Add( new SpecificFundDetail { FundId = rdr.GetInt64(0), Name = rdr.GetString(5), Symbol = rdr.GetString(6), Quantity = rdr.GetDecimal(7), AveragePrice = rdr.GetDecimal(8), BookCost = rdr.GetDecimal(9), MarketPrice = rdr.GetDecimal(10).ToString("N2"), MarketValue = rdr.GetDecimal(11), AppDep = rdr.GetString(12) } );
+                    //Debug.WriteLine("FUND_ID in Default DB: " + FUND_ID);
+                }
+            }
+
+            conn.Close();
+
+            return items;
+        }
+
+        public static void Email(string htmlString)
+        {
+            try
+            {
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                message.To.Add(new MailAddress(ConfigurationManager.AppSettings["MailTo"].ToString()));
+                message.Subject = "Test";
+                message.IsBodyHtml = true; //to make message body as html  
+                message.Body = htmlString;
+                smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["port"].ToString());
+                smtp.Host = ConfigurationManager.AppSettings["host"].ToString(); //for gmail host  
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["MailFrom"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Send(message);
+            }
+            catch (Exception) { }
+        }
+
     }
     
 }

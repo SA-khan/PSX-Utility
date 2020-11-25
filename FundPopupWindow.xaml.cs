@@ -51,19 +51,25 @@ namespace PSXDataFetchingApp
             if (bucket != null && bucket.FSB_READING_STATUS == false)
             {
                 InitializeComponent();
-            
+
+                decimal _quantity = Math.Round(Convert.ToDecimal(bucket.FSB_SHARE_QUANTITY), MidpointRounding.AwayFromZero);
+                decimal _bookcost = Math.Round(Convert.ToDecimal(bucket.FSB_SHARE_BOOK_COST), MidpointRounding.AwayFromZero);
+                decimal _marketvalue = Math.Round(Convert.ToDecimal(bucket.FSB_SHARE_MARKET_VALUE), MidpointRounding.AwayFromZero);
+                decimal _appdep = Math.Round(Convert.ToDecimal(bucket.FSB_SHARE_APP_DEP), MidpointRounding.AwayFromZero);
+                decimal _closing = Convert.ToDecimal(bucket.FSB_SHARE_PERCENTAGE_CLOSING);
+
                 //this.Close();
                 txtDate.Text = bucket.FSB_DATE.ToString();
                 txtFundName.Text = bucket.FSB_FUND_NAME;
                 txtShareName.Text = bucket.FSB_SHARE_NAME;
                 txtShareSymbol.Text = bucket.FSB_SHARE_SYMBOL;
-                txtShareQuantity.Text = bucket.FSB_SHARE_QUANTITY;
+                txtShareQuantity.Text = _quantity.ToString("N0");
                 txtShareAveragePrice.Text = bucket.FSB_SHARE_AVG_PRICE.ToString("F");
-                txtShareBookCost.Text = bucket.FSB_SHARE_BOOK_COST;
-                txtShareMarketPrice.Text = bucket.FSB_SHARE_MARKET_PRICE.ToString("F");
-                txtShareMarketValue.Text = bucket.FSB_SHARE_MARKET_VALUE;
-                txtShareAppDep.Text = bucket.FSB_SHARE_APP_DEP;
-                txtShareClosingPercentage.Text = bucket.FSB_SHARE_PERCENTAGE_CLOSING.ToString("F");
+                txtShareBookCost.Text = _bookcost.ToString("N0");
+                txtShareMarketPrice.Text = bucket.FSB_SHARE_MARKET_PRICE.ToString("0.##");
+                txtShareMarketValue.Text = _marketvalue.ToString("N0");
+                txtShareAppDep.Text = _appdep.ToString("N0");
+                txtShareClosingPercentage.Text = bucket.FSB_SHARE_PERCENTAGE_CLOSING + "%";
 
 
 
@@ -202,7 +208,7 @@ namespace PSXDataFetchingApp
             {
                 while (rdr.Read())
                 {
-                    bucket.Add(new SpecificFundBucket { SB_ID = rdr.GetInt64(0), FSB_DATE = rdr.GetDateTime(1), FSB_STATUS = rdr.GetString(2), FSB_READING_STATUS = rdr.GetBoolean(3), FSB_FUND_ID = rdr.GetInt64(4), FSB_FUND_NAME = rdr.GetString(5), FSB_SHARE_NAME = rdr.GetString(6), FSB_SHARE_SYMBOL = rdr.GetString(7), FSB_SHARE_QUANTITY = rdr.GetDecimal(8).ToString(), FSB_SHARE_AVG_PRICE = rdr.GetDecimal(9), FSB_SHARE_BOOK_COST = rdr.GetDecimal(10).ToString(), FSB_SHARE_MARKET_PRICE = rdr.GetDecimal(11), FSB_SHARE_MARKET_VALUE = rdr.GetDecimal(12).ToString(), FSB_SHARE_APP_DEP = rdr.GetDecimal(13).ToString(), FSB_SHARE_PERCENTAGE_CLOSING = rdr.GetDecimal(14) });
+                    bucket.Add(new SpecificFundBucket { SB_ID = rdr.GetInt64(0), FSB_DATE = rdr.GetDateTime(1), FSB_STATUS = rdr.GetString(2), FSB_READING_STATUS = rdr.GetBoolean(3), FSB_FUND_ID = rdr.GetInt64(4), FSB_FUND_NAME = rdr.GetString(5), FSB_SHARE_NAME = rdr.GetString(6), FSB_SHARE_SYMBOL = rdr.GetString(7), FSB_SHARE_QUANTITY = rdr.GetDecimal(8).ToString(), FSB_SHARE_AVG_PRICE = rdr.GetDecimal(9), FSB_SHARE_BOOK_COST = rdr.GetDecimal(10).ToString(), FSB_SHARE_MARKET_PRICE = rdr.GetDecimal(11), FSB_SHARE_MARKET_VALUE = rdr.GetDecimal(12).ToString(), FSB_SHARE_APP_DEP = rdr.GetDecimal(13).ToString(), FSB_SHARE_PERCENTAGE_CLOSING = rdr.GetDecimal(14).ToString() });
                 }
             }
             conn.Close();
@@ -237,7 +243,7 @@ namespace PSXDataFetchingApp
                     bucket.FSB_SHARE_MARKET_PRICE = rdr.GetDecimal(11);
                     bucket.FSB_SHARE_MARKET_VALUE = rdr.GetDecimal(12).ToString();
                     bucket.FSB_SHARE_APP_DEP = rdr.GetDecimal(13).ToString();
-                    bucket.FSB_SHARE_PERCENTAGE_CLOSING = rdr.GetDecimal(14);
+                    bucket.FSB_SHARE_PERCENTAGE_CLOSING = rdr.GetDecimal(14).ToString();
                 }
             }
             conn.Close();

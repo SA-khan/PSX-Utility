@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PSXDataFetchingApp.Model
 {
-    class SpecificFundDetail
+    public class SpecificFundDetail
     {
         public long FundId { get; set; }
         public string Name { get; set; }
