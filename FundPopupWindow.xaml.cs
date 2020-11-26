@@ -52,6 +52,46 @@ namespace PSXDataFetchingApp
             {
                 InitializeComponent();
 
+                try
+                {
+                    if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                    {
+                        if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                        {
+                            // Header Background Color 
+                            var bc = new BrushConverter();
+                            header.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+                            headerright.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+                            headerleft.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+                            headerbottom.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+
+                            //Setting Logo
+                            //var image = new BitmapImage();
+                            //image.BeginInit();
+                            //image.UriSource = ResourceAccessor.Get("Images/BOP.gif");
+                            //image.EndInit();
+                            //ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                        }
+                        else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                        {
+                            // Header Background Color
+                            var bc = new BrushConverter();
+                            header.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+                            headerright.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+                            headerleft.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+                            headerbottom.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+
+                            //Setting Logo
+                            //var image = new BitmapImage();
+                            //image.BeginInit();
+                            //image.UriSource = ResourceAccessor.Get("Images/HBL.gif");
+                            //image.EndInit();
+                            //ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                        }
+                    }
+                }
+                catch { }
+
                 decimal _quantity = Math.Round(Convert.ToDecimal(bucket.FSB_SHARE_QUANTITY), MidpointRounding.AwayFromZero);
                 decimal _bookcost = Math.Round(Convert.ToDecimal(bucket.FSB_SHARE_BOOK_COST), MidpointRounding.AwayFromZero);
                 decimal _marketvalue = Math.Round(Convert.ToDecimal(bucket.FSB_SHARE_MARKET_VALUE), MidpointRounding.AwayFromZero);

@@ -410,8 +410,6 @@ namespace PSXDataFetchingApp
                 _status = false;
             }
 
-            
-
             System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             
             // Update the setting.
@@ -419,13 +417,13 @@ namespace PSXDataFetchingApp
             {
                 config.AppSettings.Settings["PopupAlert"].Value = "1";
                 _status = true;
-                Debug.WriteLine("Closing Percentage " + _status);
+                Debug.WriteLine("Popup Alert " + _status);
             }
             else
             {
                 config.AppSettings.Settings["PopupAlert"].Value = "0";
                 _status = false;
-                Debug.WriteLine("Closing Percentage " + _status);
+                Debug.WriteLine("Popup Alert " + _status);
             }
 
             
@@ -442,16 +440,16 @@ namespace PSXDataFetchingApp
 
             
 
-            if ( _what == _status)
-            {
-                var bc = new BrushConverter();
-                btnAlert.Background = (Brush)bc.ConvertFrom("#32CD32");
-            }
-            else
-            {
-                var bc = new BrushConverter();
-                btnAlert.Background = (Brush)bc.ConvertFrom("#FF6347");
-            }
+            //if ( _what == _status)
+            //{
+            //    var bc = new BrushConverter();
+            //    btnAlert.Background = (Brush)bc.ConvertFrom("#32CD32");
+            //}
+            //else
+            //{
+            //    var bc = new BrushConverter();
+            //    btnAlert.Background = (Brush)bc.ConvertFrom("#FF6347");
+            //}
 
             //
             bool _statusEmail = false;
@@ -473,13 +471,13 @@ namespace PSXDataFetchingApp
             {
                 configEmail.AppSettings.Settings["EmailAlert"].Value = "1";
                 _statusEmail = true;
-                Debug.WriteLine("Closing Percentage " + _statusEmail);
+                Debug.WriteLine("Email Alert " + _statusEmail);
             }
             else
             {
                 configEmail.AppSettings.Settings["EmailAlert"].Value = "0";
                 _statusEmail = false;
-                Debug.WriteLine("Closing Percentage " + _statusEmail);
+                Debug.WriteLine("Email Alert " + _statusEmail);
             }
 
             //
@@ -487,7 +485,7 @@ namespace PSXDataFetchingApp
 
             bool _whatEmail = ConfigurationManager.AppSettings["EmailAlert"].ToString() == "1" ? true : false;
 
-            if (_whatEmail == _statusEmail)
+            if (_whatEmail == _statusEmail && _what == _status)
             {
                 var bc = new BrushConverter();
                 btnAlert.Background = (Brush)bc.ConvertFrom("#32CD32");

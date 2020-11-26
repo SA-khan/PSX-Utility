@@ -603,7 +603,7 @@ namespace PSXDataFetchingApp
 
                     lblStatus.Text = "Status: Ready";
 
-                    if (ConfigurationManager.AppSettings["Alert"] == "1")
+                    if (ConfigurationManager.AppSettings["PopupAlert"] == "1")
                     {
 
                         if (FundPopUpWindowFlag)
@@ -1114,7 +1114,7 @@ namespace PSXDataFetchingApp
 
             lblStatus.Text = "Status: Ready";
 
-            if (ConfigurationManager.AppSettings["Alert"] == "1")
+            if (ConfigurationManager.AppSettings["PopupAlert"] == "1")
             {
 
                 if (FundPopUpWindowFlag)

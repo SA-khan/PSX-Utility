@@ -44,6 +44,12 @@
     <None Remove="Fonts\Raleway-ThinItalic.ttf" />
     <None Remove="Fonts\Raleway-VariableFont_wght.ttf" />
     <None Remove="Images\add.jpg" />
+    <None Remove="Images\alert.gif" />
+    <None Remove="Images\alert.jpg" />
+    <None Remove="Images\alert.png" />
+    <None Remove="Images\alert2.gif" />
+    <None Remove="Images\alert2.png" />
+    <None Remove="Images\alert3.png" />
     <None Remove="Images\back.png" />
     <None Remove="Images\bop.gif" />
     <None Remove="Images\BOP.png" />
@@ -100,6 +106,12 @@
 
   <ItemGroup>
     <Resource Include="Images\add.jpg" />
+    <Resource Include="Images\alert.gif" />
+    <Resource Include="Images\alert.jpg" />
+    <Resource Include="Images\alert.png" />
+    <Resource Include="Images\alert2.gif" />
+    <Resource Include="Images\alert2.png" />
+    <Resource Include="Images\alert3.png" />
     <Resource Include="Images\bucket.png" />
     <Resource Include="notification.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
