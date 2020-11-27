@@ -1289,7 +1289,7 @@ namespace PSXDataFetchingApp
                     int total = 1;
                     for (int index = 0; index < Share_Name.Count; index++)
                     {
-                        total = index + 1;
+                        total = index + 2;
                         worksheet.Cells["A" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
                         worksheet.Cells["A" + total].Value = fund[index].SERIAL + 1;
                         worksheet.Cells["B" + total].Value = fund[index].NAME;

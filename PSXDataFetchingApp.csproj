@@ -54,6 +54,9 @@
     <None Remove="Images\bop.gif" />
     <None Remove="Images\BOP.png" />
     <None Remove="Images\bucket.png" />
+    <None Remove="Images\excel.jpg" />
+    <None Remove="Images\excel.png" />
+    <None Remove="Images\excel2.png" />
     <None Remove="Images\exclaimation.png" />
     <None Remove="Images\fundImage.jpg" />
     <None Remove="Images\HBL.gif" />
@@ -75,6 +78,7 @@
     <None Remove="Images\restart2.png" />
     <None Remove="Images\restart3.jpg" />
     <None Remove="Images\run.jpg" />
+    <None Remove="Images\search.png" />
     <None Remove="Images\setting.png" />
     <None Remove="Images\stockMarket.jpg" />
     <None Remove="Images\system.png" />
@@ -113,6 +117,10 @@
     <Resource Include="Images\alert2.png" />
     <Resource Include="Images\alert3.png" />
     <Resource Include="Images\bucket.png" />
+    <Resource Include="Images\excel.jpg" />
+    <Resource Include="Images\excel.png" />
+    <Resource Include="Images\excel2.png" />
+    <Resource Include="Images\search.png" />
     <Resource Include="notification.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

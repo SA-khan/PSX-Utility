@@ -17,6 +17,10 @@ namespace PSXDataFetchingApp.Model
             public string LOW { get; set; }
             public double Change { get; set; }
             public string Volume { get; set; }
-        
+
+            public DateTime Date { get; set; }
+            public Int64 Category { get; set; }
+            public string Closing { get; set; }
+
     }
 }
