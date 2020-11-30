@@ -120,7 +120,7 @@ namespace PSXDataFetchingApp
             lblStatus.Text = "Status: Processing";
             var image = new BitmapImage();
             image.BeginInit();
-            image.UriSource = ResourceAccessor.Get("Images/exclaimation.png");
+            image.UriSource = ResourceAccessor.Get("Images/processing.gif");
             image.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image);
 
@@ -408,10 +408,10 @@ namespace PSXDataFetchingApp
             else
             {
                 list1.Items.Clear();
-                string _searchKeyword = SearchTermTextBox.Text.ToString();
+                string _searchKeyword = SearchTermTextBox.Text.ToString().ToLower();
                 List<MarketSummary> _searchList = new List<MarketSummary>();
                 var _selectedItem = from item in _tempItems
-                                    where item.Name.Contains(_searchKeyword) || item.Symbol.Contains(_searchKeyword)
+                                    where item.Name.ToLower().Contains(_searchKeyword) || item.Symbol.ToLower().Contains(_searchKeyword)
                                     orderby item.Name
                                     select item;
                 _searchList = _selectedItem.ToList();
@@ -426,10 +426,10 @@ namespace PSXDataFetchingApp
         private void SearchTermTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             list1.Items.Clear();
-            string _searchKeyword = SearchTermTextBox.Text.ToString();
+            string _searchKeyword = SearchTermTextBox.Text.ToString().ToLower();
             List<MarketSummary> _searchList = new List<MarketSummary>();
             var _selectedItem = from item in _tempItems
-                                where item.Name.Contains(_searchKeyword) || item.Symbol.Contains(_searchKeyword)
+                                where item.Name.ToLower().Contains(_searchKeyword) || item.Symbol.ToLower().Contains(_searchKeyword)
                                 orderby item.Name
                                 select item;
             _searchList = _selectedItem.ToList();

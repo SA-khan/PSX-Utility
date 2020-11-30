@@ -66,6 +66,7 @@
     <None Remove="Images\mufapMarketSummary.jpg" />
     <None Remove="Images\mufapMarketSummary2.gif" />
     <None Remove="Images\play.png" />
+    <None Remove="Images\processing.gif" />
     <None Remove="Images\processing_complex.png" />
     <None Remove="Images\psx.png" />
     <None Remove="Images\psx2.png" />
@@ -120,6 +121,7 @@
     <Resource Include="Images\excel.jpg" />
     <Resource Include="Images\excel.png" />
     <Resource Include="Images\excel2.png" />
+    <Resource Include="Images\processing.gif" />
     <Resource Include="Images\search.png" />
     <Resource Include="notification.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

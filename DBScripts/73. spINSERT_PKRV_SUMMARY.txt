@@ -1,0 +1,18 @@
+CREATE PROC spINSERT_PKRV_SUMMARY
+	@PKRV_SelectedDate Date,
+	@PKRV_Tenor varchar(MAX),
+	@PKRV_MidRate decimal,
+	@PKRV_Change decimal
+AS
+BEGIN
+INSERT INTO [dbo].[PKRV_SUMMARY]
+           ([PKRV_SelectedDate]
+           ,[PKRV_Tenor]
+           ,[PKRV_MidRate]
+           ,[PKRV_Change])
+     VALUES
+           (@PKRV_SelectedDate
+           ,@PKRV_Tenor
+           ,@PKRV_MidRate
+           ,@PKRV_Change)
+END

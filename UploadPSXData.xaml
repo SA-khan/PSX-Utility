@@ -85,7 +85,7 @@
                     </Button.Content>
                 </Button>
                 <Grid Grid.Column="6" HorizontalAlignment="Left">
-                    <TextBox  Width="205" Height="25"  VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="SearchTermTextBox" Margin="5" TextChanged="SearchTermTextBox_TextChanged" />
+                    <TextBox  Width="205" Height="25" FontSize="13"  VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="SearchTermTextBox" Margin="5" TextChanged="SearchTermTextBox_TextChanged" />
                     <TextBlock x:Name="txtSearch" IsHitTestVisible="False" Text="Enter Search Term Here" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray" FontSize="13" FontFamily="/Fonts/#Raleway">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
