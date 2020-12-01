@@ -381,11 +381,124 @@ namespace PSXDataFetchingApp
                 cmd.Parameters.Add("@PKFRV_FloatingRateBond", SqlDbType.VarChar, -1);
                 cmd.Parameters["@PKFRV_FloatingRateBond"].Value = _summary.FloatingRateBond;
                 cmd.Parameters.Add("@PKFRV_SelectedDate", SqlDbType.Date);
-                cmd.Parameters["@PKFRV_SelectedDate"].Value = Convert.ToDateTime(_Date.Replace("-", ""));
-                cmd.Parameters.Add("@PKFRV_IssueDate", SqlDbType.Date);
-                cmd.Parameters["@PKFRV_IssueDate"].Value = Convert.ToDateTime(_summary.IssuanceDate.Replace("-",""));
-                cmd.Parameters.Add("@PKFRV_MaturityDate", SqlDbType.Date);
-                cmd.Parameters["@PKFRV_MaturityDate"].Value = Convert.ToDateTime(_summary.MaturityDate.Replace("-", ""));
+                //cmd.Parameters["@PKFRV_SelectedDate"].Value = Convert.ToDateTime(_Date);
+                cmd.Parameters["@PKFRV_SelectedDate"].Value = DateTime.Now;
+
+                string[] tempVar = _summary.IssuanceDate.Split("-");
+                string monthName = tempVar[1];
+                string monthId = "00";
+                switch (monthName)
+                {
+                    case "Jan":
+                        monthId = "JAN";
+                        break;
+                    case "Feb":
+                        monthId = "FEB";
+                        break;
+                    case "Mar":
+                        monthId = "MAR";
+                        break;
+                    case "Apr":
+                        monthId = "APR";
+                        break;
+                    case "May":
+                        monthId = "MAY";
+                        break;
+                    case "Jun":
+                        monthId = "JUN";
+                        break;
+                    case "Jul":
+                        monthId = "JUL";
+                        break;
+                    case "Aug":
+                        monthId = "AUG";
+                        break;
+                    case "Sep":
+                        monthId = "SEP";
+                        break;
+                    case "0ct":
+                        monthId = "OCT";
+                        break;
+                    case "Nov":
+                        monthId = "NOV";
+                        break;
+                    case "Dec":
+                        monthId = "DEC";
+                        break;
+                    default:
+                        monthId = "-";
+                        break;
+                }
+
+                int fIndex = _summary.IssuanceDate.IndexOf('-');
+                int lIndex = _summary.IssuanceDate.LastIndexOf('-');
+                string tempMonth = _summary.IssuanceDate.Substring(fIndex, 5);
+                string lMonth = _summary.IssuanceDate.Replace(tempMonth, "-" + monthId + "-");
+                //string llMonth = lMonth.EndsWith("20") ? lMonth + "20" : lMonth.Insert(lIndex-1, "20");
+                //Debug.WriteLine("Computed Date: " + llMonth);
+
+                cmd.Parameters.Add("@PKFRV_IssueDate", SqlDbType.DateTime);
+                //cmd.Parameters["@PKFRV_IssueDate"].Value = Convert.ToDateTime(_summary.IssuanceDate);
+                //Debug.WriteLine("Current Date: " + DateTime.Now);
+                //Debug.WriteLine("Issuence Date: " + llMonth);
+                cmd.Parameters["@PKFRV_IssueDate"].Value = DateTime.Parse(lMonth);
+
+                tempVar = _summary.MaturityDate.Split("-");
+                monthName = tempVar[1];
+                monthId = "0";
+                switch (monthName)
+                {
+                    case "Jan":
+                        monthId = "JAN";
+                        break;
+                    case "Feb":
+                        monthId = "FEB";
+                        break;
+                    case "Mar":
+                        monthId = "MAR";
+                        break;
+                    case "Apr":
+                        monthId = "APR";
+                        break;
+                    case "May":
+                        monthId = "MAY";
+                        break;
+                    case "Jun":
+                        monthId = "JUN";
+                        break;
+                    case "Jul":
+                        monthId = "JUL";
+                        break;
+                    case "Aug":
+                        monthId = "AUG";
+                        break;
+                    case "Sep":
+                        monthId = "SEP";
+                        break;
+                    case "0ct":
+                        monthId = "OCT";
+                        break;
+                    case "Nov":
+                        monthId = "NOV";
+                        break;
+                    case "Dec":
+                        monthId = "DEC";
+                        break;
+                    default:
+                        monthId = "-";
+                        break;
+                }
+
+                fIndex = _summary.MaturityDate.IndexOf('-');
+                lIndex = _summary.MaturityDate.LastIndexOf('-');
+                tempMonth = _summary.MaturityDate.Substring(fIndex, 5);
+                lMonth = _summary.MaturityDate.Replace(tempMonth, "-" + monthId + "-");
+                //llMonth = lMonth.EndsWith("20") ? lMonth + "20" : lMonth.Insert(lIndex-1, "20");
+                //Debug.WriteLine("Maturity Computed Date: " + llMonth);
+
+                cmd.Parameters.Add("@PKFRV_MaturityDate", SqlDbType.DateTime);
+                //cmd.Parameters["@PKFRV_MaturityDate"].Value = Convert.ToDateTime(_summary.MaturityDate.Replace("-", ""));
+                cmd.Parameters["@PKFRV_MaturityDate"].Value = DateTime.Parse(lMonth);
                 cmd.Parameters.Add("@PKFRV_CouponFrequency", SqlDbType.VarChar, -1);
                 cmd.Parameters["@PKFRV_CouponFrequency"].Value = _summary.CouponFrequency;
                 cmd.Parameters.Add("@PKFRV_BMA", SqlDbType.Decimal);
@@ -430,6 +543,7 @@ namespace PSXDataFetchingApp
 
         public void RunExcel()
         {
+            string _fileName = "MufapPKFRVSummary.xlsx";
             ExcelPackage package = null;
             Stream xlFile = null;
             try
@@ -464,29 +578,139 @@ namespace PSXDataFetchingApp
                     {
                         total = index + 2;
                         worksheet.Cells["A" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["A" + total].Value = items[index].Id;
+                        worksheet.Cells["A" + total].Value = items[index].Id.ToString();
                         worksheet.Cells["B" + total].Value = items[index].FloatingRateBond;
-                        worksheet.Cells["C" + total].Value = items[index].IssuanceDate;
+                        //string[] tempVar = items[index].IssuanceDate.Split("-");
+                        //string monthName = tempVar[1];
+                        //string monthId = "00";
+                        //switch (monthName)
+                        //{
+                        //    case "Jan":
+                        //        monthId = "01";
+                        //        break;
+                        //    case "Feb":
+                        //        monthId = "02";
+                        //        break;
+                        //    case "Mar":
+                        //        monthId = "03";
+                        //        break;
+                        //    case "Apr":
+                        //        monthId = "04";
+                        //        break;
+                        //    case "May":
+                        //        monthId = "05";
+                        //        break;
+                        //    case "Jun":
+                        //        monthId = "06";
+                        //        break;
+                        //    case "Jul":
+                        //        monthId = "07";
+                        //        break;
+                        //    case "Aug":
+                        //        monthId = "08";
+                        //        break;
+                        //    case "Sep":
+                        //        monthId = "09";
+                        //        break;
+                        //    case "0ct":
+                        //        monthId = "10";
+                        //        break;
+                        //    case "Nov":
+                        //        monthId = "11";
+                        //        break;
+                        //    case "Dec":
+                        //        monthId = "12";
+                        //        break;
+                        //    default:
+                        //        monthId = "00";
+                        //        break;
+                        //}
+
+                        //int fIndex = items[index].IssuanceDate.IndexOf('-');
+                        //int lIndex = items[index].IssuanceDate.LastIndexOf('-');
+                        //string tempMonth = items[index].IssuanceDate.Substring(fIndex, 5);
+                        //Debug.WriteLine("Temp Month: " + tempMonth);
+                        //string lMonth = items[index].IssuanceDate.Replace(tempMonth, "/" + monthId + "/");
+                        //string llMonth = lMonth.EndsWith("20") ? lMonth + "20" : lMonth.Insert(lIndex, "20");
+                        //Debug.WriteLine("Computed Date: " + llMonth);
+                        worksheet.Cells["C" + total].Value = Convert.ToString(items[index].IssuanceDate);
                         worksheet.Cells["D" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["D" + total].Value = items[index].MaturityDate;
+
+                        //tempVar = items[index].MaturityDate.Split("-");
+                        //monthName = tempVar[1];
+                        //monthId = "00";
+                        //switch (monthName)
+                        //{
+                        //    case "Jan":
+                        //        monthId = "01";
+                        //        break;
+                        //    case "Feb":
+                        //        monthId = "02";
+                        //        break;
+                        //    case "Mar":
+                        //        monthId = "03";
+                        //        break;
+                        //    case "Apr":
+                        //        monthId = "04";
+                        //        break;
+                        //    case "May":
+                        //        monthId = "05";
+                        //        break;
+                        //    case "Jun":
+                        //        monthId = "06";
+                        //        break;
+                        //    case "Jul":
+                        //        monthId = "07";
+                        //        break;
+                        //    case "Aug":
+                        //        monthId = "08";
+                        //        break;
+                        //    case "Sep":
+                        //        monthId = "09";
+                        //        break;
+                        //    case "0ct":
+                        //        monthId = "10";
+                        //        break;
+                        //    case "Nov":
+                        //        monthId = "11";
+                        //        break;
+                        //    case "Dec":
+                        //        monthId = "12";
+                        //        break;
+                        //    default:
+                        //        monthId = "00";
+                        //        break;
+                        //}
+
+                        //fIndex = items[index].MaturityDate.IndexOf('-');
+                        //lIndex = items[index].MaturityDate.LastIndexOf('-');
+                        //tempMonth = items[index].MaturityDate.Substring(fIndex, 5);
+                        //lMonth = items[index].MaturityDate.Replace(tempMonth, "/" + monthId + "/");
+                        //llMonth = lMonth.EndsWith("20") ? lMonth + "20" : lMonth.Insert(lIndex, "20");
+                        //Debug.WriteLine("Maturity Computed Date: " + llMonth);
+
+                        worksheet.Cells["D" + total].Value = Convert.ToString(items[index].MaturityDate);
                         //worksheet.Cells["E" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["E" + total].Value = items[index].BMA;
+                        worksheet.Cells["E" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        worksheet.Cells["E" + total].Value = items[index].CouponFrequency.ToString();
                         worksheet.Cells["F" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["F" + total].Value = items[index].CANDM;
+                        worksheet.Cells["F" + total].Value = items[index].BMA.ToString();
                         worksheet.Cells["G" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["G" + total].Value = items[index].CMKA;
+                        worksheet.Cells["G" + total].Value = items[index].CANDM.ToString();
                         worksheet.Cells["H" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["H" + total].Value = items[index].IONE;
+                        worksheet.Cells["H" + total].Value = items[index].CMKA.ToString();
                         worksheet.Cells["I" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["I" + total].Value = items[index].JSCM;
+                        worksheet.Cells["I" + total].Value = items[index].IONE.ToString();
                         worksheet.Cells["J" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["J" + total].Value = items[index].MCPL;
+                        worksheet.Cells["J" + total].Value = items[index].JSCM.ToString();
                         worksheet.Cells["K" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["K" + total].Value = items[index].SCPL;
+                        worksheet.Cells["K" + total].Value = items[index].MCPL.ToString();
                         worksheet.Cells["L" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["L" + total].Value = items[index].VCPL;
+                        worksheet.Cells["L" + total].Value = items[index].SCPL.ToString();
                         worksheet.Cells["M" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                        worksheet.Cells["M" + total].Value = items[index].FMA;
+                        worksheet.Cells["M" + total].Value = items[index].VCPL.ToString();
+                        worksheet.Cells["N" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["N" + total].Value = items[index].FMA.ToString();
                     }
 
                     //EndTest
@@ -501,7 +725,7 @@ namespace PSXDataFetchingApp
                     }
 
                     //Create an autofilter for the range
-                    worksheet.Cells["A1:M4"].AutoFilter = true;
+                    worksheet.Cells["A1:N4"].AutoFilter = true;
 
                     worksheet.Cells["A2:A4"].Style.Numberformat.Format = "@";   //Format as text
 
@@ -531,7 +755,7 @@ namespace PSXDataFetchingApp
                     // Set some document properties
                     package.Workbook.Properties.Title = "Mufap PKFRV Summary Details";
                     package.Workbook.Properties.Author = "Saad Ahmed";
-                    package.Workbook.Properties.Comments = "This is the psx market summary closing detail report.";
+                    package.Workbook.Properties.Comments = "This is the MUFAP PKFRV summary detail report.";
 
                     // Set some extended property values
                     package.Workbook.Properties.Company = "EPPlus Software AB";
@@ -541,7 +765,7 @@ namespace PSXDataFetchingApp
                     package.Workbook.Properties.SetCustomPropertyValue("AssemblyName", "EPPlus");
 
                     //var xlFile = FileOutputUtil.GetFileInfo("01-GettingStarted.xlsx");
-                    string path = "MarketSummaryClosing.xlsx";
+                    string path = _fileName;
                     xlFile = File.Create(path);
 
 
@@ -568,24 +792,19 @@ namespace PSXDataFetchingApp
                 //xlFile.Dispose();
                 //package.Dispose();
             }
-            Debug.WriteLine("Excel Sheet Created.");
+            //Debug.WriteLine("Excel Sheet Created.");
             Thread.Sleep(1000);
-            if (File.Exists("MufapPKFRVSummary.xlsx"))
+            if (File.Exists(_fileName))
             {
                 try
                 {
-                    //using (Stream stream = new FileStream("FundMarketSummary.xlsx", FileMode.Open))
-                    //{
-                    // File/Stream manipulating code here
                     Process p = new Process();
                     p.StartInfo.UseShellExecute = true;
-                    p.StartInfo.FileName = "MufapPKFRVSummary.xlsx";
+                    p.StartInfo.FileName = _fileName;
                     p.Start();
-                    //}
                 }
                 catch (Exception ex)
                 {
-                    //check here why it failed and ask user to retry if the file is in use.
                     MessageBox.Show(ex.Message);
                 }
 
@@ -615,7 +834,7 @@ namespace PSXDataFetchingApp
                 // iterate through results, printing each to console
                 while (rdr.Read())
                 {
-                    items.Add(new PKFRV { Id = Convert.ToInt64(rdr.GetInt64(0)), FloatingRateBond = rdr.GetString(1), IssuanceDate = rdr.GetDateTime(2).ToString(), MaturityDate = rdr.GetDateTime(3).ToString(), CouponFrequency = rdr.GetString(4), BMA = rdr.GetDecimal(5).ToString(), CANDM = rdr.GetDecimal(6).ToString(), CMKA = rdr.GetDecimal(7).ToString(), IONE = rdr.GetDecimal(8).ToString(), JSCM = rdr.GetDecimal(9).ToString(), MCPL = rdr.GetDecimal(10).ToString(), SCPL = rdr.GetDecimal(11).ToString(), VCPL = rdr.GetDecimal(12).ToString(), FMA = rdr.GetDecimal(13).ToString() });
+                    items.Add(new PKFRV { Id = Convert.ToInt64(rdr.GetInt64(0)), FloatingRateBond = rdr.GetString(1), IssuanceDate = rdr.GetDateTime(3).ToString(), MaturityDate = rdr.GetDateTime(4).ToString(), CouponFrequency = rdr.GetString(5), BMA = rdr.GetDecimal(6).ToString(), CANDM = rdr.GetDecimal(7).ToString(), CMKA = rdr.GetDecimal(8).ToString(), IONE = rdr.GetDecimal(9).ToString(), JSCM = rdr.GetDecimal(10).ToString(), MCPL = rdr.GetDecimal(11).ToString(), SCPL = rdr.GetDecimal(12).ToString(), VCPL = rdr.GetDecimal(13).ToString(), FMA = rdr.GetDecimal(14).ToString() });
                     //Debug.WriteLine("FUND_ID in Default DB: " + FUND_ID);
                 }
             }
