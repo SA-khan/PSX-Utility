@@ -1,0 +1,5 @@
+create proc spGET_FUND_NAMES
+AS
+BEGIN
+	SELECT * FROM FUND_INFO
+END

@@ -1,0 +1,14 @@
+/****** Object:  Table [dbo].[CURRENT_MARKET_OVERVIEW]    Script Date: 10/16/2020 10:10:49 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CURRENT_MARKET_OVERVIEW](
+	[CMO_ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[CMO_DATE] [datetime] NULL,
+	[CMO_STATUS] [varchar](300) NULL,
+	[CMO_VOLUME] [float] NULL,
+	[CMO_VALUE] [float] NULL,
+	[CMO_TRADES] [float] NULL)

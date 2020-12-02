@@ -39,6 +39,42 @@ namespace PSXDataFetchingApp
         {
             InitializeComponent();
             pkrvDatepicker.SelectedDate = DateTime.Now;
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/BOP.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/HBL.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                }
+            }
+            catch { }
+
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -83,7 +119,15 @@ namespace PSXDataFetchingApp
 
             int _year = pkrvDatepicker.SelectedDate.Value.Year;
             int _month = pkrvDatepicker.SelectedDate.Value.Month;
-            int _day = pkrvDatepicker.SelectedDate.Value.Day;
+            string _day = String.Empty;
+            if (pkrvDatepicker.SelectedDate.Value.Day.ToString().Length == 1)
+            {
+                _day = pkrvDatepicker.SelectedDate.Value.Day.ToString("0#");
+            }
+            else
+            {
+                _day = pkrvDatepicker.SelectedDate.Value.Day.ToString();
+            }
 
             string _monthString = String.Empty;
             switch (_month)
@@ -131,7 +175,7 @@ namespace PSXDataFetchingApp
 
             
 
-            if (_year != 0 && _month != 0 && _day != 0 && pkrvDatepicker.SelectedDate.Value.ToString() != "")
+            if (_year != 0 && _month != 0 && _day != "0" && pkrvDatepicker.SelectedDate.Value.ToString() != "")
             {
                 list1.Items.Clear();
                 _Date = pkrvDatepicker.SelectedDate.Value.ToString("dddd, dd MMMM yyyy");
@@ -148,7 +192,7 @@ namespace PSXDataFetchingApp
                 }
                 if (_Date != String.Empty && _summaryData.Count != 0)
                 {
-                    txtDate.Text = "Date: " + Convert.ToDateTime(_Date).ToString("dddd, dd MMMM yyyy");
+                    txtDate.Text = "File Date: " + Convert.ToDateTime(_Date).ToString("dddd, dd MMMM yyyy");
                     var _selectedItem = from item in _summaryData
                                         select item;
                     _summaryData = _selectedItem.ToList();

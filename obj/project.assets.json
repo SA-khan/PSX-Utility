@@ -303,6 +303,15 @@
           "System.Xml.XDocument": "4.3.0"
         }
       },
+      "Oracle.ManagedDataAccess.Core/2.19.100": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Oracle.ManagedDataAccess.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Oracle.ManagedDataAccess.dll": {}
+        }
+      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
         "type": "package",
         "runtimeTargets": {
@@ -2330,6 +2339,22 @@
         "dotnet_library_license.txt",
         "netstandard.library.1.6.1.nupkg.sha512",
         "netstandard.library.nuspec"
+      ]
+    },
+    "Oracle.ManagedDataAccess.Core/2.19.100": {
+      "sha512": "ISGSsundxgtb+Wff68QOFjrWuOomaFOZucXtQUblF84ITqZRJY+VePXhcSbHWNnDWDeHX2reG1xjHwoh1o23gg==",
+      "type": "package",
+      "path": "oracle.manageddataaccess.core/2.19.100",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "PerfCounters/register_odpc_perfmon_counters.ps1",
+        "PerfCounters/unregister_odpc_perfmon_counters.ps1",
+        "info.txt",
+        "lib/netstandard2.0/Oracle.ManagedDataAccess.dll",
+        "oracle.manageddataaccess.core.2.19.100.nupkg.sha512",
+        "oracle.manageddataaccess.core.nuspec",
+        "readme.txt"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
@@ -6801,6 +6826,7 @@
       "Microsoft.Extensions.Configuration >= 3.1.7",
       "Microsoft.Extensions.Configuration.FileExtensions >= 3.1.7",
       "Microsoft.Extensions.Configuration.Json >= 3.1.7",
+      "Oracle.ManagedDataAccess.Core >= 2.19.100",
       "Syncfusion.ReportControls.WPF >= 18.2.0.58",
       "System.Data.SqlClient >= 4.8.2",
       "System.Drawing.Common >= 4.7.0",
@@ -6872,6 +6898,10 @@
           "Microsoft.Extensions.Configuration.Json": {
             "target": "Package",
             "version": "[3.1.7, )"
+          },
+          "Oracle.ManagedDataAccess.Core": {
+            "target": "Package",
+            "version": "[2.19.100, )"
           },
           "Syncfusion.ReportControls.WPF": {
             "target": "Package",

@@ -42,65 +42,117 @@ namespace PSXDataFetchingApp
         public UploadPSXData()
         {
             InitializeComponent();
+
+            datepsxpicker.SelectedDate = DateTime.Now;
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/BOP.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/HBL.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                }
+            }
+            catch { }
+
         }
 
         private async void btnReset_Click(object sender, RoutedEventArgs e)
         {
+            btnReset.IsEnabled = false;
             FundImage.Visibility = Visibility.Hidden;
             loadingImage.Visibility = Visibility.Visible;
             list1.Visibility = Visibility.Hidden;
             lblStatus.Text = "Status: Processing";
             var image = new BitmapImage();
             image.BeginInit();
-            image.UriSource = ResourceAccessor.Get("Images/exclaimation.png");
+            image.UriSource = ResourceAccessor.Get("Images/processing.gif");
             image.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image);
-
-
-            int _year = datepsxpicker.SelectedDate.Value.Year;
-            int _month = datepsxpicker.SelectedDate.Value.Month;
-            int _day = datepsxpicker.SelectedDate.Value.Day;
-            if (_year != 0 && _month != 0 && _day != 0)
+            Debug.WriteLine("Date Value: ");
+            try
             {
-                list1.Items.Clear();
-                _Date = String.Empty;
-                List<MarketSummary> _summaryData = new List<MarketSummary>();
-                try
+                if (datepsxpicker.SelectedDate.Value != null)
                 {
-                    await Task.Run(() => _summaryData = GetFileUploadPSXMarketSummary(_year, _month, _day));
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                }
-                if (_Date != String.Empty)
-                {
-                    txtDate.Text = "Date: " + Convert.ToDateTime(_Date).ToString("dddd, dd MMMM yyyy");
-                    var _selectedItem = from item in _summaryData
-                                        orderby item.Name
-                                        select item;
-                    _summaryData = _selectedItem.ToList();
-                    int counter = 0;
-                    for (int i = 0; i < _summaryData.Count; i++)
+                    int _year = datepsxpicker.SelectedDate.Value.Year;
+                    int _month = datepsxpicker.SelectedDate.Value.Month;
+                    int _day = datepsxpicker.SelectedDate.Value.Day;
+
+                    list1.Items.Clear();
+                    _Date = String.Empty;
+                    List<MarketSummary> _summaryData = new List<MarketSummary>();
+                    try
                     {
-                        list1.Items.Add(new FundMarket { SERIAL = ++counter, NAME = _summaryData[i].Name, SYMBOL = _summaryData[i].Symbol, LDCP = _summaryData[i].LDCP, OPEN = _summaryData[i].OPEN, HIGH = _summaryData[i].HIGH, LOW = _summaryData[i].LOW, CHANGE = _summaryData[i].Change.ToString(), VOLUME = _summaryData[i].Volume });
+                        await Task.Run(() => _summaryData = GetFileUploadPSXMarketSummary(_year, _month, _day));
                     }
-                    _tempItems = _summaryData;
-                    FundImage.Visibility = Visibility.Hidden;
-                    loadingImage.Visibility = Visibility.Hidden;
-                    list1.Visibility = Visibility.Visible;
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("There is no file exist on PSX Site.\n" + ex.Message, "File Not Found", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    }
+                    if (_Date != String.Empty)
+                    {
+                        txtDate.Text = "Date: " + Convert.ToDateTime(_Date).ToString("dddd, dd MMMM yyyy");
+                        var _selectedItem = from item in _summaryData
+                                            orderby item.Name
+                                            select item;
+                        _summaryData = _selectedItem.ToList();
+                        int counter = 0;
+                        for (int i = 0; i < _summaryData.Count; i++)
+                        {
+                            list1.Items.Add(new FundMarket { SERIAL = ++counter, NAME = _summaryData[i].Name, SYMBOL = _summaryData[i].Symbol, LDCP = _summaryData[i].LDCP, OPEN = _summaryData[i].OPEN, HIGH = _summaryData[i].HIGH, LOW = _summaryData[i].LOW, CHANGE = _summaryData[i].Change.ToString(), VOLUME = _summaryData[i].Volume });
+                        }
+                        _tempItems = _summaryData;
+                        FundImage.Visibility = Visibility.Hidden;
+                        loadingImage.Visibility = Visibility.Hidden;
+                        list1.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        FundImage.Visibility = Visibility.Visible;
+                        loadingImage.Visibility = Visibility.Hidden;
+                        list1.Visibility = Visibility.Hidden;
+                    }
+
                 }
                 else
                 {
+                    MessageBox.Show("Please select a valid date to fetch market summary closing data.", "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Information);
                     FundImage.Visibility = Visibility.Visible;
                     loadingImage.Visibility = Visibility.Hidden;
                     list1.Visibility = Visibility.Hidden;
                 }
-
             }
-            else
+            catch(Exception ex)
             {
-                MessageBox.Show("Please select a valid date to fetch market summary closing data.", "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Please select a valid date to fetch market summary closing data.\nDetails: " + ex.Message, "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Information);
+                FundImage.Visibility = Visibility.Visible;
+                loadingImage.Visibility = Visibility.Hidden;
+                list1.Visibility = Visibility.Hidden;
             }
 
             lblStatus.Text = "Status: Ready";
@@ -109,6 +161,7 @@ namespace PSXDataFetchingApp
             image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
             image2.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image2);
+            btnReset.IsEnabled = true;
         }
 
         private async void btnGet_Click(object sender, RoutedEventArgs e)
@@ -124,51 +177,64 @@ namespace PSXDataFetchingApp
             image.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image);
 
-
-            int _year = datepsxpicker.SelectedDate.Value.Year;
-            int _month = datepsxpicker.SelectedDate.Value.Month;
-            int _day = datepsxpicker.SelectedDate.Value.Day;
-            if (_year != 0 && _month != 0 && _day != 0)
+            try
             {
-                list1.Items.Clear();
-                _Date = String.Empty;
-                List<MarketSummary> _summaryData = new List<MarketSummary>();
-                try
+
+                int _year = datepsxpicker.SelectedDate.Value.Year;
+                int _month = datepsxpicker.SelectedDate.Value.Month;
+                int _day = datepsxpicker.SelectedDate.Value.Day;
+                if (_year != 0 && _month != 0 && _day != 0)
                 {
-                    await Task.Run(() => _summaryData = GetFileUploadPSXMarketSummary(_year, _month, _day));
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                }
-                if (_Date != String.Empty)
-                {
-                    txtDate.Text = "Date: " + Convert.ToDateTime(_Date).ToString("dddd, dd MMMM yyyy");
-                    var _selectedItem = from item in _summaryData
-                                        orderby item.Name
-                                        select item;
-                    _summaryData = _selectedItem.ToList();
-                    int counter = 0;
-                    for (int i = 0; i < _summaryData.Count; i++)
+                    list1.Items.Clear();
+                    _Date = String.Empty;
+                    List<MarketSummary> _summaryData = new List<MarketSummary>();
+                    try
                     {
-                        list1.Items.Add(new FundMarket { SERIAL = ++counter, NAME = _summaryData[i].Name, SYMBOL = _summaryData[i].Symbol, LDCP = _summaryData[i].LDCP, OPEN = _summaryData[i].OPEN, HIGH = _summaryData[i].HIGH, LOW = _summaryData[i].LOW, CHANGE = _summaryData[i].Change.ToString(), VOLUME = _summaryData[i].Volume });
+                        await Task.Run(() => _summaryData = GetFileUploadPSXMarketSummary(_year, _month, _day));
                     }
-                    _tempItems = _summaryData;
-                    FundImage.Visibility = Visibility.Hidden;
-                    loadingImage.Visibility = Visibility.Hidden;
-                    list1.Visibility = Visibility.Visible;
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("There is no file exist on PSX Site.\n" + ex.Message, "File Not Found", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    }
+                    if (_Date != String.Empty)
+                    {
+                        txtDate.Text = "Date: " + Convert.ToDateTime(_Date).ToString("dddd, dd MMMM yyyy");
+                        var _selectedItem = from item in _summaryData
+                                            orderby item.Name
+                                            select item;
+                        _summaryData = _selectedItem.ToList();
+                        int counter = 0;
+                        for (int i = 0; i < _summaryData.Count; i++)
+                        {
+                            list1.Items.Add(new FundMarket { SERIAL = ++counter, NAME = _summaryData[i].Name, SYMBOL = _summaryData[i].Symbol, LDCP = _summaryData[i].LDCP, OPEN = _summaryData[i].OPEN, HIGH = _summaryData[i].HIGH, LOW = _summaryData[i].LOW, CHANGE = _summaryData[i].Change.ToString(), VOLUME = _summaryData[i].Volume });
+                        }
+                        _tempItems = _summaryData;
+                        FundImage.Visibility = Visibility.Hidden;
+                        loadingImage.Visibility = Visibility.Hidden;
+                        list1.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        FundImage.Visibility = Visibility.Visible;
+                        loadingImage.Visibility = Visibility.Hidden;
+                        list1.Visibility = Visibility.Hidden;
+                    }
+
                 }
                 else
                 {
+                    MessageBox.Show("Please select a valid date to fetch market summary closing data.", "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Information);
                     FundImage.Visibility = Visibility.Visible;
                     loadingImage.Visibility = Visibility.Hidden;
                     list1.Visibility = Visibility.Hidden;
                 }
-
             }
-            else
+            catch(Exception ex)
             {
-                MessageBox.Show("Please select a valid date to fetch market summary closing data.", "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Information);
+                FundImage.Visibility = Visibility.Visible;
+                loadingImage.Visibility = Visibility.Hidden;
+                list1.Visibility = Visibility.Hidden;
+                MessageBox.Show("Please select a valid date.\nDetails: " + ex.Message, "Invalid Selection", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             lblStatus.Text = "Status: Ready";
@@ -391,12 +457,19 @@ namespace PSXDataFetchingApp
 
         private void btnPsxLink_Click(object sender, RoutedEventArgs e)
         {
-            var destinationurl = "https://dps.psx.com.pk/downloads";
-            var sInfo = new System.Diagnostics.ProcessStartInfo(destinationurl)
+            try
             {
-                UseShellExecute = true,
-            };
-            System.Diagnostics.Process.Start(sInfo);
+                var destinationurl = "https://dps.psx.com.pk/downloads";
+                var sInfo = new System.Diagnostics.ProcessStartInfo(destinationurl)
+                {
+                    UseShellExecute = true,
+                };
+                System.Diagnostics.Process.Start(sInfo);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Something went wrong..\nDetails: "+ ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
@@ -440,9 +513,32 @@ namespace PSXDataFetchingApp
             }
         }
 
-        private void btnSave_Click(object sender, RoutedEventArgs e)
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            RunExcel();
+            btnSave.IsEnabled = false;
+            lblStatus.Text = "Status: Processing";
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = ResourceAccessor.Get("Images/processing.gif");
+            image.EndInit();
+            ImageBehavior.SetAnimatedSource(imgStatus, image);
+
+            if (_Date != "")
+            {
+                await Task.Run(() => RunExcel());
+            }
+            else
+            {
+                MessageBox.Show("Please fetch the closing market summary first.", "Data Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            lblStatus.Text = "Status: Ready";
+            var image2 = new BitmapImage();
+            image2.BeginInit();
+            image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
+            image2.EndInit();
+            ImageBehavior.SetAnimatedSource(imgStatus, image2);
+            btnSave.IsEnabled = true;
         }
 
         private int ClearMarketSummaryClosing()
@@ -721,5 +817,9 @@ namespace PSXDataFetchingApp
             return items;
         }
 
+        private void datepsxpicker_DateValidationError(object sender, DatePickerDateValidationErrorEventArgs e)
+        {
+            MessageBox.Show("Please select a valid date first..", "No Valid Date Selected!", MessageBoxButton.OK, MessageBoxImage.Hand);
+        }
     }
 }

@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PSXDataFetchingApp"
         mc:Ignorable="d"
-        Title="Data Extractor Utility" Icon="Images/web-scrap2.png" Height="550" Width="920" WindowStartupLocation="CenterScreen">
+        Title="Data Extractor Utility" Icon="Images/web-scrap2.png" Height="650" Width="920" WindowStartupLocation="CenterScreen">
     <Border Margin="10" Background="DarkGray">
         <Grid>
             <Grid.RowDefinitions>
@@ -35,39 +35,42 @@
                     <TextBlock x:Name="txtStatus" Grid.Row="1" FontFamily="/Fonts/#Lato" VerticalAlignment="Top" Margin="0 2 0 0" />
                 </Grid>
             </Grid>
-            <Grid Grid.Row="1" Margin="1 5 1 5" Background="#fff" MaxHeight="30">
+            <Grid Grid.Row="1" Margin="1 5 1 5" Background="#fff" MaxHeight="35">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="*" MaxWidth="81" />
+                    <ColumnDefinition Width="3*" MaxWidth="350" />
                     <ColumnDefinition Width="2*" MaxWidth="60"/>
                     <ColumnDefinition Width="2*" MaxWidth="60"/>
                     <ColumnDefinition Width="2*" MaxWidth="60"/>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" x:Name="btnBack" FontFamily="/Fonts/#Lato" Click="btnBack_Click" Height="20" VerticalAlignment="Center" Width="40" HorizontalAlignment="Center" Margin="0 0 0 0" ToolTip="Go To Main Menu">
+                <Button Grid.Column="0" x:Name="btnBack" FontFamily="/Fonts/#Lato" Click="btnBack_Click" Height="30" VerticalAlignment="Center" Width="70" HorizontalAlignment="Left" Margin="5 0 0 0" ToolTip="Go To Main Menu">
                     <Button.Content>
                         <StackPanel>
-                            <Image Source="Images/back.png" Stretch="Uniform" Width="15" />
+                            <Grid Width="70" Height="25">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                            <Image Source="Images/back.png" Stretch="Uniform" Width="15" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="Back" VerticalAlignment="Center" FontSize="13" FontFamily="Fonts/#Raleway" />
+                            </Grid>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <DatePicker Grid.Column="1" Name="pkrvDatepicker" FontFamily="Tahoma" MinWidth="150" HorizontalAlignment="Stretch" Margin="5" Height="20" ToolTip="Select Date.." DateValidationError="pkrvDatepicker_DateValidationError" />
-                <Button x:Name="btnGet" Grid.Column="2" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnGet_Click" Background="Transparent" BorderBrush="Transparent" Padding="5" ToolTip="Get Shares of Fund">
+                <DatePicker Grid.Column="1" Name="pkrvDatepicker" FontFamily="Fonts/#Raleway" VerticalContentAlignment="Center" Margin="5 0 0 0" MinWidth="250" MaxWidth="450" HorizontalAlignment="Stretch" Height="30" ToolTip="Select Date.." DateValidationError="pkrvDatepicker_DateValidationError" />
+                <Button x:Name="btnGet" Grid.Column="2" FontFamily="/Fonts/#Lato-Bold" FontSize="13" Width="50" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnGet_Click" Background="Transparent" BorderBrush="Transparent" ToolTip="Get Shares of Fund">
                     <Button.Content>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Images/play.png" Stretch="Fill" >
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="50">
+                            <Image Source="Images/play.png" Stretch="Uniform" >
                             </Image>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button x:Name="btnSave" Grid.Column="3" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="30" MinWidth="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" BorderBrush="Transparent" ToolTip="Generate Excel Report" Click="btnSave_Click">
+                <Button x:Name="btnSave" Grid.Column="3" FontFamily="/Fonts/#Lato-Bold" FontSize="13" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" BorderBrush="Transparent" ToolTip="Generate Excel Report" Click="btnSave_Click">
                     <Button.Content>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Images/report.png" Stretch="Uniform"  >
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="35" >
+                            <Image Source="Images/excel.jpg" Stretch="Fill"  >
                             </Image>
                         </StackPanel>
                     </Button.Content>
@@ -80,17 +83,6 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <TextBlock x:Name="lblFundID" Grid.Column="5" Visibility="Hidden" Text="FUND ID:" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" />
-                <TextBox Grid.Column="6" Name="txtFundID" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
-                <TextBlock x:Name="lblFundNAME" Grid.Column="7" Text="FUND NAME:" Visibility="Hidden" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
-                <TextBox Grid.Column="8" Name="txtFund" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
-                <Button x:Name="btnAdd" Grid.Column="9" Visibility="Hidden" Margin="5" Content="ADD" IsEnabled="False" FontFamily="/Fonts/#Lato" FontSize="13" MinWidth="70" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Center"></Button>
-
-
-
-
-
-
             </Grid>
             <Border x:Name="loadingImage" Visibility="Hidden" Grid.Row="2" Background="White">
                 <Image HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" gif:ImageBehavior.AnimatedSource="Images/loading.gif" Source="Images/Exclaimation.png" />
@@ -166,7 +158,7 @@
                         <TextBlock Name="lblStatus" Text="Status: Ready" FontFamily="/Fonts/#Lato" FontSize="11" Background="Transparent" />
                     </StatusBarItem>
                 </StatusBar>
-                <TextBlock Grid.Column="1" FontSize="14" HorizontalAlignment="Center" Text="The Data of Market Rates are getting from Pakistan Stock Exchange Website With 5 Minutes Interval." FontFamily="Fonts/#Lato" Foreground="Black" VerticalAlignment="Center" FontWeight="Bold" />
+                <TextBlock Grid.Column="1" FontSize="14" HorizontalAlignment="Center" Text="Data Source: http://www.mufap.com.pk/ " FontFamily="Fonts/#Lato" Foreground="Black" VerticalAlignment="Center" FontWeight="Bold" />
                 <StatusBar DockPanel.Dock="Bottom" Grid.Column="2" Name="statusBar2" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Background="Transparent" Foreground="Black" Margin="1">
                     <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Bottom" MaxHeight="50" Background="Transparent">
                         <Border Background="Transparent">

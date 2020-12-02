@@ -59,7 +59,7 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <DatePicker Grid.Column="1" Name="datepsxpicker" FontFamily="/Fonts/#Raleway" MinWidth="250" MaxWidth="250" HorizontalAlignment="Left" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Padding="10 0 0 0" Margin="5" Height="25" ToolTip="Select Date To Fetch Closing Market Summary.." FontSize="13" />
+                <DatePicker Grid.Column="1" Name="datepsxpicker" FontFamily="/Fonts/#Raleway" MinWidth="250" MaxWidth="250" HorizontalAlignment="Left" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Padding="10 0 0 0" Margin="5" Height="25" ToolTip="Select Date To Fetch Closing Market Summary.." FontSize="13" DateValidationError="datepsxpicker_DateValidationError" />
                 <Button x:Name="btnGet" Grid.Column="2" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="36" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnGet_Click" Background="Transparent" BorderBrush="Transparent" Padding="5" ToolTip="Get Closing Market Summary">
                     <Button.Content>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

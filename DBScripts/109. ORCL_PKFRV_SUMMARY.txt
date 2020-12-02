@@ -1,0 +1,17 @@
+CREATE TABLE PKFRV_SUMMARY(PKFRV_ID int primary key, 
+						   PKFRV_FloatingRateBond varchar(500),
+						   PKFRV_SelectedDate Date,
+						   PKFRV_IssueDate Date,
+						   PKFRV_MaturityDate Date, 
+						   PKFRV_CouponFrequency varchar(500),
+						   PKFRV_BMA decimal,
+						   PKFRV_CANDM decimal,
+						   PKFRV_CMKA decimal,
+						   PKFRV_IONE decimal,
+						   PKFRV_JSCM decimal,
+						   PKFRV_MCPL decimal,
+						   PKFRV_SCPL decimal,
+						   PKFRV_VCPL decimal,
+						   PKFRV_FMA decimal,
+						   );
+CREATE SEQUENCE SYS_C00633984;

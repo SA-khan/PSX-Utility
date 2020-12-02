@@ -66,6 +66,10 @@
               "target": "Package",
               "version": "[3.1.7, )"
             },
+            "Oracle.ManagedDataAccess.Core": {
+              "target": "Package",
+              "version": "[2.19.100, )"
+            },
             "Syncfusion.ReportControls.WPF": {
               "target": "Package",
               "version": "[18.2.0.58, )"

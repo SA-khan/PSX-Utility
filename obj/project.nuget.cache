@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "h8ie3HIMKn5KaUx/5HRiQEhH9p5eTaDNij1ePL6V9QVhGLtwHRrKwKKbGAod/4tKFxDq8bL5w57uPbxlkEqaXA==",
+  "dgSpecHash": "ttJNFgwlt93A7NTFsWnYU8EILtno5DjcJNf+qnADL1nE9ejeaP0wrvROquBcDD8kG8ebYXNVQ1n/2Qbb2Oilag==",
   "success": true,
   "projectFilePath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj",
   "expectedPackageFiles": [
@@ -24,6 +24,7 @@
     "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
+    "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\oracle.manageddataaccess.core\\2.19.100\\oracle.manageddataaccess.core.2.19.100.nupkg.sha512",
     "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",

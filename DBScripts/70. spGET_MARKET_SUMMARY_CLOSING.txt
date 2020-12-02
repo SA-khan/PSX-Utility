@@ -1,6 +1,0 @@
-/****** Script for SelectTopNRows command from SSMS  ******/
-CREATE PROC spGET_MARKET_SUMMARY_CLOSING
-AS
-BEGIN
-SELECT * FROM [MARKET_SUMMARY_CLOSING]
-END

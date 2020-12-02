@@ -1,0 +1,13 @@
+USE [PSXDataWarehouse]
+GO
+/****** Object:  StoredProcedure [dbo].[spGetFundIDByParamNAME]    Script Date: 11/17/2020 2:52:14 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[spGetFundIDByParamNAME]
+		@FUND_NAME varchar(500)
+		AS
+		BEGIN
+SELECT [FI_CODE] FROM [dbo].[FUND_INFO] WHERE [FI_NAME] = @FUND_NAME
+END

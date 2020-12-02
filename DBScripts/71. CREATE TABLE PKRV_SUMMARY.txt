@@ -1,6 +1,0 @@
-CREATE TABLE PKRV_SUMMARY(PKRV_ID bigint primary key identity(1,1), 
-						   PKRV_SelectedDate Date,
-						   PKRV_Tenor varchar(MAX),
-						   PKRV_MidRate decimal(18,2),
-						   PKRV_Change float
-						   )

@@ -1,0 +1,15 @@
+CREATE TABLE MARKET_SUMMARY_CLOSING(
+  MSC_ID int primary key,
+  MSC_DATE DATE,
+  MSC_SYMBOL varchar(500),
+  MSC_CATEGORY int,
+  MSC_NAME varchar(500),
+  MSC_OPEN varchar(500),
+  MSC_HIGH varchar(500),
+  MSC_LOW varchar(500),
+  MSC_CLOSING varchar(500),
+  MSC_VOLUME varchar(500),
+  MSC_LDCP varchar(500)
+);
+
+CREATE SEQUENCE SYS_C00633982;

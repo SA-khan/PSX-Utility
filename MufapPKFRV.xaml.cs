@@ -35,6 +35,42 @@ namespace PSXDataFetchingApp
         public MufapPKFRV()
         {
             InitializeComponent();
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/BOP.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/HBL.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                }
+            }
+            catch { }
+
             pkfrvDatepicker.SelectedDate = DateTime.Now;
         }
 
@@ -62,7 +98,15 @@ namespace PSXDataFetchingApp
 
                 int _year = pkfrvDatepicker.SelectedDate.Value.Year;
                 int _month = pkfrvDatepicker.SelectedDate.Value.Month;
-                int _day = pkfrvDatepicker.SelectedDate.Value.Day;
+                string _day = String.Empty;
+                if (pkfrvDatepicker.SelectedDate.Value.Day.ToString().Length == 1)
+                {
+                   _day = pkfrvDatepicker.SelectedDate.Value.Day.ToString("0#");
+                }
+                else
+                {
+                    _day = pkfrvDatepicker.SelectedDate.Value.Day.ToString();
+                }
 
                 string _monthString = String.Empty;
                 switch (_month)
@@ -108,7 +152,7 @@ namespace PSXDataFetchingApp
                         break;
                 }
 
-                if (_year != 0 && _month != 0 && _day != 0 && pkfrvDatepicker.SelectedDate.Value != null)
+                if (_year != 0 && _month != 0 && _day != "0" && pkfrvDatepicker.SelectedDate.Value != null)
                 {
                     list1.Items.Clear();
                     _Date = pkfrvDatepicker.SelectedDate.Value.ToString("dddd, dd MMMM yyyy");
@@ -854,7 +898,14 @@ namespace PSXDataFetchingApp
             image.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image);
 
-            await  Task.Run( () => RunExcel() );
+            if (_Date != "")
+            {
+                await Task.Run(() => RunExcel());
+            }
+            else
+            {
+                MessageBox.Show("Please fetch the PKFRV price first.", "Data Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
 
             lblStatus.Text = "Status: Ready";
             var image2 = new BitmapImage();

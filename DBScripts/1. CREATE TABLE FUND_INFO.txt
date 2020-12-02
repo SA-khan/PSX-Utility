@@ -1,6 +1,0 @@
-CREATE TABLE [dbo].[FUND_INFO](
-	[FI_ID] [bigint] IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	[FI_CODE] [bigint] NULL default 0,
-	[FI_NAME] [varchar](MAX) NULL,
-	[FI_SYMBOL] [varchar](500) NULL UNIQUE,
-	[FI_DESC] [varchar](max) NULL)

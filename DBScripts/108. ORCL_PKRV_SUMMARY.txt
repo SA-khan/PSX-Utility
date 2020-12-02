@@ -1,0 +1,8 @@
+CREATE TABLE PKRV_SUMMARY(PKRV_ID int primary key, 
+               PKRV_SelectedDate Date,
+               PKRV_Tenor varchar(500),
+               PKRV_MidRate decimal,
+               PKRV_Change float
+               );
+
+CREATE SEQUENCE SYS_C00633983;
