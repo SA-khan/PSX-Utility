@@ -732,8 +732,8 @@ namespace PSXDataFetchingApp
                     // iterate through results, printing each to console
                     while (rdr.Read())
                     {
-                        FUND_ID = Convert.ToInt32(rdr["FUND_CODE"]);
-                        //Debug.WriteLine("FUND_ID in Default DB: " + FUND_ID);
+                        FUND_ID = Convert.ToInt32(rdr["FI_CODE"]);
+                        Debug.WriteLine("FI_CODE in Default DB: " + FUND_ID);
                     }
                 }
 
@@ -1158,97 +1158,116 @@ namespace PSXDataFetchingApp
 
         private int SavingDataToDatabase(string MARKET_STATUS, Int64 FUND_ID, string FUND_NAME, List<String> SHARE_NAME, List<String> SHARE_SYMBOL, List<Decimal> QUANTITY, List<Decimal> AVERAGE_PRICE, List<Decimal> BOOK_COST, List<Decimal> MARKET_PRICE, List<Decimal> MARKET_VALUE, List<String> APP_DEP)
         {
-
-            if (MARKET_STATUS != null)
+            try
             {
-
-                SqlConnection conn = new SqlConnection();
-                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
-                conn.Open();
-                int status = 0;
-                try
+                if (SHARE_NAME != null)
                 {
-                    for (int i = 0; i < SHARE_NAME.Count; i++)
+                    if (MARKET_STATUS != null && SHARE_NAME.Count > 0)
                     {
+
+                        SqlConnection conn = new SqlConnection();
+                        conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+                        conn.Open();
+                        int status = 0;
+                        try
+                        {
+                            for (int i = 0; i < SHARE_NAME.Count; i++)
+                            {
+
+
+                                //
+                                //if (MARKET_PRICE[i] == null)
+                                //{
+
+                                //}
+                                //else
+                                //{
+
+                                SqlCommand cmd = new SqlCommand("spINSERT_FUND_MARKET_SUMMARY", conn);
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.Add("@MARKET_STATUS", SqlDbType.VarChar, 500);
+                                cmd.Parameters["@MARKET_STATUS"].Value = MARKET_STATUS;
+                                cmd.Parameters.Add("@FUND_ID", SqlDbType.BigInt);
+                                cmd.Parameters["@FUND_ID"].Value = FUND_ID;
+                                cmd.Parameters.Add("@FUND_NAME", SqlDbType.VarChar, -1);
+                                cmd.Parameters["@FUND_NAME"].Value = FUND_NAME;
+                                cmd.Parameters.Add("@SHR_NAME", SqlDbType.VarChar, -1);
+                                cmd.Parameters["@SHR_NAME"].Value = SHARE_NAME[i];
+                                cmd.Parameters.Add("@SHR_SYMBOL", SqlDbType.VarChar, 500);
+                                cmd.Parameters["@SHR_SYMBOL"].Value = SHARE_SYMBOL[i];
+                                cmd.Parameters.Add("@SHR_QUANTITY", SqlDbType.Decimal);
+                                cmd.Parameters["@SHR_QUANTITY"].Value = QUANTITY[i];
+                                cmd.Parameters.Add("@SHR_AVG_PRICE", SqlDbType.Decimal);
+                                cmd.Parameters["@SHR_AVG_PRICE"].Value = AVERAGE_PRICE[i];
+                                cmd.Parameters.Add("@SHR_BOOK_COST", SqlDbType.Decimal);
+                                cmd.Parameters["@SHR_BOOK_COST"].Value = BOOK_COST[i];
+                                cmd.Parameters.Add("@SHR_MARKET_PRICE", SqlDbType.Decimal);
+                                cmd.Parameters["@SHR_MARKET_PRICE"].Value = MARKET_PRICE[i];
+                                cmd.Parameters.Add("@SHR_MARKET_VALUE", SqlDbType.Decimal);
+                                cmd.Parameters["@SHR_MARKET_VALUE"].Value = MARKET_VALUE[i];
+                                cmd.Parameters.Add("@SHR_APP_DEP", SqlDbType.VarChar);
+                                cmd.Parameters["@SHR_APP_DEP"].Value = APP_DEP[i];
+
+                                status = cmd.ExecuteNonQuery();
+                                //if (status == 1)
+                                //{
+                                //    Debug.WriteLine("Passed!");
+                                //}
+
+                                //}
+                            }
+                            return status;
+
+                        }
+                        catch (SqlException ex)
+                        {
+                            MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            Debug.WriteLine("SQL Exception: " + ex.Message);
+                            return 0;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            Debug.WriteLine("General Exception: " + ex.Message);
+                            return 0;
+                        }
+
 
 
                         //
-                        //if (MARKET_PRICE[i] == null)
-                        //{
 
-                        //}
-                        //else
-                        //{
-
-                        SqlCommand cmd = new SqlCommand("spINSERT_FUND_MARKET_SUMMARY", conn);
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@MARKET_STATUS", SqlDbType.VarChar, 500);
-                        cmd.Parameters["@MARKET_STATUS"].Value = MARKET_STATUS;
-                        cmd.Parameters.Add("@FUND_ID", SqlDbType.BigInt);
-                        cmd.Parameters["@FUND_ID"].Value = FUND_ID;
-                        cmd.Parameters.Add("@FUND_NAME", SqlDbType.VarChar, -1);
-                        cmd.Parameters["@FUND_NAME"].Value = FUND_NAME;
-                        cmd.Parameters.Add("@SHR_NAME", SqlDbType.VarChar, -1);
-                        cmd.Parameters["@SHR_NAME"].Value = SHARE_NAME[i];
-                        cmd.Parameters.Add("@SHR_SYMBOL", SqlDbType.VarChar, 500);
-                        cmd.Parameters["@SHR_SYMBOL"].Value = SHARE_SYMBOL[i];
-                        cmd.Parameters.Add("@SHR_QUANTITY", SqlDbType.Decimal);
-                        cmd.Parameters["@SHR_QUANTITY"].Value = QUANTITY[i];
-                        cmd.Parameters.Add("@SHR_AVG_PRICE", SqlDbType.Decimal);
-                        cmd.Parameters["@SHR_AVG_PRICE"].Value = AVERAGE_PRICE[i];
-                        cmd.Parameters.Add("@SHR_BOOK_COST", SqlDbType.Decimal);
-                        cmd.Parameters["@SHR_BOOK_COST"].Value = BOOK_COST[i];
-                        cmd.Parameters.Add("@SHR_MARKET_PRICE", SqlDbType.Decimal);
-                        cmd.Parameters["@SHR_MARKET_PRICE"].Value = MARKET_PRICE[i];
-                        cmd.Parameters.Add("@SHR_MARKET_VALUE", SqlDbType.Decimal);
-                        cmd.Parameters["@SHR_MARKET_VALUE"].Value = MARKET_VALUE[i];
-                        cmd.Parameters.Add("@SHR_APP_DEP", SqlDbType.VarChar);
-                        cmd.Parameters["@SHR_APP_DEP"].Value = APP_DEP[i];
-
-                        status = cmd.ExecuteNonQuery();
                         //if (status == 1)
                         //{
-                        //    Debug.WriteLine("Passed!");
+                        //    Debug.WriteLine("Data successfully saved.");
+                        //    return true;
                         //}
+                        finally
+                        {
+                            conn.Close();
+                        }
 
-                        //}
+
+
                     }
-                    return status;
-
+                    else
+                    {
+                        return 0;
+                    }
                 }
-                catch (SqlException ex)
+                else
                 {
-                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Debug.WriteLine("SQL Exception: " + ex.Message);
                     return 0;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Debug.WriteLine("General Exception: " + ex.Message);
-                    return 0;
-                }
-
-
-
-                //
-
-                //if (status == 1)
-                //{
-                //    Debug.WriteLine("Data successfully saved.");
-                //    return true;
-                //}
-                finally
-                {
-                    conn.Close();
-                }
-
-
-
             }
-            else
+            catch (NullReferenceException ex)
             {
+                MessageBox.Show("Null Reference Exception Occured.." + ex.Message);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("General Exception on Saving Data in Database..: " + ex.Message);
                 return 0;
             }
         }

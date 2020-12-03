@@ -37,7 +37,7 @@ namespace PSXDataFetchingApp
     {
 
         //15/10/2020
-        DateTime ExpiryDate = DateTime.Parse("2020/11/30 15:17:00");
+        DateTime ExpiryDate = DateTime.Parse("2020/12/31 15:17:00");
         public static bool isDataSaved = false;
         public static DateTime RequestDate = DateTime.Now;
         public static string RequestStatus = String.Empty;
@@ -218,7 +218,7 @@ namespace PSXDataFetchingApp
         {
             var image = new BitmapImage();
             image.BeginInit();
-            image.UriSource = ResourceAccessor.Get("Images/exclaimation.png");
+            image.UriSource = ResourceAccessor.Get("Images/processing.gif");
             image.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image);
             progressBarContainer.Visibility = Visibility.Visible;
@@ -507,8 +507,11 @@ namespace PSXDataFetchingApp
         {
             try
             {
-                defaultData = GetDefault();
+                MainWindow cl = new MainWindow();
+                defaultData = cl.GetDefault();
                 RequestDate = DateTime.Parse(defaultData[0]);
+                List<String> lMiscellenous = cl.GetStatusAndMiscellenous();
+
                 worker.WorkerReportsProgress = true;
                 //int progressPercentage = Convert.ToInt32(((double)i / max) * 100);
                 //(sender as BackgroundWorker)worker.ReportProgress(progressPercentage, statusFlag);
@@ -521,7 +524,7 @@ namespace PSXDataFetchingApp
                 Debug.WriteLine(ExpiredTime);
                 if (ExpiredTime <= CurrentTime)
                 {
-                    statusContent = "Application Expired.";
+                    MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
                     //MessageBox.Show("Application is expired.");
                 }
                 else
@@ -532,25 +535,25 @@ namespace PSXDataFetchingApp
                     {
                         progressBar.Value = 2;
                     });
-                    RequestStatus = defaultData[1];
+                    RequestStatus = lMiscellenous[0];
                     this.Dispatcher.Invoke(() =>
                     {
                         progressBar.Value = 3;
                     });
                     //worker.ReportProgress(3);
-                    RequestValue = Double.Parse(defaultData[2]);
+                    RequestValue = Double.Parse(lMiscellenous[1]);
                     this.Dispatcher.Invoke(() =>
                     {
                         progressBar.Value = 4;
                     });
                     //worker.ReportProgress(4);
-                    RequestVolume = Double.Parse(defaultData[3]);
+                    RequestVolume = Double.Parse(lMiscellenous[2]);
                     this.Dispatcher.Invoke(() =>
                     {
                         progressBar.Value = 5;
                     });
                     //worker.ReportProgress(5);
-                    RequestTrades = Double.Parse(defaultData[4]);
+                    RequestTrades = Double.Parse(lMiscellenous[3]);
                     statusContent = "Status: Getting Names..";
                     this.Dispatcher.Invoke(() =>
                     {

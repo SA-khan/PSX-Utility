@@ -43,55 +43,80 @@
                     <TextBlock x:Name="txtStatus" Grid.Row="1" FontFamily="/Fonts/#Lato" VerticalAlignment="Top" Margin="0 2 0 0" />
                 </Grid>
             </Grid>
-            <Grid Grid.Row="1" Margin="1 5 1 5" Background="#fff" MaxHeight="30">
+            <Grid Grid.Row="1" Margin="1 5 1 5" Background="#fff" MaxHeight="40">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MaxWidth="80" />
+                    <ColumnDefinition Width="2*" MaxWidth="160" />
+                    <ColumnDefinition Width="2*" MaxWidth="90"/>
+                    <ColumnDefinition Width="2*" MaxWidth="90"/>
+                    <ColumnDefinition Width="2*" MaxWidth="90"/>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="4*" />
-                    <ColumnDefinition Width="2*" MaxWidth="60"/>
-                    <ColumnDefinition Width="2*" MaxWidth="60"/>
-                    <ColumnDefinition Width="2*" MaxWidth="60"/>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" MaxWidth="50"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" x:Name="btnBack" FontFamily="/Fonts/#Lato" Click="btnBack_Click" Height="20" VerticalAlignment="Center" Width="40" HorizontalAlignment="Center" Margin="0 0 0 0" ToolTip="Go To Main Menu">
+                <Button Grid.Column="0" x:Name="btnBack" FontFamily="/Fonts/#Lato" Click="btnBack_Click" Height="30" VerticalAlignment="Center" Width="70" HorizontalAlignment="Center" Margin="0 0 0 0" ToolTip="Go To Main Menu">
                     <Button.Content>
-                        <StackPanel>
-                            <Image Source="Images/back.png" Stretch="Uniform" Width="15" />
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <Grid Width="70" Height="30" Margin="1 0 1 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/back.png" Width="20" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Back" FontSize="13" FontFamily="Fonts/#Raleway" Margin="4 0 0 0" />
+                            </Grid>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <ComboBox Grid.Column="1" Name="comboFund" FontFamily="Tahoma" MinWidth="150" HorizontalAlignment="Stretch" Margin="5" Height="20" SelectionChanged="comboFund_SelectionChanged" ToolTip="Select Fund To Fetch Its Shares"/>
-                <Button x:Name="btnGet" Grid.Column="2" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="50" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnGet_Click" Background="Transparent" BorderBrush="Transparent" Padding="5" ToolTip="Get Shares of Fund">
+                <ComboBox Grid.Column="1" Name="comboFund" FontFamily="Fonts/#Raleway" FontSize="13" MinWidth="150" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Margin="5" Height="30" SelectionChanged="comboFund_SelectionChanged" ToolTip="Select Fund To Fetch Its Shares with their current market details."/>
+                <Button x:Name="btnGet" Grid.Column="2" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="50" MinWidth="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnGet_Click"  Background="White" ToolTip="Get Shares of Fund">
                     <Button.Content>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Images/play.png" Stretch="Fill" >
-                            </Image>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <Grid Width="70" Height="30" Margin="1 0 1 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/play.png" Width="22" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Go" FontSize="13" FontFamily="Fonts/#Raleway" Margin="4 0 0 0" />
+                            </Grid>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button x:Name="btnSave" Grid.Column="3" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="30" MinWidth="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSave_Click" Background="White" BorderBrush="Transparent" ToolTip="Generate Report">
+                <Button x:Name="btnSave" Grid.Column="3" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="30" MinWidth="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSave_Click"  Background="White" ToolTip="Generate Excel Report.">
                     <Button.Content>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Images/report.png" Stretch="Uniform"  >
-                            </Image>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <Grid Width="70" Height="30" Margin="1 0 1 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/excel.jpg" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Excel" FontSize="13" FontFamily="Fonts/#Raleway" Margin="4 0 0 0" />
+                            </Grid>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button x:Name="btnReset" Grid.Column="4" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="40" MinWidth="40" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btnReset_Click" Background="White" BorderBrush="Transparent">
+                <Button x:Name="btnReset" Grid.Column="4" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="40" MinWidth="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnReset_Click" Background="White">
                     <Button.Content>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Images/reset.png" Margin="1" Stretch="Fill" MaxHeight="25" ToolTip="Refresh Information" >
-                            </Image>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <Grid Width="70" Height="30">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/refresh2.png" Width="22" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Refresh" FontSize="13" FontFamily="Fonts/#Raleway" Margin="1 0 0 0" />
+                            </Grid>
                         </StackPanel>
                     </Button.Content>
                 </Button>
                 <TextBlock x:Name="lblFundID" Grid.Column="5" Visibility="Hidden" Text="FUND ID:" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" />
-                <TextBox Grid.Column="6" Name="txtFundID" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
+                <TextBox Grid.Column="6" Name="txtFundID" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
                 <TextBlock x:Name="lblFundNAME" Grid.Column="7" Text="FUND NAME:" Visibility="Hidden" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
-                <TextBox Grid.Column="8" Name="txtFund" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="120" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
+                <TextBox Grid.Column="8" Name="txtFund" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
                 <Button x:Name="btnAdd" Visibility="Hidden" Grid.Column="9" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="40" MinWidth="40" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btnAdd_Click" Background="White" BorderBrush="Transparent">
                     <Button.Content>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

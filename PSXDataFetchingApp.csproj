@@ -9,6 +9,7 @@
     <Authors>Saad Ahmed</Authors>
     <Product>Data Extractor Utility</Product>
     <PackageIcon>web-scrap2.png</PackageIcon>
+    <PackageId>Data Extractor Utility</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -19,7 +19,7 @@
                 <Border Margin="2" HorizontalAlignment="Left" Padding="5" Background="White">
                 <Image x:Name="imgClient" Source="/Images/BOP.png"   />
                 </Border>
-                <Label  Content="Pakistan Stock Exchange Data Preview" FontFamily="/Fonts/#Lato" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+                <Label  Content="Pakistan Stock Exchange Live Data Preview" FontFamily="/Fonts/#Lato" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
                 <Border HorizontalAlignment="Right" Padding="5" >
                     <Grid Margin="0 0 10 0">
                     <Grid.RowDefinitions>
@@ -62,27 +62,45 @@
             <Grid Grid.Row="1" Background="White" Margin="0 2 0 2">
                 <Grid >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="90" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btnBack" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Width="70" Height="30" Background="AliceBlue" Click="btnBack_Click" ToolTip="Go Back">
-                    <StackPanel HorizontalAlignment="Stretch" >
-                        <Image Source="Images/back.png" Height="25" Width="38" />
-                        <!--<TextBlock HorizontalAlignment="Center" Width="84" Height="22" VerticalAlignment="Top" Margin="0,-31,-58,0" Text="ثبت مشتری" />-->
-                    </StackPanel>
+                    <Button x:Name="btnBack" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="80" Height="30" Background="AliceBlue" Click="btnBack_Click" ToolTip="Go Back" Margin="5 0 0 0">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <Grid Width="70" Height="30" Margin="1 0 1 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/back.png" Width="20" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Back" FontSize="13" FontFamily="Fonts/#Raleway" Margin="4 0 0 0" />
+                            </Grid>
+                        </StackPanel>
                 </Button>
-                    <Button x:Name="btnRefresh" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="70" Height="30" Background="AliceBlue" Click="btnRefresh_Click" ToolTip="Refresh">
-                    <StackPanel HorizontalAlignment="Stretch" >
-                        <Image Source="Images/refresh2.png" Height="25" Width="38" />
-                        <!--<TextBlock HorizontalAlignment="Center" Width="84" Height="22" VerticalAlignment="Top" Margin="0,-31,-58,0" Text="ثبت مشتری" />-->
-                    </StackPanel>
+                    <Button x:Name="btnRefresh" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="80" Height="30" Background="AliceBlue" Click="btnRefresh_Click" ToolTip="Refresh">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <Grid Width="70" Height="30" Margin="1 0 1 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="3*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/refresh2.png" Width="20" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Refresh" FontSize="13" FontFamily="Fonts/#Raleway" Margin="2 0 0 0" />
+                            </Grid>
+                        </StackPanel>
                 </Button>
-                    <Button x:Name="btnExport" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="70" Height="30" Background="AliceBlue" Click="btnExport_Click" ToolTip="Export Data">
-                        <StackPanel HorizontalAlignment="Stretch" >
-                            <Image Source="Images/report.png" Height="25" Width="38" />
-                            <!--<TextBlock HorizontalAlignment="Center" Width="84" Height="22" VerticalAlignment="Top" Margin="0,-31,-58,0" Text="ثبت مشتری" />-->
+                    <Button x:Name="btnExport" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="80" Height="30" Background="AliceBlue" Click="btnExport_Click" ToolTip="Generate Excel Report.">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <Grid Width="70" Height="30" Margin="1 0 1 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="Images/excel.jpg" Width="20" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Excel" FontSize="13" FontFamily="Fonts/#Raleway" Margin="4 0 0 0" />
+                            </Grid>
                         </StackPanel>
                     </Button>
                     <Grid Grid.Column="3" HorizontalAlignment="Right">
