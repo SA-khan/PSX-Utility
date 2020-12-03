@@ -64,24 +64,20 @@ namespace PSXDataFetchingApp
 
         public string getMUFAPMarketSummaryRates(string tag)
         {
-            string[] result = null;
+            List<String> result = new List<String>();
             string text = String.Empty;
             try
             {
 
                 string URL = "http://www.mufap.com.pk/nav_returns_performance.php?tab=01";
-                HtmlNodeCollection name_nodes = FetchDataFromPSX(URL, "//td");
-
-                result = new string[name_nodes.Count];
+                HtmlNodeCollection _nodes = FetchDataFromPSX(URL, "//tr");
                 
                 int startCapture = 0;
 
-                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+                foreach (HtmlAgilityPack.HtmlNode node in _nodes)
                 {
                     if (node.InnerText != null)
                     {
-                        //if (node.InnerText.Contains(tag))
-                        //{
                         if (node.InnerText.ToString() == "S&M**")
                         {
                             startCapture = 1;
@@ -95,16 +91,17 @@ namespace PSXDataFetchingApp
                         {
                             text += node.InnerText.ToString();
                         }
-                        //}
-
+                        else
+                        {
+                            text += node.InnerText.ToString()+"\n";
+                        }
                     }
 
                 }
 
-                for (int i = 0; i < result.Length; i++)
+                for (int i = 0; i < result.Count; i++)
                 {
                     text += result[i] + "\n";
-
                 }
             }
             catch(WebException ex)

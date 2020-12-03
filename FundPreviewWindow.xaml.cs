@@ -429,152 +429,159 @@ namespace PSXDataFetchingApp
                     int flagClearBucket = ClearFundBacket();
                     Debug.WriteLine("Clear Table Status: " + flagClearBucket);
                     //Debug.WriteLine("Clear Fund Bucker Data Count: " + flagClearBucket);
-                    if (flagClearBucket != 0)
+                    if (flagClearBucket == -1)
                     {
-                        //MessageBox.Show("Cleared!");
-                    }
-                    else
-                    {
-                        //MessageBox.Show("Not Cleared!");
-                    }
-
-
-                    for (int i = 0; i < spFundDetial.Count; i++)
-                    {
-                        if (spFundDetial[i].Name == null) { }
-                        else
+                        for (int i = 0; i < spFundDetial.Count; i++)
                         {
-
-                            //if (Appreciation_Depreciation[i].StartsWith('('))
-                            //{
-                            //    //var bc = new BrushConverter();
-
-                            //    //myGridView.AllowsColumnReorder = true;
-                            //    //myGridView.ColumnHeaderToolTip = "Fund Market Information";
-
-
-                            //    //gvc1.DisplayMemberBinding = new Binding("SERIAL");
-                            //    //gvc1.Header = "Sr. No.";
-                            //    //gvc1.Width = 50;
-                            //    //myGridView.Columns.Add(gvc1);
-                            //    ////GridViewColumn gvc2 = new GridViewColumn();
-                            //    //gvc2.DisplayMemberBinding = new Binding("NAME");
-                            //    //gvc2.Header = "NAME";
-                            //    //gvc2.Width = 250;
-                            //    //myGridView.Columns.Add(gvc2);
-                            //    ////GridViewColumn gvc3 = new GridViewColumn();
-                            //    //gvc3.DisplayMemberBinding = new Binding("SYMBOL");
-                            //    //gvc3.Header = "SYMBOL";
-                            //    //gvc3.Width = 60;
-                            //    //myGridView.Columns.Add(gvc3);
-                            //    ////GridViewColumn gvc4 = new GridViewColumn();
-                            //    //gvc4.DisplayMemberBinding = new Binding("CURRENT");
-                            //    //gvc4.Header = "Quantity";
-                            //    //gvc4.Width = 70;
-                            //    //myGridView.Columns.Add(gvc4);
-                            //    ////GridViewColumn gvc5 = new GridViewColumn();
-                            //    //gvc5.DisplayMemberBinding = new Binding("LDCP");
-                            //    //gvc5.Header = "Avg. Price";
-                            //    //gvc5.Width = 80;
-                            //    //myGridView.Columns.Add(gvc5);
-                            //    ////GridViewColumn gvc6 = new GridViewColumn();
-                            //    //gvc6.DisplayMemberBinding = new Binding("OPEN");
-                            //    //gvc6.Header = "Book Cost";
-                            //    //gvc6.Width = 80;
-                            //    //myGridView.Columns.Add(gvc6);
-                            //    ////GridViewColumn gvc7 = new GridViewColumn();
-                            //    //gvc7.DisplayMemberBinding = new Binding("CHANGE");
-                            //    //gvc7.Header = "Market Price";
-                            //    //gvc7.Width = 85;
-                            //    //myGridView.Columns.Add(gvc7);
-                            //    ////GridViewColumn gvc8 = new GridViewColumn();
-                            //    //gvc8.DisplayMemberBinding = new Binding("VOLUME");
-                            //    //gvc8.Header = "Market Value";
-                            //    //gvc8.Width = 100;
-                            //    //myGridView.Columns.Add(gvc8);
-                            //    ////GridViewColumn gvc9 = new GridViewColumn();
-                            //    //gvc9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
-                            //    //gvc9.Header = "App. / Dep.";
-                            //    //gvc9.Width = 80;
-                            //    ////gvc9..ItemStyle.BackColor = System.Drawing.Color.Red;
-                            //    //myGridView.Columns.Add(gvc9);
-                            //    //list1.View = myGridView;
-                            //    //HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
-
-                            //    //Style style = new Style();
-                            //    //style.TargetType = typeof(GridViewColumn);
-                            //    ////style.Setters.Add(new Setter(GridViewColumn.BackgroundProperty, (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500")));
-                            //    //list1.ItemContainerStyle = style;
-
-                            //    ////gvc9.S
-
-                            //    //Style style2 = new Style();
-                            //    //style2.TargetType = typeof(ListViewItem);
-                            //    //style2.Setters.Add(new Setter(ListViewItem.ForegroundProperty, System.Drawing.Brushes.Red));
-                            //    //list1.SelectedItem = style2;
-                            //    ////ItemsSource is ObservableCollection of EmployeeInfo objects;
-                            //    //list1.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF0000");
-                            //    //list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
-                            //    ////list1.Items.Add(new SHARE{ total + 1, Share_Name[i] });
-                            //    //list1.View = myGridView;
-
-
-                            //}
-                            //else
-                            //{
-                            //    //var bc = new BrushConverter();
-                            //    //Style style = new Style();
-                            //    //style.TargetType = typeof(ListViewItem);
-                            //    //style.Setters.Add(new Setter(ListViewItem.ForegroundProperty, Brushes.DarkGray));
-                            //    //list1.SelectedItem = style;
-                            //    //list1.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#000000");
-                            //    //list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
-
-                            //    //list1.View = myGridView;
-                            //}
-                            decimal lappdepp;
-                            if (Appreciation_Depreciation[i].Contains("("))
-                            {
-                                lappdepp = Convert.ToDecimal("-" + Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
-                            }
+                            if (spFundDetial[i].Name == null) { }
                             else
                             {
-                                lappdepp = Convert.ToDecimal(Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
-                            }
 
-                            decimal lbookcost = Convert.ToDecimal(LastUpdatedCost[i].Replace(",", ""));
-                            decimal closing = lappdepp / lbookcost;
-                            if (closing >= CLOSING_PERCENTAGE)
-                            {
-                                FundPopUpWindowFlag = true;
-                                int flagBucket = SavingToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), false, getFundId(FundName), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), Convert.ToDecimal(lappdepp), Convert.ToDecimal(closing));
-                                //Debug.WriteLine("Insert Fund Bucker Record Count: " + flagBucket);
-                                //if (flagBucket != 0)
+                                //if (Appreciation_Depreciation[i].StartsWith('('))
                                 //{
+                                //    //var bc = new BrushConverter();
+
+                                //    //myGridView.AllowsColumnReorder = true;
+                                //    //myGridView.ColumnHeaderToolTip = "Fund Market Information";
+
+
+                                //    //gvc1.DisplayMemberBinding = new Binding("SERIAL");
+                                //    //gvc1.Header = "Sr. No.";
+                                //    //gvc1.Width = 50;
+                                //    //myGridView.Columns.Add(gvc1);
+                                //    ////GridViewColumn gvc2 = new GridViewColumn();
+                                //    //gvc2.DisplayMemberBinding = new Binding("NAME");
+                                //    //gvc2.Header = "NAME";
+                                //    //gvc2.Width = 250;
+                                //    //myGridView.Columns.Add(gvc2);
+                                //    ////GridViewColumn gvc3 = new GridViewColumn();
+                                //    //gvc3.DisplayMemberBinding = new Binding("SYMBOL");
+                                //    //gvc3.Header = "SYMBOL";
+                                //    //gvc3.Width = 60;
+                                //    //myGridView.Columns.Add(gvc3);
+                                //    ////GridViewColumn gvc4 = new GridViewColumn();
+                                //    //gvc4.DisplayMemberBinding = new Binding("CURRENT");
+                                //    //gvc4.Header = "Quantity";
+                                //    //gvc4.Width = 70;
+                                //    //myGridView.Columns.Add(gvc4);
+                                //    ////GridViewColumn gvc5 = new GridViewColumn();
+                                //    //gvc5.DisplayMemberBinding = new Binding("LDCP");
+                                //    //gvc5.Header = "Avg. Price";
+                                //    //gvc5.Width = 80;
+                                //    //myGridView.Columns.Add(gvc5);
+                                //    ////GridViewColumn gvc6 = new GridViewColumn();
+                                //    //gvc6.DisplayMemberBinding = new Binding("OPEN");
+                                //    //gvc6.Header = "Book Cost";
+                                //    //gvc6.Width = 80;
+                                //    //myGridView.Columns.Add(gvc6);
+                                //    ////GridViewColumn gvc7 = new GridViewColumn();
+                                //    //gvc7.DisplayMemberBinding = new Binding("CHANGE");
+                                //    //gvc7.Header = "Market Price";
+                                //    //gvc7.Width = 85;
+                                //    //myGridView.Columns.Add(gvc7);
+                                //    ////GridViewColumn gvc8 = new GridViewColumn();
+                                //    //gvc8.DisplayMemberBinding = new Binding("VOLUME");
+                                //    //gvc8.Header = "Market Value";
+                                //    //gvc8.Width = 100;
+                                //    //myGridView.Columns.Add(gvc8);
+                                //    ////GridViewColumn gvc9 = new GridViewColumn();
+                                //    //gvc9.DisplayMemberBinding = new Binding("APPRECIATION_DEPRECIATION");
+                                //    //gvc9.Header = "App. / Dep.";
+                                //    //gvc9.Width = 80;
+                                //    ////gvc9..ItemStyle.BackColor = System.Drawing.Color.Red;
+                                //    //myGridView.Columns.Add(gvc9);
+                                //    //list1.View = myGridView;
+                                //    //HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+
+                                //    //Style style = new Style();
+                                //    //style.TargetType = typeof(GridViewColumn);
+                                //    ////style.Setters.Add(new Setter(GridViewColumn.BackgroundProperty, (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500")));
+                                //    //list1.ItemContainerStyle = style;
+
+                                //    ////gvc9.S
+
+                                //    //Style style2 = new Style();
+                                //    //style2.TargetType = typeof(ListViewItem);
+                                //    //style2.Setters.Add(new Setter(ListViewItem.ForegroundProperty, System.Drawing.Brushes.Red));
+                                //    //list1.SelectedItem = style2;
+                                //    ////ItemsSource is ObservableCollection of EmployeeInfo objects;
+                                //    //list1.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#FF0000");
+                                //    //list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
+                                //    ////list1.Items.Add(new SHARE{ total + 1, Share_Name[i] });
+                                //    //list1.View = myGridView;
+
+
+                                //}
+                                //else
+                                //{
+                                //    //var bc = new BrushConverter();
+                                //    //Style style = new Style();
+                                //    //style.TargetType = typeof(ListViewItem);
+                                //    //style.Setters.Add(new Setter(ListViewItem.ForegroundProperty, Brushes.DarkGray));
+                                //    //list1.SelectedItem = style;
+                                //    //list1.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#000000");
+                                //    //list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = LastUpdatedPerUnitCost[i], OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = MarketPriceCurrent[i].Trim(), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim() });
+
+                                //    //list1.View = myGridView;
+                                //}
+                                decimal lappdepp;
+                                Debug.WriteLine("Appreciation_Depreciation[i]: " + Appreciation_Depreciation[i]);
+                                if (Appreciation_Depreciation[i].Contains("("))
+                                {
+                                    lappdepp = Convert.ToDecimal("-" + Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
+                                }
+                                else
+                                {
+                                    lappdepp = Convert.ToDecimal(Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
+                                }
+                                Debug.WriteLine("lappdepp: " + lappdepp + ", Type: "+ lappdepp.GetType());
+                                Debug.WriteLine("LastUpdatedCost[i]: " + LastUpdatedCost[i] + ", Type: " + LastUpdatedCost[i].GetType());
+                                decimal lbookcost = Convert.ToDecimal(LastUpdatedCost[i].Replace(",", ""));
+                                Debug.WriteLine("lbookcost: " + lbookcost + ", Type: " + lbookcost.GetType());
+                                decimal closing = lappdepp / lbookcost;
+                                Debug.WriteLine("closing: " + closing + ", Type: " + closing.GetType());
+                                if (closing >= Convert.ToDecimal(CLOSING_PERCENTAGE))
+                                {
+                                    FundPopUpWindowFlag = true;
+                                    try
+                                    {
+                                        int flagBucket = SavingToFundBacket(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), false, getFundId(FundName), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), Convert.ToDecimal(lappdepp), Convert.ToDecimal(closing));
+                                    }
+                                    catch(Exception ex)
+                                    {
+                                        Debug.WriteLine("Exception: " + ex.Message);
+                                    }
+                                    //Debug.WriteLine("Insert Fund Bucker Record Count: " + flagBucket);
+                                    //if (flagBucket != 0)
+                                    //{
 
                                     //FundPopupWindow popupWindow = new FundPopupWindow(Convert.ToDateTime(DefaultData[0]), DefaultData[1].ToUpper(), false, FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i]), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), lappdepp, closing);
                                     //popupWindow.Show();
 
                                     // Debug.WriteLine("Insert Fund Bucker Record Count: " + flagBucket);
                                     //MessageBox.Show("INSERTED!");
-                                //}
-                                //else
-                                //{
+                                    //}
+                                    //else
+                                    //{
                                     //Debug.WriteLine("Insert Fund Bucker Record Count: " + flagBucket);
                                     //MessageBox.Show("NOT INSERTED!");
-                                //}
+                                    //}
+                                }
+                                Debug.WriteLine("LastUpdatedPerUnitCost[i]: " + LastUpdatedPerUnitCost[i] + ", Type: " + LastUpdatedPerUnitCost[i].GetType());
+                                decimal laverageprice = Convert.ToDecimal(LastUpdatedPerUnitCost[i]);
+                                Debug.WriteLine("LastUpdatedPerUnitCost[i]: " + MarketPriceCurrent[i] + ", Type: " + MarketPriceCurrent[i].GetType());
+                                decimal lmarketprice = Convert.ToDecimal(MarketPriceCurrent[i] == "" ? "0.00" : MarketPriceCurrent[i]);
+                                list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = laverageprice.ToString("N2"), OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = lmarketprice.ToString("N2") == "0.00" ? "Not Listed" : lmarketprice.ToString("N2"), VOLUME = MarketValue[i] == "0" ? "Not Listed" : MarketValue[i], APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}", Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                //list1.Items.Add(new FundMarket { SERIAL = Convert.ToInt32(spFundDetial[i].FundId), NAME = spFundDetial[i].Name, SYMBOL = spFundDetial[i].Symbol, CURRENT = spFundDetial[i].Quantity.ToString("#"), LDCP = spFundDetial[i].AveragePrice.ToString(), OPEN = spFundDetial[i].BookCost.ToString(), CHANGE = spFundDetial[i].MarketPrice, VOLUME = spFundDetial[i].MarketValue.ToString(), APPRECIATION_DEPRECIATION = spFundDetial[i].AppDep   } );
+                                //list1.Items.Add(new SpecificFundDetail { FundId = spFundDetial[i].FundId, Name = spFundDetial[i].Name, Symbol = spFundDetial[i].Symbol, Quantity = spFundDetial[i].Quantity, AveragePrice = spFundDetial[i].AveragePrice, BookCost = spFundDetial[i].BookCost, MarketPrice = spFundDetial[i].MarketPrice, MarketValue = spFundDetial[i].MarketValue, AppDep = spFundDetial[i].AppDep });
+                                // 
                             }
-                            decimal laverageprice = Convert.ToDecimal(LastUpdatedPerUnitCost[i]);
-                            decimal lmarketprice = Convert.ToDecimal(MarketPriceCurrent[i]);
-                            list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = laverageprice.ToString("N2"), OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = lmarketprice.ToString("N2"), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}" , Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
-                            //list1.Items.Add(new FundMarket { SERIAL = Convert.ToInt32(spFundDetial[i].FundId), NAME = spFundDetial[i].Name, SYMBOL = spFundDetial[i].Symbol, CURRENT = spFundDetial[i].Quantity.ToString("#"), LDCP = spFundDetial[i].AveragePrice.ToString(), OPEN = spFundDetial[i].BookCost.ToString(), CHANGE = spFundDetial[i].MarketPrice, VOLUME = spFundDetial[i].MarketValue.ToString(), APPRECIATION_DEPRECIATION = spFundDetial[i].AppDep   } );
-                            //list1.Items.Add(new SpecificFundDetail { FundId = spFundDetial[i].FundId, Name = spFundDetial[i].Name, Symbol = spFundDetial[i].Symbol, Quantity = spFundDetial[i].Quantity, AveragePrice = spFundDetial[i].AveragePrice, BookCost = spFundDetial[i].BookCost, MarketPrice = spFundDetial[i].MarketPrice, MarketValue = spFundDetial[i].MarketValue, AppDep = spFundDetial[i].AppDep });
-                            // 
                         }
                     }
+                    else
+                    {
 
-
-
+                    }
 
                     FundImage.Visibility = Visibility.Hidden;
                     list1.Visibility = Visibility.Visible;
@@ -804,19 +811,27 @@ namespace PSXDataFetchingApp
                         // Qunatity is not Null
                         if (!rdr.IsDBNull(5))
                         {
+                            //Debug.WriteLine(":Name: " + rdr.GetString(0).ToString() + ", Quantity: "+ rdr.GetDecimal(5));
                             // Quantity is not 0
                             if (rdr.GetDecimal(5) != 0)
                             {
-                                
+                                //Debug.WriteLine(":Name: " + rdr.GetString(0).ToString() + ", Quantity: " + rdr.GetDecimal(5));
+                                Debug.WriteLine(":Share Name: " + ", Type: " + Share_Name.GetType() + " - :Name: " + rdr.GetString(0) + ", Type: " + rdr.GetString(0).GetType());
                                 Share_Name.Add(rdr.GetString(0).ToString());
+                                Debug.WriteLine(":Share Symbol: " + ", Type: " + Share_Symbol.GetType() + " - :Symbol: " + rdr.GetString(1) + ", Type: " + rdr.GetString(1).GetType());
                                 Share_Symbol.Add(rdr.GetString(1).ToString());
+                                //Debug.WriteLine(":Share Name: " + Share_Name + ", Type: " + Share_Name.GetType() + " - :Name: " + rdr.GetString(0) + ", Type: " + rdr.GetString(0).GetType());
                                 DateCostLastUpdated.Add(rdr.GetDateTime(2).ToString());
+                                Debug.WriteLine(":AVERAGE_PRICE: " + ", Type: " + AVERAGE_PRICE.GetType() + " - :AVERAGE_PRICE: " + rdr.GetDecimal(3) + ", Type: " + rdr.GetDecimal(3).GetType());
                                 AVERAGE_PRICE.Add(rdr.GetDecimal(3).ToString() == null ? 0 : rdr.GetDecimal(3));
                                 //AVERAGE_PRICE.Add(33.89M);
+                                
                                 LastUpdatedPerUnitCost.Add(rdr.GetDecimal(3).ToString("#.##"));
+                                Debug.WriteLine(":BOOK_COST: " + ", Type: " + BOOK_COST.GetType() + " - :BOOK_COST: " + rdr.GetDecimal(4) + ", Type: " + rdr.GetDecimal(4).GetType());
                                 BOOK_COST.Add(rdr.GetDecimal(4));
                                 LastUpdatedCost.Add(Math.Round(rdr.GetDecimal(4)).ToString("#,##0"));
                                 double holding = Convert.ToDouble(rdr.GetDecimal(5));
+                                Debug.WriteLine(":QUANTITY: " + ", Type: " + QUANTITY.GetType() + " - :QUANTITY: " + rdr.GetDecimal(5) + ", Type: " + rdr.GetDecimal(5).GetType());
                                 QUANTITY.Add(rdr.GetDecimal(5));
                                 LastUpdatedHolding.Add(holding.ToString("#,##0"));
                                 LastUpdatedMarketPriceDate.Add(rdr.GetDateTime(6).ToString("#.##"));
@@ -830,17 +845,23 @@ namespace PSXDataFetchingApp
                                         if (rdr.GetString(1).ToString().Equals(testShare[i].SHARE_SYMBOL.ToString()))
                                         {
                                             localSymbol = testShare[i].SHARE_SYMBOL.ToString();
+                                            Debug.WriteLine(":testShare[i].SHARE_CURRENT: " + ", Type: " + testShare[i].SHARE_CURRENT.GetType());
                                             localCurrent = String.Format("{0:d}",testShare[i].SHARE_CURRENT);
+                                            Debug.WriteLine(":MARKET_PRICE: " + ", Type: " + MARKET_PRICE.GetType());
                                             MARKET_PRICE.Add(Decimal.Parse(testShare[i].SHARE_CURRENT));
+                                            Debug.WriteLine(":testShare[i].SHARE_CURRENT: " + ", Type: " + testShare[i].SHARE_CURRENT.GetType());
                                             localValue = Convert.ToDecimal(testShare[i].SHARE_CURRENT) * rdr.GetDecimal(5);
+                                            Debug.WriteLine(":MARKET_VALUE: " + ", Type: " + MARKET_VALUE.GetType());
                                             MARKET_VALUE.Add(localValue);
 
                                         }
                                     }
                                 }
+                                Debug.WriteLine(":MarketSymbol: " + ", Type: " + MarketSymbol.GetType());
                                 MarketSymbol.Add(localSymbol);
-
+                                Debug.WriteLine(":MarketPriceCurrent: " + ", Type: " + MarketPriceCurrent.GetType() + ", localCurrent: " + localCurrent + ", Type: " + localCurrent.GetType());
                                 MarketPriceCurrent.Add(localCurrent);
+                                Debug.WriteLine(":MarketValue: " + ", Type: " + MarketValue.GetType() + ", localCurrent: " + localValue + ", Type: " + localValue.GetType());
                                 MarketValue.Add(Convert.ToInt32(Math.Round(localValue)).ToString("#,##0"));
                                 decimal appreciation = localValue - rdr.GetDecimal(4);
                                 APPRECIATION_DEPRECIATION.Add(appreciation.ToString());
@@ -849,6 +870,8 @@ namespace PSXDataFetchingApp
                                 {
                                     localAppreciate = "(" + localAppreciate.Replace("-", "") + ")";
                                 }
+                                Debug.WriteLine(":Appreciation_Depreciation: " + ", Type: " + Appreciation_Depreciation.GetType() + ", localCurrent: " + localAppreciate + ", Type: " + localAppreciate.GetType());
+
                                 Appreciation_Depreciation.Add(localAppreciate.ToString());
 
                                 //New Edition 11/17/2020
@@ -1080,8 +1103,8 @@ namespace PSXDataFetchingApp
                             
                         }
                         decimal laverageprice = Convert.ToDecimal(LastUpdatedPerUnitCost[i]);
-                        decimal lmarketprice = Convert.ToDecimal(MarketPriceCurrent[i]);
-                        list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = laverageprice.ToString("N2"), OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = lmarketprice.ToString("N2"), VOLUME = MarketValue[i].Trim(), APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}", Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                        decimal lmarketprice = Convert.ToDecimal(MarketPriceCurrent[i] == "" ? "0.00" : MarketPriceCurrent[i]);
+                        list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = laverageprice.ToString("N2"), OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = lmarketprice.ToString("N2") == "0.00" ? "Not Listed" : lmarketprice.ToString("N2"), VOLUME = MarketValue[i] == "0" ? "Not Listed" : MarketValue[i], APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}", Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
                         
                         //list1.Items.Add(new SpecificFundDetail { FundId = spFundDetial[i].FundId, Name = spFundDetial[i].Name, Symbol = spFundDetial[i].Symbol, Quantity = spFundDetial[i].Quantity, AveragePrice = spFundDetial[i].AveragePrice, BookCost = spFundDetial[i].BookCost, MarketPrice = spFundDetial[i].MarketPrice, MarketValue = spFundDetial[i].MarketValue, AppDep = spFundDetial[i].AppDep, Math.Round(closing, 2).ToString("0.##") + "%" });
                     }
@@ -1104,7 +1127,7 @@ namespace PSXDataFetchingApp
                 MessageBox.Show("Run the Fund Selection First.", "No Data Found.", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
-
+            txtBucketCount.Text = " (" + getCountFundBucket().ToString() + ") ";
 
             var image2 = new BitmapImage();
             image2.BeginInit();

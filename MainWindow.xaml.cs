@@ -101,7 +101,180 @@ namespace PSXDataFetchingApp
                 }
             }
             catch { }
+
         }
+
+        #region ConfigurationManager_ButtonClick
+        private void btnConfigure_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DateTime CurrentTime = DateTime.Now;
+                DateTime ExpiredTime = ExpiryDate;
+                if (ExpiredTime <= CurrentTime)
+                {
+                    MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    Configuration Window = new Configuration();
+                    Window.Show();
+                    this.Hide();
+                }
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("Internet Exception: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("General Exception: " + ex.Message);
+            }
+
+        }
+
+        #endregion
+
+        #region PSX_MarketSummary_ButtonClick
+        public void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+            DateTime CurrentTime = DateTime.Now;
+            Debug.WriteLine(CurrentTime);
+            DateTime ExpiredTime = ExpiryDate;
+            Debug.WriteLine(ExpiredTime);
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                //MessageBox.Show("Application is not expired.");
+                imgWebScrap.Visibility = Visibility.Hidden;
+                progressBar.Visibility = Visibility.Visible;
+                lblProgress.Content = "Processing..";
+                btnGet.IsEnabled = false;
+                progressBar.Value = 1;
+                //BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += worker_DoWork;
+                worker.ProgressChanged += worker_ProgressChanged;
+                worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+                worker.RunWorkerAsync();
+            }
+
+        }
+
+        #endregion
+
+        #region PSX_FundMarketSummary_ButtonClick
+        private void btnGetV2_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DateTime CurrentTime = DateTime.Now;
+                DateTime ExpiredTime = ExpiryDate;
+                if (ExpiredTime <= CurrentTime)
+                {
+                    MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
+                    fundPreviewWindow.Show();
+                    this.Hide();
+                }
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("Internet Exception: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("General Exception: " + ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region PSX_UploadMarketSummaryClosing_ButtonClick
+
+        private void btnGetV3_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            DateTime ExpiredTime = ExpiryDate;
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                UploadPSXData window = new UploadPSXData();
+                window.Show();
+                this.Hide();
+            }
+        }
+
+        #endregion
+
+        #region MUFAP_MarketSummary_ButtonClick
+        private void btnMufapGetMarketSummary_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            DateTime ExpiredTime = ExpiryDate;
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MUFAPMarketSummary window = new MUFAPMarketSummary();
+                window.Show();
+                this.Hide();
+            }
+        }
+        #endregion
+
+        #region MUFAP_PKRVSummary_ButtonClick
+        private void btnMufapGetPKRV_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            DateTime ExpiredTime = ExpiryDate;
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MufapPKRV window = new MufapPKRV();
+                window.Show();
+                this.Hide();
+            }
+        }
+        #endregion
+
+        #region MUFAP_PKFRVSummary_ButtonClick
+        private void btnMufapGetPKFRV_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            DateTime ExpiredTime = ExpiryDate;
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MufapPKFRV window = new MufapPKFRV();
+                window.Show();
+                this.Hide();
+            }
+        }
+        #endregion
+
+        
 
         private HtmlNodeCollection FetchDataFromPSX(string url, string param)
         {
@@ -112,6 +285,10 @@ namespace PSXDataFetchingApp
             {
                 string html = client.DownloadString(URL);
                 doc.LoadHtml(html);
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show("There is an internet connectivity issue.\nDetails: " + ex.Message, "Internet Connectivity Issue", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -141,6 +318,7 @@ namespace PSXDataFetchingApp
 
                 foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
                 {
+                    //Debug.WriteLine("=> Data: " + node.InnerText.ToString() );
                     if (node.InnerText.ToString().StartsWith("* LDCP")) { }
                     else if (node.InnerText.ToString().StartsWith("2020"))
                     {
@@ -171,10 +349,40 @@ namespace PSXDataFetchingApp
                 result[2] = localVolume;
                 result[3] = localValue;
                 result[4] = localTrades;
+
+                List<String> lMiscellenous = GetStatusAndMiscellenous();
+                result[1] = lMiscellenous[0];
+                result[2] = lMiscellenous[1];
+                result[3] = lMiscellenous[2];
+                result[4] = lMiscellenous[3];
+
                 for (int i = 0; i < names.Count(); i++)
                 {
                     result[i + 5] = names[i];
                 }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return result;
+        }
+
+        public List<String> GetStatusAndMiscellenous()
+        {
+            
+            HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//strong");
+            List<String> result = new List<String>();
+            try
+            {
+
+                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+                {
+                    //Debug.WriteLine("=> Data: " + node.InnerText.ToString() );
+                    result.Add(node.InnerText.ToString());
+                }
+
+                
             }
             catch(Exception ex)
             {
@@ -865,33 +1073,7 @@ namespace PSXDataFetchingApp
         }
         private BackgroundWorker worker = new BackgroundWorker();
 
-        public void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-            DateTime CurrentTime = DateTime.Now;
-            Debug.WriteLine(CurrentTime);
-            DateTime ExpiredTime = ExpiryDate;
-            Debug.WriteLine(ExpiredTime);
-            if (ExpiredTime <= CurrentTime)
-            {
-                MessageBox.Show("Application is expired.");
-            }
-            else
-            {
-                //MessageBox.Show("Application is not expired.");
-                imgWebScrap.Visibility = Visibility.Hidden;
-                progressBar.Visibility = Visibility.Visible;
-                lblProgress.Content = "Processing..";
-                btnGet.IsEnabled = false;
-                progressBar.Value = 1;
-                //BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += worker_DoWork;
-                worker.ProgressChanged += worker_ProgressChanged;
-                worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-                worker.RunWorkerAsync();
-            }
-
-        }
+        
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -936,7 +1118,7 @@ namespace PSXDataFetchingApp
                 Debug.WriteLine(ExpiredTime);
                 if (ExpiredTime <= CurrentTime)
                 {
-                    MessageBox.Show("Application is expired.");
+                    MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
@@ -1055,136 +1237,19 @@ namespace PSXDataFetchingApp
             mustWork();
         }
 
-        private void btnGetV3_Click(object sender, RoutedEventArgs e)
-        {
-            DateTime CurrentTime = DateTime.Now;
-            Debug.WriteLine(CurrentTime);
-            DateTime ExpiredTime = ExpiryDate;
-            Debug.WriteLine(ExpiredTime);
-            if (ExpiredTime <= CurrentTime)
-            {
-                MessageBox.Show("Application is expired.");
-                Debug.WriteLine("Computer Date: " + ExpiredTime);
-            }
-            else
-            {
-                UploadPSXData window = new UploadPSXData();
-                window.Show();
-                this.Hide();
-            }
-        }
 
-        private void btnMufapGetPKRV_Click(object sender, RoutedEventArgs e)
-        {
-            DateTime CurrentTime = DateTime.Now;
-            Debug.WriteLine(CurrentTime);
-            DateTime ExpiredTime = ExpiryDate;
-            Debug.WriteLine(ExpiredTime);
-            if (ExpiredTime <= CurrentTime)
-            {
-                MessageBox.Show("Application is expired.");
-                Debug.WriteLine("Computer Date: " + ExpiredTime);
-            }
-            else
-            {
-                MufapPKRV window = new MufapPKRV();
-                window.Show();
-                this.Hide();
-            }
-        }
 
-        private void btnMufapGetPKFRV_Click(object sender, RoutedEventArgs e)
-        {
-            DateTime CurrentTime = DateTime.Now;
-            Debug.WriteLine(CurrentTime);
-            DateTime ExpiredTime = ExpiryDate;
-            Debug.WriteLine(ExpiredTime);
-            if (ExpiredTime <= CurrentTime)
-            {
-                MessageBox.Show("Application is expired.");
-                Debug.WriteLine("Computer Date: " + ExpiredTime);
-            }
-            else
-            {
-                MufapPKFRV window = new MufapPKFRV();
-                window.Show();
-                this.Hide();
-            }
-        }
-
-        private void btnMufapGetMarketSummary_Click(object sender, RoutedEventArgs e)
-        {
-            DateTime CurrentTime = DateTime.Now;
-            Debug.WriteLine(CurrentTime);
-            DateTime ExpiredTime = ExpiryDate;
-            Debug.WriteLine(ExpiredTime);
-            if (ExpiredTime <= CurrentTime)
-            {
-                MessageBox.Show("Application is expired.");
-                Debug.WriteLine("Computer Date: " + ExpiredTime);
-            }
-            else
-            {
-                MUFAPMarketSummary window = new MUFAPMarketSummary();
-                window.Show();
-                this.Hide();
-            }
-        }
 
         
 
-        private void btnGetV2_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                DateTime CurrentTime = DateTime.Now;
-                Debug.WriteLine(CurrentTime);
-                DateTime ExpiredTime = ExpiryDate;
-                Debug.WriteLine(ExpiredTime);
-                if (ExpiredTime <= CurrentTime)
-                {
-                    //MessageBox.Show("Application is expired.");
-                    Debug.WriteLine("Computer Date: " + ExpiredTime);
-                }
-                else
-                {
-                    //string[] defaultData = GetDefault();
-                    //RequestDate = DateTime.Parse(defaultData[0]);
-                    //Debug.WriteLine("PSX Date" + ExpiredTime);
-                    //if (ExpiredTime <= CurrentTime)
-                    //{
-                    //    MessageBox.Show("Application is expired.");
-                    //}
-                    //else
-                    //{
-                        FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
-                        fundPreviewWindow.Show();
-                        this.Hide();
-                    //}
-                }
-            }
-            catch (WebException ex)
-            {
-                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
-                Debug.WriteLine("Internet Exception: " + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
-                Debug.WriteLine("General Exception: " + ex.Message);
-            }
-        }
+
+
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
-        private void btnConfigure_Click(object sender, RoutedEventArgs e)
-        {
-            Configuration Window = new Configuration();
-            Window.Show();
-            this.Hide();
-        }
+        
     }
 }
