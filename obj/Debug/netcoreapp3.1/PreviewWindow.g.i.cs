@@ -294,7 +294,7 @@ namespace PSXDataFetchingApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/PSXDataFetchingApp;V1.0.0.0;component/previewwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/PSXDataFetchingApp;component/previewwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\PreviewWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
