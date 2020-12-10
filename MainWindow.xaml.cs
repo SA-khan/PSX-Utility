@@ -1250,6 +1250,25 @@ namespace PSXDataFetchingApp
             Application.Current.Shutdown();
         }
 
-        
+        private void btnTutorial_Click(object sender, RoutedEventArgs e)
+        {
+            Tutorial cls = new Tutorial();
+            cls.Show();
+            this.Hide();
+        }
+
+        private void btnPrivacy_Click(object sender, RoutedEventArgs e)
+        {
+            Privacy cls = new Privacy();
+            cls.Show();
+            this.Hide();
+        }
+
+        private void btnDisclaimer_Click(object sender, RoutedEventArgs e)
+        {
+            Disclaimer cls = new Disclaimer();
+            cls.Show();
+            this.Hide();
+        }
     }
 }

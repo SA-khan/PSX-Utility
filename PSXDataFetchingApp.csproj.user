@@ -12,6 +12,9 @@
     <Compile Update="Configuration.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Disclaimer.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="FundBucket.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -30,7 +33,13 @@
     <Compile Update="PreviewWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Privacy.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Report.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Tutorial.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UploadPSXData.xaml.cs">
@@ -39,6 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Configuration.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Disclaimer.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="FundBucket.xaml">
@@ -62,7 +74,13 @@
     <Page Update="PreviewWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Privacy.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Report.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Tutorial.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UploadPSXData.xaml">

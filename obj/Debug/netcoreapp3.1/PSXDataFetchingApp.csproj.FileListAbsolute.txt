@@ -147,3 +147,9 @@ C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\FundBucket.baml
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\bin\Debug\netcoreapp3.1\Oracle.ManagedDataAccess.dll
 C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\PSXDataFetchingApp.csproj.CoreCompileInputs.cache
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Disclaimer.g.cs
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Privacy.g.cs
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Tutorial.g.cs
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Disclaimer.baml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Privacy.baml
+C:\Users\Saad.Ahmed\Desktop\Projects\NewPSX\PSX-Utility\obj\Debug\netcoreapp3.1\Tutorial.baml

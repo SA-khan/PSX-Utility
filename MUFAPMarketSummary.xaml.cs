@@ -17,6 +17,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfAnimatedGif;
 using System.Linq;
+using OfficeOpenXml;
+using System.IO;
+using System.Threading;
+using OfficeOpenXml.Style;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Data;
 
 namespace PSXDataFetchingApp
 {
@@ -60,6 +67,12 @@ namespace PSXDataFetchingApp
             foreach(string _item in _category)
             comboCategory.Items.Add(_item);
             comboCategory.SelectedIndex = 0;
+            //comboCategory.IsEnabled = false;
+            //btnGet.IsEnabled = false;
+            btnSave.IsEnabled = false;
+            btnReset.IsEnabled = false;
+            SearchTermTextBox.IsEnabled = false;
+            btnSearch.IsEnabled = false;
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -71,7 +84,12 @@ namespace PSXDataFetchingApp
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-
+            FundImage.Visibility = Visibility.Visible;
+            loadingImage.Visibility = Visibility.Hidden;
+            list1.Items.Clear();
+            list1.Visibility = Visibility.Hidden;
+            txtSearch.Text = "";
+            comboCategory.SelectedIndex = 0;
         }
 
         private async void btnGet_Click(object sender, RoutedEventArgs e)
@@ -87,7 +105,7 @@ namespace PSXDataFetchingApp
             txtSearch.IsEnabled = false;
             btnSearch.IsEnabled = false;
 
-            txtStatus.Text = "Status: Processing";
+            lblStatus.Text = "Status: Processing";
             var image = new BitmapImage();
             image.BeginInit();
             image.UriSource = ResourceAccessor.Get("Images/processing.gif");
@@ -101,7 +119,7 @@ namespace PSXDataFetchingApp
             list1.Items.Clear();
 
             string _selectedCategory = comboCategory.Text.ToString();
-            Debug.WriteLine(_selectedCategory);
+            //Debug.WriteLine(_selectedCategory);
 
             await Task.Run(() => __fundSummaryDetails = GetMUFAPFundSummaryData(_selectedCategory));
 
@@ -119,10 +137,10 @@ namespace PSXDataFetchingApp
             btnGet.IsEnabled = true;
             btnSave.IsEnabled = true;
             btnReset.IsEnabled = true;
-            txtSearch.IsEnabled = true;
+            SearchTermTextBox.IsEnabled = true;
             btnSearch.IsEnabled = true;
 
-            txtStatus.Text = "Status: Ready";
+            lblStatus.Text = "Status: Ready";
             var image2 = new BitmapImage();
             image2.BeginInit();
             image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
@@ -150,6 +168,14 @@ namespace PSXDataFetchingApp
             int y = 0;
             int counter = 0;
             bool _headerFlag = false;
+            int _clearStatus = ClearMufapMarketSummary();
+            if(_clearStatus == -1) {
+                Debug.WriteLine("MUFAP Table Cleared..");
+            }
+            else
+            {
+                Debug.WriteLine("MUFAP Table Cleared.. Code: " + _clearStatus);
+            }
             for (int i = 0; i < _data.Count; i++)
             {
                 SpecificMUFAPFundSummary obj1 = new SpecificMUFAPFundSummary();
@@ -218,14 +244,22 @@ namespace PSXDataFetchingApp
                             obj1.MF = _data[i + 13];
                             obj1.SANDM = _data[i + 14];
                         }
+                        if (string.IsNullOrEmpty(obj1.Rating))
+                        {
+                            obj1.Rating = " - ";
+                        }
                         //Debug.WriteLine("=> "+obj1.FundId+": " + obj1.Name + ", Category: " + obj1.Category, ", Rating: "+ obj1.Rating + ", NAV: " + obj1.NAV + ", YTD: " + obj1.YTD + ", MTD: " + obj1.MTD + ", 1 Day: " + obj1._1Day + ", 15 Days: " + obj1._15Days + ", 30 Days: " + obj1._30Days + ", 90 Days: " + obj1._90Days + ", 180 Days: " + obj1._180Days + ", 270 Days: " + obj1._270Days + ", 365 Days: " + obj1._365Days + ", TER: " + obj1.TER + ", MF: " + obj1.MF + ", S&M" + obj1.SANDM + " .");
                         if (_selectcategory == "All Categories")
                         {
-                            response.Add(new SpecificMUFAPFundSummary { FundId = ++counter, Name = obj1.Name, Category = obj1.Category, Rating = obj1.Rating == "" ? "-" : obj1.Rating, ValidityDate = obj1.ValidityDate, NAV = obj1.NAV, YTD = obj1.YTD, MTD = obj1.MTD, _1Day = obj1._1Day, _15Days = obj1._15Days, _30Days = obj1._30Days, _90Days = obj1._90Days, _180Days = obj1._180Days, _270Days = obj1._270Days, _365Days = obj1._365Days, TER = obj1.TER, MF = obj1.MF, SANDM = obj1.SANDM });
+                            response.Add(new SpecificMUFAPFundSummary { FundId = ++counter, Name = obj1.Name, Category = obj1.Category, Rating = string.IsNullOrEmpty(obj1.Rating) ? " - " : obj1.Rating, ValidityDate = obj1.ValidityDate, NAV = obj1.NAV, YTD = obj1.YTD, MTD = obj1.MTD, _1Day = obj1._1Day, _15Days = obj1._15Days, _30Days = obj1._30Days, _90Days = obj1._90Days, _180Days = obj1._180Days, _270Days = obj1._270Days, _365Days = obj1._365Days, TER = obj1.TER, MF = obj1.MF, SANDM = obj1.SANDM });
+                            int _savingStatus = SavingSpecificMufapFundMarketSummary(obj1);
+                            if(_savingStatus != 1) { Debug.WriteLine("Database Insertion Failed of Fund Name: " + obj1.Name); }
                         }
                         else if(obj1.Category == _selectcategory )
                         {
-                            response.Add(new SpecificMUFAPFundSummary { FundId = ++counter, Name = obj1.Name, Category = obj1.Category, Rating = obj1.Rating == "" ? "-" : obj1.Rating, ValidityDate = obj1.ValidityDate, NAV = obj1.NAV, YTD = obj1.YTD, MTD = obj1.MTD, _1Day = obj1._1Day, _15Days = obj1._15Days, _30Days = obj1._30Days, _90Days = obj1._90Days, _180Days = obj1._180Days, _270Days = obj1._270Days, _365Days = obj1._365Days, TER = obj1.TER, MF = obj1.MF, SANDM = obj1.SANDM });
+                            response.Add(new SpecificMUFAPFundSummary { FundId = ++counter, Name = obj1.Name, Category = obj1.Category, Rating = string.IsNullOrEmpty(obj1.Rating) ? " - " : obj1.Rating, ValidityDate = obj1.ValidityDate, NAV = obj1.NAV, YTD = obj1.YTD, MTD = obj1.MTD, _1Day = obj1._1Day, _15Days = obj1._15Days, _30Days = obj1._30Days, _90Days = obj1._90Days, _180Days = obj1._180Days, _270Days = obj1._270Days, _365Days = obj1._365Days, TER = obj1.TER, MF = obj1.MF, SANDM = obj1.SANDM });
+                            int _savingStatus = SavingSpecificMufapFundMarketSummary(obj1);
+                            if (_savingStatus != 1) { Debug.WriteLine("Database Insertion Failed of Fund Name: " + obj1.Name); }
                         }
                     }
                     
@@ -267,8 +301,6 @@ namespace PSXDataFetchingApp
                 string URL = "http://www.mufap.com.pk/nav_returns_performance.php?tab=01";
                 HtmlNodeCollection _nodes = FetchDataFromPSX(URL, "//td");
                 
-                int startCapture = 0;
-
                 foreach (HtmlAgilityPack.HtmlNode node in _nodes)
                 {
                     if (node.InnerText != null)
@@ -304,27 +336,12 @@ namespace PSXDataFetchingApp
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            list1.Items.Clear();
-            string _searchKeyword = SearchTermTextBox.Text.ToString().ToLower();
-            List<SpecificMUFAPFundSummary> _searchList = new List<SpecificMUFAPFundSummary>();
-            var _selectedItem = from item in __fundSummaryDetails
-                                where item.Name.ToLower().Contains(_searchKeyword) || item.Category.ToLower().Contains(_searchKeyword)
-                                orderby item.Name
-                                select item;
-            _searchList = _selectedItem.ToList();
-            int counter = 0;
-            foreach (SpecificMUFAPFundSummary item in _selectedItem)
-            {
-                list1.Items.Add(new SpecificMUFAPFundSummary { FundId = ++counter, Name = item.Name, Category = item.Category, Rating = item.Rating, ValidityDate = item.ValidityDate, NAV = item.NAV, YTD = item.YTD, MTD = item.MTD, _1Day = item._1Day, _15Days = item._15Days, _30Days = item._30Days, _90Days = item._90Days, _180Days = item._180Days, _270Days = item._270Days, _365Days = item._365Days, TER = item.TER, MF = item.MF, SANDM = item.SANDM });
-            }
-        }
 
-        private void SearchTermTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (SearchTermTextBox.Text != null)
+            string _word = SearchTermTextBox.Text.ToString().ToLower();
+            if (_word != null)
             {
                 list1.Items.Clear();
-                string _searchKeyword = SearchTermTextBox.Text.ToString().ToLower();
+                string _searchKeyword = _word;
                 List<SpecificMUFAPFundSummary> _searchList = new List<SpecificMUFAPFundSummary>();
                 var _selectedItem = from item in __fundSummaryDetails
                                     where item.Name.ToLower().Contains(_searchKeyword) || item.Category.ToLower().Contains(_searchKeyword)
@@ -338,5 +355,471 @@ namespace PSXDataFetchingApp
                 }
             }
         }
+
+        private void SearchTermTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string _word = SearchTermTextBox.Text.ToString().ToLower();
+            if (!string.IsNullOrEmpty(_word))
+            {
+                list1.Items.Clear();
+                string _searchKeyword = _word;
+                List<SpecificMUFAPFundSummary> _searchList = new List<SpecificMUFAPFundSummary>();
+                var _selectedItem = from item in __fundSummaryDetails
+                                    where item.Name.ToLower().Contains(_searchKeyword) || item.Category.ToLower().Contains(_searchKeyword)
+                                    orderby item.Name
+                                    select item;
+                _searchList = _selectedItem.ToList();
+                int counter = 0;
+                foreach (SpecificMUFAPFundSummary item in _selectedItem)
+                {
+                    list1.Items.Add(new SpecificMUFAPFundSummary { FundId = ++counter, Name = item.Name, Category = item.Category, Rating = item.Rating, ValidityDate = item.ValidityDate, NAV = item.NAV, YTD = item.YTD, MTD = item.MTD, _1Day = item._1Day, _15Days = item._15Days, _30Days = item._30Days, _90Days = item._90Days, _180Days = item._180Days, _270Days = item._270Days, _365Days = item._365Days, TER = item.TER, MF = item.MF, SANDM = item.SANDM });
+                }
+            }
+        }
+
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            btnSave.IsEnabled = false;
+            lblStatus.Text = "Status: Processing";
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = ResourceAccessor.Get("Images/processing.gif");
+            image.EndInit();
+            ImageBehavior.SetAnimatedSource(imgStatus, image);
+
+            if (list1.Items.Count != 0)
+            {
+                await Task.Run(() => RunExcel());
+            }
+            else
+            {
+                MessageBox.Show("Please fetch the closing market summary first.", "Data Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            lblStatus.Text = "Status: Ready";
+            var image2 = new BitmapImage();
+            image2.BeginInit();
+            image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
+            image2.EndInit();
+            ImageBehavior.SetAnimatedSource(imgStatus, image2);
+            btnSave.IsEnabled = true;
+        }
+
+        public void RunExcel()
+        {
+            ExcelPackage package = null;
+            Stream xlFile = null;
+            try
+            {
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                using (package = new ExcelPackage())
+                {
+
+                    //Add a new worksheet to the empty workbook
+                    var worksheet = package.Workbook.Worksheets.Add("MUFAP Fund Market Summary");
+                    //Add the headers
+                    worksheet.Cells[1, 1].Value = "Id";
+                    worksheet.Cells[1, 2].Value = "Name";
+                    worksheet.Cells[1, 3].Value = "Category";
+                    worksheet.Cells[1, 5].Value = "Validity Date";
+                    worksheet.Cells[1, 4].Value = "Rating";
+                    worksheet.Cells[1, 6].Value = "NAV";
+                    worksheet.Cells[1, 7].Value = "YTD";
+                    worksheet.Cells[1, 8].Value = "MTD";
+                    worksheet.Cells[1, 9].Value = "1 Day";
+                    worksheet.Cells[1, 10].Value = "15 Days";
+                    worksheet.Cells[1, 11].Value = "30 Days";
+                    worksheet.Cells[1, 12].Value = "90 Days";
+                    worksheet.Cells[1, 13].Value = "180 Days";
+                    worksheet.Cells[1, 14].Value = "270 Days";
+                    worksheet.Cells[1, 15].Value = "365 Days";
+                    worksheet.Cells[1, 16].Value = "TER %**";
+                    worksheet.Cells[1, 17].Value = "MF %**";
+                    worksheet.Cells[1, 18].Value = "S&M %**";
+
+                    //Add some items...
+                    List<SpecificMUFAPFundSummary> items = getMufapMarketSummary();
+
+                    int total = 1;
+                    for (int index = 0; index < items.Count; index++)
+                    {
+                        total = index + 2;
+                        worksheet.Cells["A" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["A" + total].Value = items[index].FundId;
+                        worksheet.Cells["B" + total].Value = items[index].Name;
+                        worksheet.Cells["C" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        worksheet.Cells["C" + total].Value = items[index].Category;
+                        worksheet.Cells["D" + total].Value = items[index].Rating;
+                        //worksheet.Cells["E" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["E" + total].Value = items[index].ValidityDate;
+                        worksheet.Cells["F" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["F" + total].Value = items[index].NAV;
+                        worksheet.Cells["G" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["G" + total].Value = items[index].YTD;
+                        worksheet.Cells["H" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["H" + total].Value = items[index].MTD;
+                        worksheet.Cells["I" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["I" + total].Value = items[index]._1Day;
+                        worksheet.Cells["J" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["J" + total].Value = items[index]._15Days;
+                        worksheet.Cells["K" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["K" + total].Value = items[index]._30Days;
+                        worksheet.Cells["L" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["L" + total].Value = items[index]._90Days;
+                        worksheet.Cells["M" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["M" + total].Value = items[index]._180Days;
+                        worksheet.Cells["N" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["N" + total].Value = items[index]._270Days;
+                        worksheet.Cells["O" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["O" + total].Value = items[index]._365Days;
+                        worksheet.Cells["P" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["P" + total].Value = items[index].TER;
+                        worksheet.Cells["Q" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["Q" + total].Value = items[index].MF;
+                        worksheet.Cells["R" + total].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells["R" + total].Value = items[index].SANDM;
+                    }
+
+                    //EndTest
+
+                    //Ok now format the values;
+                    using (var range = worksheet.Cells[1, 1, 1, 18])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DarkBlue);
+                        range.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    }
+
+                    //Create an autofilter for the range
+                    worksheet.Cells["A1:K4"].AutoFilter = true;
+
+                    worksheet.Cells["A2:A4"].Style.Numberformat.Format = "@";   //Format as text
+
+                    //There is actually no need to calculate, Excel will do it for you, but in some cases it might be useful. 
+                    //For example if you link to this workbook from another workbook or you will open the workbook in a program that hasn't a calculation engine or 
+                    //you want to use the result of a formula in your program.
+                    worksheet.Calculate();
+
+                    worksheet.Cells.AutoFitColumns(0);  //Autofit columns for all cells
+
+                    // Lets set the header text 
+                    worksheet.HeaderFooter.OddHeader.CenteredText = "&24&U&\"Arial,Regular Bold\" Fund Market Summary";
+                    // Add the page number to the footer plus the total number of pages
+                    worksheet.HeaderFooter.OddFooter.RightAlignedText =
+                        string.Format("Page {0} of {1}", ExcelHeaderFooter.PageNumber, ExcelHeaderFooter.NumberOfPages);
+                    // Add the sheet name to the footer
+                    worksheet.HeaderFooter.OddFooter.CenteredText = ExcelHeaderFooter.SheetName;
+                    // Add the file path to the footer
+                    worksheet.HeaderFooter.OddFooter.LeftAlignedText = ExcelHeaderFooter.FilePath + ExcelHeaderFooter.FileName;
+
+                    //worksheet.PrinterSettings.RepeatRows = worksheet.Cells["1:2"];
+                    //worksheet.PrinterSettings.RepeatColumns = worksheet.Cells["A:I"];
+
+                    // Change the sheet view to show it in page layout mode
+                    //worksheet.View.PageLayoutView = true;
+
+                    // Set some document properties
+                    package.Workbook.Properties.Title = "MUFAP Fund Market Summary Details";
+                    package.Workbook.Properties.Author = "Saad Ahmed";
+                    package.Workbook.Properties.Comments = "This is the mufap fund market summary detail report.";
+
+                    // Set some extended property values
+                    package.Workbook.Properties.Company = "EPPlus Software AB";
+
+                    // Set some custom property values
+                    package.Workbook.Properties.SetCustomPropertyValue("Checked by", "Jan Källman");
+                    package.Workbook.Properties.SetCustomPropertyValue("AssemblyName", "EPPlus");
+
+                    //var xlFile = FileOutputUtil.GetFileInfo("01-GettingStarted.xlsx");
+                    string path = "MufapFundMarketSummary.xlsx";
+                    xlFile = File.Create(path);
+
+
+                    // Save our new workbook in the output directory and we are done!
+                    package.SaveAs(xlFile);
+                    //xlFile.Close();
+
+                    //return xlFile.FullName;
+                    package.Stream.Close();
+
+                    xlFile.Dispose();
+                    package.Dispose();
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Problem: ", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                Debug.WriteLine("Exception: " + ex.Message);
+            }
+            finally
+            {
+                //xlFile.Dispose();
+                //package.Dispose();
+            }
+            Debug.WriteLine("Excel Sheet Created.");
+            Thread.Sleep(1000);
+            if (File.Exists("MufapFundMarketSummary.xlsx"))
+            {
+                try
+                {
+                    //using (Stream stream = new FileStream("FundMarketSummary.xlsx", FileMode.Open))
+                    //{
+                    // File/Stream manipulating code here
+                    Process p = new Process();
+                    p.StartInfo.UseShellExecute = true;
+                    p.StartInfo.FileName = "MufapFundMarketSummary.xlsx";
+                    p.Start();
+                    //}
+                }
+                catch (Exception ex)
+                {
+                    //check here why it failed and ask user to retry if the file is in use.
+                    MessageBox.Show(ex.Message);
+                }
+
+            }
+
+        }
+
+        public List<SpecificMUFAPFundSummary> getMufapMarketSummary()
+        {
+            List<SpecificMUFAPFundSummary> items = new List<SpecificMUFAPFundSummary>();
+
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            conn.Open();
+            // 1.  create a command object identifying the stored procedure
+            SqlCommand cmd = new SqlCommand("spGET_MUFAP_MARKET_SUMMARY", conn);
+
+            // 2. set the command object so it knows to execute a stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // 3. add parameter to command, which will be passed to the stored procedure
+            //cmd.Parameters.Add(new SqlParameter("@FUND_NAME", _fundName));
+
+            // execute the command
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+                // iterate through results, printing each to console
+                while (rdr.Read())
+                {
+                    items.Add(new SpecificMUFAPFundSummary { FundId = rdr.GetInt64(0), ValidityDate = rdr.GetDateTime(2).ToString(), Category = rdr.GetString(3), Name = rdr.GetString(4), Rating = rdr.GetString(5), NAV = rdr.GetDecimal(6).ToString(), YTD = rdr.GetDecimal(7).ToString(), MTD = rdr.GetDecimal(8).ToString(), _1Day = rdr.GetDecimal(9).ToString(), _15Days = rdr.GetDecimal(10).ToString(), _30Days = rdr.GetDecimal(11).ToString(), _90Days = rdr.GetDecimal(12).ToString(), _180Days = rdr.GetDecimal(13).ToString(), _270Days = rdr.GetDecimal(14).ToString(), _365Days = rdr.GetDecimal(15).ToString(), TER = rdr.GetDecimal(16).ToString(), MF = rdr.GetDecimal(17).ToString(), SANDM = rdr.GetDecimal(18).ToString() });
+                    //Debug.WriteLine("FUND_ID in Default DB: " + FUND_ID);
+                }
+            }
+
+            conn.Close();
+
+            return items;
+        }
+
+        private int ClearMufapMarketSummary()
+        {
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            conn.Open();
+            int status = 0;
+            try
+            {
+                SqlCommand cmd = new SqlCommand("spTRUNCATE_MUFAP_MARKET_SUMMARY", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                status = cmd.ExecuteNonQuery();
+                return status;
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("SQL Exception: " + ex.Message);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("General Exception: " + ex.Message);
+                return 0;
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+        }
+
+        public int SavingSpecificMufapFundMarketSummary(SpecificMUFAPFundSummary _fundSummary)
+        {
+            int status = 0;
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            conn.Open();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("spINSERT_MUFAP_MARKET_SUMMARY", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@MMS_DATE", SqlDbType.DateTime);
+                cmd.Parameters["@MMS_DATE"].Value = DateTime.Now;
+                cmd.Parameters.Add("@MMS_VALIDITY_DATE", SqlDbType.DateTime);
+                cmd.Parameters["@MMS_VALIDITY_DATE"].Value = Convert.ToDateTime(_fundSummary.ValidityDate);
+                cmd.Parameters.Add("@MMS_CATEGORY", SqlDbType.VarChar, 500);
+                cmd.Parameters["@MMS_CATEGORY"].Value = _fundSummary.Category;
+                cmd.Parameters.Add("@MMS_NAME", SqlDbType.VarChar, 1000);
+                cmd.Parameters["@MMS_NAME"].Value = _fundSummary.Name;
+                cmd.Parameters.Add("@MMS_RATING", SqlDbType.VarChar, 500);
+                cmd.Parameters["@MMS_RATING"].Value = string.IsNullOrEmpty(_fundSummary.Rating)  ? " - " : _fundSummary.Rating;
+                cmd.Parameters.Add("@MMS_NAV", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary.NAV) || _fundSummary.NAV.Contains("N/A"))
+                {
+                    cmd.Parameters["@MMS_NAV"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_NAV"].Value = Convert.ToDecimal(_fundSummary.NAV);
+                }
+                cmd.Parameters.Add("@MMS_YTD", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary.YTD) || _fundSummary.YTD.Contains("N/A") || _fundSummary.YTD.Contains("("))
+                {
+                    cmd.Parameters["@MMS_YTD"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_YTD"].Value = Convert.ToDecimal(_fundSummary.YTD);
+                }
+                //cmd.Parameters["@MMS_YTD"].Value = Convert.ToDecimal(_fundSummary.YTD);
+                cmd.Parameters.Add("@MMS_MTD", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary.MTD) || _fundSummary.MTD.Contains("N/A") || _fundSummary.MTD.Contains("("))
+                {
+                    cmd.Parameters["@MMS_MTD"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_MTD"].Value = Convert.ToDecimal(_fundSummary.MTD);
+                }
+                //cmd.Parameters["@MMS_MTD"].Value = Convert.ToDecimal(_fundSummary.MTD);
+                cmd.Parameters.Add("@MMS_1Day", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary._1Day) || _fundSummary._1Day.Contains("N/A") || _fundSummary._1Day.Contains("("))
+                {
+                    cmd.Parameters["@MMS_1Day"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_1Day"].Value = Convert.ToDecimal(_fundSummary._1Day);
+                }
+                //cmd.Parameters["@MMS_1Day"].Value = Convert.ToDecimal(_fundSummary._1Day);
+                cmd.Parameters.Add("@MMS_15Days", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary._15Days) || _fundSummary._15Days.Contains("N/A") || _fundSummary._15Days.Contains("("))
+                {
+                    cmd.Parameters["@MMS_15Days"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_15Days"].Value = Convert.ToDecimal(_fundSummary._15Days);
+                }
+                //cmd.Parameters["@MMS_15Days"].Value = Convert.ToDecimal(_fundSummary._15Days);
+                cmd.Parameters.Add("@MMS_30Days", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary._30Days) || _fundSummary._30Days.Contains("N/A") || _fundSummary._30Days.Contains("("))
+                {
+                    cmd.Parameters["@MMS_30Days"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_30Days"].Value = Convert.ToDecimal(_fundSummary._30Days);
+                }
+                //cmd.Parameters["@MMS_30Days"].Value = Convert.ToDecimal(_fundSummary._30Days);
+                cmd.Parameters.Add("@MMS_90Days", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary._90Days) || _fundSummary._90Days.Contains("N/A") || _fundSummary._90Days.Contains("("))
+                {
+                    cmd.Parameters["@MMS_90Days"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_90Days"].Value = Convert.ToDecimal(_fundSummary._90Days);
+                }
+                //cmd.Parameters["@MMS_90Days"].Value = Convert.ToDecimal(_fundSummary._90Days);
+                cmd.Parameters.Add("@MMS_180Days", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary._180Days) || _fundSummary._180Days.Contains("N/A") || _fundSummary._180Days.Contains("("))
+                {
+                    cmd.Parameters["@MMS_180Days"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_180Days"].Value = Convert.ToDecimal(_fundSummary._180Days);
+                }
+                //cmd.Parameters["@MMS_180Days"].Value = Convert.ToDecimal(_fundSummary._180Days);
+                cmd.Parameters.Add("@MMS_270Days", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary._270Days) || _fundSummary._270Days.Contains("N/A") || _fundSummary._270Days.Contains("("))
+                {
+                    cmd.Parameters["@MMS_270Days"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_270Days"].Value = Convert.ToDecimal(_fundSummary._270Days);
+                }
+                //cmd.Parameters["@MMS_270Days"].Value = Convert.ToDecimal(_fundSummary._270Days);
+                cmd.Parameters.Add("@MMS_365Days", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary._365Days) || _fundSummary._365Days.Contains("N/A") || _fundSummary._365Days.Contains("("))
+                {
+                    cmd.Parameters["@MMS_365Days"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_365Days"].Value = Convert.ToDecimal(_fundSummary._365Days);
+                }
+                //cmd.Parameters["@MMS_365Days"].Value = Convert.ToDecimal(_fundSummary._365Days);
+                cmd.Parameters.Add("@MMS_TER", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary.TER) || _fundSummary.TER.Contains("N/A") || _fundSummary.TER.Contains("("))
+                {
+                    cmd.Parameters["@MMS_TER"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_TER"].Value = Convert.ToDecimal(_fundSummary.TER);
+                }
+                //cmd.Parameters["@MMS_TER"].Value = Convert.ToDecimal(_fundSummary.TER);
+                cmd.Parameters.Add("@MMS_MF", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary.MF) || _fundSummary.MF.Contains("N/A") || _fundSummary.MF.Contains("("))
+                {
+                    cmd.Parameters["@MMS_MF"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_MF"].Value = Convert.ToDecimal(_fundSummary.MF);
+                }
+                //cmd.Parameters["@MMS_MF"].Value = Convert.ToDecimal(_fundSummary.MF);
+                cmd.Parameters.Add("@MMS_SANDM", SqlDbType.Decimal);
+                if (string.IsNullOrEmpty(_fundSummary.SANDM) || _fundSummary.SANDM.Contains("N/A") || _fundSummary.SANDM.Contains("("))
+                {
+                    cmd.Parameters["@MMS_SANDM"].Value = Convert.ToDecimal("0.00");
+                }
+                else
+                {
+                    cmd.Parameters["@MMS_SANDM"].Value = Convert.ToDecimal(_fundSummary.SANDM);
+                }
+                //cmd.Parameters["@MMS_SANDM"].Value = Convert.ToDecimal(_fundSummary.SANDM);
+                status = cmd.ExecuteNonQuery();
+                return status;
+
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("SQL Exception: " + ex.Message);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("General Exception: " + ex.Message);
+                return 0;
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
     }
 }

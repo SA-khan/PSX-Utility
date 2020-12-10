@@ -1,0 +1,105 @@
+﻿<Window x:Class="PSXDataFetchingApp.Privacy"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PSXDataFetchingApp"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        mc:Ignorable="d"
+        Icon="Images/web-scrap2.png"
+        Title="Web Extractor Utility" Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
+    <Border  Background="DarkGray">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MaxHeight="60"/>
+                <RowDefinition Height="*" MaxHeight="60" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" MaxHeight="60" />
+            </Grid.RowDefinitions>
+            <Border>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border>
+                        <Image />
+                    </Border>
+                    <Border Grid.Column="1">
+                        <Image />
+                    </Border>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" Margin="0 15 0 0"  Background="White">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MaxWidth="90" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Border>
+                        <Button Grid.Column="0" x:Name="btnBack" FontFamily="/Fonts/#Lato" Click="btnBack_Click" Height="30" VerticalAlignment="Center" Width="70" HorizontalAlignment="Left" ToolTip="Go To Main Menu" Margin="5 0 0 0">
+                            <Button.Content>
+                                <StackPanel Width="70" Height="30" VerticalAlignment="Center" Margin="2 0 2 0">
+                                    <Grid Width="70" Height="30">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Image Source="Images/back.png" Stretch="Uniform" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="1" Text="Back" FontSize="13" FontFamily="Fonts/#Raleway" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </Border>
+                    <Border Grid.Column="1" x:Name="borderHeading" HorizontalAlignment="Left">
+                        <TextBlock Text=" Privacy" FontSize="26" FontFamily="Fonts/#Raleway" VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </Border>
+            <Border Grid.Row="2" Background="Gray" Padding="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Padding="2">
+                        <Grid Background="Azure">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Border>
+                                <Button x:Name="vendorPolicy" Content="Vendor Policy" FontSize="20" FontFamily="Fonts/#Raleway" Click="vendorPolicy_Click"></Button>
+                            </Border>
+                            <Border Grid.Row="1">
+                                <Button x:Name="softwarePolicy" Content="Software Policy" FontSize="20" FontFamily="Fonts/#Raleway" Click="softwarePolicy_Click"></Button>
+                            </Border>
+                            <Border Grid.Row="2">
+                                <Button x:Name="copyrightPolicy" Content="Copy Rights Policy" FontSize="20" FontFamily="Fonts/#Raleway" Click="copyrightPolicy_Click"></Button>
+                            </Border>
+                            <Border Grid.Row="3">
+                                <Button x:Name="distributionPolicy" Content="Distribution Policy" FontSize="20" FontFamily="Fonts/#Raleway" Click="distributionPolicy_Click"></Button>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="1" Padding="2">
+                        <RichTextBox x:Name="richPrivacy" TextBlock.FontFamily="Fonts/#Raleway" FontSize="14" Padding="5">
+                            <FlowDocument>
+                                <Paragraph>
+                                    We uses certain technology on our app to collect information from
+                                    <Bold>Pakistan Stock Exchange (PSX)</Bold> and
+                                    <Bold>Mutual Funds Association of Pakistan (MUFAP)</Bold> and compiles aggregate statistical information in our application, including information relating to the frequency of hits on these websites, We uses this information to improve the application content and performance. No individually identifiable information is collected for this purpose and we does not monitor any behaviour.
+                                </Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

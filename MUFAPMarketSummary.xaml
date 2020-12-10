@@ -76,7 +76,7 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button x:Name="btnSave" Grid.Column="3" FontFamily="/Fonts/#Lato-Bold" FontSize="13" Width="90" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" ToolTip="Generate Excel Report">
+                <Button x:Name="btnSave" Grid.Column="3" FontFamily="/Fonts/#Lato-Bold" FontSize="13" Width="90" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" ToolTip="Generate Excel Report" Click="btnSave_Click">
                     <Button.Content>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid Width="80" Height="30">
@@ -105,8 +105,8 @@
                     </Button.Content>
                 </Button>
                 <Grid Grid.Column="5" HorizontalAlignment="Right">
-                    <TextBox  Width="205" Height="25" FontSize="13"  VerticalAlignment="Center" HorizontalAlignment="Right" x:Name="SearchTermTextBox" TextChanged="SearchTermTextBox_TextChanged" />
-                    <TextBlock x:Name="txtSearch" IsHitTestVisible="False" Text="Enter Search Term Here" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray" FontSize="13" FontFamily="/Fonts/#Raleway">
+                    <TextBox  Width="205" Height="25" FontSize="13"  VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="SearchTermTextBox" TextChanged="SearchTermTextBox_TextChanged" />
+                    <TextBlock x:Name="txtSearch" FontSize="13" IsHitTestVisible="False" Text="Enter Search Term Here" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray" FontFamily="/Fonts/#Raleway">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Visibility" Value="Collapsed"/>
