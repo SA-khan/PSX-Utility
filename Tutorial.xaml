@@ -68,37 +68,37 @@
                     <Border Padding="2">
                         <Grid Background="Azure">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" MaxHeight="30" />
+                                <RowDefinition Height="*" MaxHeight="30" />
+                                <RowDefinition Height="*" MaxHeight="30" />
+                                <RowDefinition Height="*" MaxHeight="30" />
+                                <RowDefinition Height="*" MaxHeight="30" />
+                                <RowDefinition Height="*" MaxHeight="30" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Border>
-                                <Button x:Name="btnPrerequisite" Content="Prerequisite Guide" FontSize="20" FontFamily="Fonts/#Raleway" Click="btnPrerequisite_Click"></Button>
+                                <Button x:Name="btnIntroduction" Content="Getting Started" FontSize="13" FontFamily="Arial" Click="btnIntroduction_Click"></Button>
                             </Border>
                             <Border Grid.Row="1">
-                                <Button x:Name="btnInstallation" Content="Installation Guide" FontSize="20" FontFamily="Fonts/#Raleway" Click="btnInstallation_Click"></Button>
+                                <Button x:Name="btnSystemRequirement" Content="System Requirement Guide" FontSize="13" FontFamily="Arial" Click="btnSystemRequirement_Click"></Button>
                             </Border>
                             <Border Grid.Row="2">
-                                <Button x:Name="btnConfiguration" Content="Configuration Guide" FontSize="20" FontFamily="Fonts/#Raleway" Click="btnConfiguration_Click"></Button>
+                                <Button x:Name="btnPrerequisite" Content="Prerequisite Guide" FontSize="13" FontFamily="Arial" Click="btnPrerequisite_Click"></Button>
                             </Border>
                             <Border Grid.Row="3">
-                                <Button x:Name="btnUseCases" Content="Use Cases" FontSize="20" FontFamily="Fonts/#Raleway" Click="btnUseCases_Click"></Button>
+                                <Button x:Name="btnInstallation" Content="Installation Guide" FontSize="13" FontFamily="Arial" Click="btnInstallation_Click"></Button>
+                            </Border>
+                            <Border Grid.Row="4">
+                                <Button x:Name="btnConfiguration" Content="Configuration Guide" FontSize="13" FontFamily="Arial" Click="btnConfiguration_Click"></Button>
+                            </Border>
+                            <Border Grid.Row="5">
+                                <Button x:Name="btnUseCases" Content="Use Cases" FontSize="13" FontFamily="Arial" Click="btnUseCases_Click"></Button>
                             </Border>
                         </Grid>
                     </Border>
                     <Border Grid.Column="1" Padding="2">
-                        <RichTextBox x:Name="richPrivacy" TextBlock.FontFamily="Fonts/#Raleway" FontSize="14" Padding="5">
-                            <FlowDocument>
-                                <Paragraph>
-                                    <Bold FontSize="26">Data Extractor Utility</Bold>
-                                    <LineBreak/>
-                                    Data Extractor Utility is an application that crawls
-                                    <Bold>Pakistan Stock Exchange (PSX)</Bold>and
-                                    <Bold>Mutual Funds Association of Pakistan (MUFAP)</Bold>
-                                     Websites data filters it and use this data for further use. We believe this utility will help to view and understand it in a more meaningful manner. If you would like to be a part of this utility feel free to add your efforts and do the pull request.
-                                </Paragraph>
-                            </FlowDocument>
+                        <RichTextBox x:Name="richPrivacy" TextBlock.FontFamily="Arial" FontSize="14" Padding="5">
+       
                         </RichTextBox>
                     </Border>
                 </Grid>

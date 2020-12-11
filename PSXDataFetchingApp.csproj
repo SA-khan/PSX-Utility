@@ -87,6 +87,7 @@
     <None Remove="Images\system2.png" />
     <None Remove="Images\tick.gif" />
     <None Remove="Images\tick.png" />
+    <None Remove="Images\Tutorial\ConfigurationManagerIconView.png" />
     <None Remove="Images\uploadPSX.jpg" />
     <None Remove="Images\web-scrap.PNG" />
     <None Remove="Images\web-scrap2.png" />
@@ -125,6 +126,7 @@
     <Resource Include="Images\excel2.png" />
     <Resource Include="Images\processing.gif" />
     <Resource Include="Images\search.png" />
+    <Resource Include="Images\Tutorial\ConfigurationManagerIconView.png" />
     <Resource Include="notification.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
