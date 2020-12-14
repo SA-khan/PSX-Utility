@@ -9,7 +9,7 @@
         Icon="Images/web-scrap2.png"
         Title="Web Extractor Utility" Height="450" Width="800" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
-    <Border  Background="DarkGray">
+    <Border x:Name="HeaderColor"  Background="DarkGray">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" MaxHeight="60"/>
@@ -28,7 +28,7 @@
                         <Image />
                     </Border>
                     <Border Grid.Column="1">
-                        <Image />
+                        <Image x:Name="HeaderImage" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                     </Border>
                 </Grid>
             </Border>
@@ -68,22 +68,23 @@
                     <Border Padding="2">
                         <Grid Background="Azure">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" MaxHeight="30" />
+                                <RowDefinition Height="*" MaxHeight="30" />
+                                <RowDefinition Height="*" MaxHeight="30" />
+                                <RowDefinition Height="*" MaxHeight="30" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Border>
-                                <Button x:Name="vendorPolicy" Content="Vendor Policy" FontSize="20" FontFamily="Fonts/#Raleway" Click="vendorPolicy_Click"></Button>
+                                <Button x:Name="vendorPolicy" Content="Vendor Policy" FontSize="13" FontFamily="Arial" Click="vendorPolicy_Click"></Button>
                             </Border>
                             <Border Grid.Row="1">
-                                <Button x:Name="softwarePolicy" Content="Software Policy" FontSize="20" FontFamily="Fonts/#Raleway" Click="softwarePolicy_Click"></Button>
+                                <Button x:Name="softwarePolicy" Content="Software Policy" FontSize="13" FontFamily="Arial" Click="softwarePolicy_Click"></Button>
                             </Border>
                             <Border Grid.Row="2">
-                                <Button x:Name="copyrightPolicy" Content="Copy Rights Policy" FontSize="20" FontFamily="Fonts/#Raleway" Click="copyrightPolicy_Click"></Button>
+                                <Button x:Name="copyrightPolicy" Content="Copy Rights Policy" FontSize="13" FontFamily="Arial" Click="copyrightPolicy_Click"></Button>
                             </Border>
                             <Border Grid.Row="3">
-                                <Button x:Name="distributionPolicy" Content="Distribution Policy" FontSize="20" FontFamily="Fonts/#Raleway" Click="distributionPolicy_Click"></Button>
+                                <Button x:Name="distributionPolicy" Content="Distribution Policy" FontSize="13" FontFamily="Arial" Click="distributionPolicy_Click"></Button>
                             </Border>
                         </Grid>
                     </Border>

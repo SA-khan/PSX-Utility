@@ -9,7 +9,7 @@
         Icon="Images/web-scrap2.png"
         Title="Web Extractor Utility" Height="450" Width="800" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
-    <Border  Background="DarkGray">
+    <Border x:Name="HeaderColor"  Background="DarkGray">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" MaxHeight="60"/>
@@ -24,8 +24,8 @@
                         <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Border>
-                        <Image />
+                    <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Image x:Name="HeaderImage" Stretch="Uniform" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                     </Border>
                     <Border Grid.Column="1">
                         <Image />

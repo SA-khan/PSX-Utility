@@ -1,5 +1,7 @@
-﻿using System;
+﻿using PSXDataFetchingApp.Model;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfAnimatedGif;
 
 namespace PSXDataFetchingApp
 {
@@ -20,6 +23,41 @@ namespace PSXDataFetchingApp
         public Privacy()
         {
             InitializeComponent();
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/BOP.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/HBL.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                }
+            }
+            catch { }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

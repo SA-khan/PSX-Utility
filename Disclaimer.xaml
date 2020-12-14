@@ -9,7 +9,7 @@
         Icon="Images/web-scrap2.png"
         Title="Web Extractor Utility" Height="450" Width="800" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing">
-    <Border  Background="DarkGray">
+    <Border x:Name="HeaderColor"  Background="DarkGray">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" MaxHeight="60"/>
@@ -25,7 +25,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Border>
-                        <Image />
+                        <Image x:Name="HeaderImage" />
                     </Border>
                     <Border Grid.Column="1">
                         <Image />
@@ -58,6 +58,11 @@
                         <TextBlock Text=" Disclaimer" FontSize="26" FontFamily="Fonts/#Raleway" VerticalAlignment="Center" />
                     </Border>
                 </Grid>
+            </Border>
+            <Border Grid.Row="2" Padding="2">
+                <RichTextBox x:Name="richDisclaimer" TextBlock.FontFamily="Arial" FontSize="14" Padding="5">
+
+                </RichTextBox>
             </Border>
         </Grid>
     </Border>

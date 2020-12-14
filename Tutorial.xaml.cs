@@ -1,6 +1,7 @@
 ﻿using PSXDataFetchingApp.Model;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
@@ -27,6 +28,51 @@ namespace PSXDataFetchingApp
         {
             InitializeComponent();
 
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/BOP.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+
+                        //Custom Buttons Color
+                        btnBack.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnIntroduction.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnSystemRequirement.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnPrerequisite.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnInstallation.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnConfiguration.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnUseCases.Background = (Brush)bc.ConvertFrom("#ffde80");
+
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/HBL.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+                }
+            }
+            catch { }
+
             ButtonAutomationPeer peer = new ButtonAutomationPeer(btnIntroduction);
             IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
             invokeProv.Invoke();
@@ -48,12 +94,39 @@ namespace PSXDataFetchingApp
         private void btnPrerequisite_Click(object sender, RoutedEventArgs e)
         {
 
-            btnIntroduction.Background = Brushes.Gray;
-            btnSystemRequirement.Background = Brushes.Gray;
-            btnPrerequisite.Background = Brushes.DarkGray;
-            btnInstallation.Background = Brushes.Gray;
-            btnConfiguration.Background = Brushes.Gray;
-            btnUseCases.Background = Brushes.Gray;
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        //Custom Buttons Color
+                        var bc = new BrushConverter();
+                        btnBack.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnIntroduction.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnSystemRequirement.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnPrerequisite.Background = (Brush)bc.ConvertFrom("#f0a500");
+                        btnInstallation.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnConfiguration.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnUseCases.Background = (Brush)bc.ConvertFrom("#ffde80");
+
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        //Custom Button Colors
+                        btnIntroduction.Background = Brushes.Gray;
+                        btnSystemRequirement.Background = Brushes.Gray;
+                        btnPrerequisite.Background = Brushes.DarkGray;
+                        btnInstallation.Background = Brushes.Gray;
+                        btnConfiguration.Background = Brushes.Gray;
+                        btnUseCases.Background = Brushes.Gray;
+                    }
+                }
+            }
+            catch { }
+
+            
 
             // Create a FlowDocument to contain content for the RichTextBox.
             FlowDocument myFlowDoc = new FlowDocument();
@@ -143,12 +216,40 @@ namespace PSXDataFetchingApp
 
         private void btnInstallation_Click(object sender, RoutedEventArgs e)
         {
-            btnIntroduction.Background = Brushes.Gray;
-            btnSystemRequirement.Background = Brushes.Gray;
-            btnPrerequisite.Background = Brushes.Gray;
-            btnInstallation.Background = Brushes.DarkGray;
-            btnConfiguration.Background = Brushes.Gray;
-            btnUseCases.Background = Brushes.Gray;
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        //Custom Buttons Color
+                        var bc = new BrushConverter();
+                        btnBack.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnIntroduction.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnSystemRequirement.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnPrerequisite.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnInstallation.Background = (Brush)bc.ConvertFrom("#f0a500");
+                        btnConfiguration.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnUseCases.Background = (Brush)bc.ConvertFrom("#ffde80");
+
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        //Custom Button Colors
+                        btnIntroduction.Background = Brushes.Gray;
+                        btnSystemRequirement.Background = Brushes.Gray;
+                        btnPrerequisite.Background = Brushes.Gray;
+                        btnInstallation.Background = Brushes.DarkGray;
+                        btnConfiguration.Background = Brushes.Gray;
+                        btnUseCases.Background = Brushes.Gray;
+                    }
+                }
+            }
+            catch { }
+
+            
 
             // Create a FlowDocument to contain content for the RichTextBox.
             FlowDocument myFlowDoc = new FlowDocument();
@@ -225,12 +326,40 @@ namespace PSXDataFetchingApp
 
         private void btnConfiguration_Click(object sender, RoutedEventArgs e)
         {
-            btnIntroduction.Background = Brushes.Gray;
-            btnSystemRequirement.Background = Brushes.Gray;
-            btnPrerequisite.Background = Brushes.Gray;
-            btnInstallation.Background = Brushes.Gray;
-            btnConfiguration.Background = Brushes.DarkGray;
-            btnUseCases.Background = Brushes.Gray;
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        //Custom Buttons Color
+                        var bc = new BrushConverter();
+                        btnBack.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnIntroduction.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnSystemRequirement.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnPrerequisite.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnInstallation.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnConfiguration.Background = (Brush)bc.ConvertFrom("#f0a500");
+                        btnUseCases.Background = (Brush)bc.ConvertFrom("#ffde80");
+
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        //Custom Button Colors
+                        btnIntroduction.Background = Brushes.Gray;
+                        btnSystemRequirement.Background = Brushes.Gray;
+                        btnPrerequisite.Background = Brushes.Gray;
+                        btnInstallation.Background = Brushes.Gray;
+                        btnConfiguration.Background = Brushes.DarkGray;
+                        btnUseCases.Background = Brushes.Gray;
+                    }
+                }
+            }
+            catch { }
+
+            
 
             // Create a FlowDocument to contain content for the RichTextBox.
             FlowDocument myFlowDoc = new FlowDocument();
@@ -279,7 +408,7 @@ namespace PSXDataFetchingApp
             prerequisite3.FontFamily = new FontFamily("Arial");
 
             TextBlock prerequisite4 = new TextBlock();
-            prerequisite4.Text = "3. You will see the Configuration Manager Button on top of application as shown below,";
+            prerequisite4.Text = "3. You will see the Configuration Manager Button on top of application as shown below, click on this option.";
             prerequisite4.FontSize = 14;
             prerequisite4.FontFamily = new FontFamily("Arial");
 
@@ -302,37 +431,72 @@ namespace PSXDataFetchingApp
             ImageBehavior.SetAnimatedSource(imageConfigurationManager, image);
             prerequisite5.Inlines.Add(imageConfigurationManager);
             prerequisite5.Width = 400;
-            prerequisite5.Height = 450;
-
-            
-
+            prerequisite5.Height = 50;
 
             TextBlock prerequisite6 = new TextBlock();
-            prerequisite6.Text = "4. Enter Your Organisation Symbol as shown in below,";
-            prerequisite6.FontSize = 14;
+            prerequisite6.Text = "Here, Primary Connection String is the database you have created through executing the scripts.";
+            prerequisite6.FontSize = 12;
+            prerequisite6.FontWeight = FontWeights.ExtraBold;
+            prerequisite6.Foreground = Brushes.Red;
             prerequisite6.FontFamily = new FontFamily("Arial");
 
             //
             TextBlock prerequisite7 = new TextBlock();
-            prerequisite7.Text = "    ";
-            prerequisite7.FontSize = 14;
+            prerequisite7.Text = "& Secondary Database is the iPaMs application database that will be used in second option of main menu i.e Fund Market Summary.";
+            prerequisite7.FontSize = 12;
+            prerequisite7.FontWeight = FontWeights.ExtraBold;
+            prerequisite7.Foreground = Brushes.Red;
             prerequisite7.FontFamily = new FontFamily("Arial");
 
-            Image imageConfigurationManagerScreen = new Image();
-            imageConfigurationManagerScreen.Name = "imageConfigurationManagerScreen";
-            BitmapImage image2 = new BitmapImage();
+            //Image imageConfigurationManagerScreen = new Image();
+            //imageConfigurationManagerScreen.Name = "imageConfigurationManagerScreen";
+            //BitmapImage image2 = new BitmapImage();
 
-            image2.BeginInit();
-            image2.UriSource = ResourceAccessor.Get("Images/Tutorial/ConfigurationManagerIconView.png");
-            image2.SourceRect = new Int32Rect(0, 0, 600, 80);
+            //image2.BeginInit();
+            //image2.UriSource = ResourceAccessor.Get("Images/Tutorial/ConfigurationManagerIconView.png");
+            //image2.SourceRect = new Int32Rect(0, 0, 600, 80);
+            ////image.SourceRect = new Int32Rect(720, 40, 80, 20);
+            ////image.DecodePixelHeight = 10;
+            ////image.DecodePixelWidth = 30;
+            //image2.EndInit();
+            //ImageBehavior.SetAnimatedSource(imageConfigurationManagerScreen, image2);
+            //prerequisite7.Inlines.Add(imageConfigurationManagerScreen);
+            //prerequisite7.Width = 400;
+            //prerequisite7.Height = 450;
+
+            //
+
+            TextBlock prerequisite8 = new TextBlock();
+            prerequisite8.Text = "4. You can see the currently saved settings of the application, update below seetings according to your environment.";
+            prerequisite8.FontSize = 14;
+            prerequisite8.FontFamily = new FontFamily("Arial");
+
+            TextBlock prerequisite9 = new TextBlock();
+            prerequisite9.Text = "    ";
+            prerequisite9.FontSize = 14;
+            prerequisite9.FontFamily = new FontFamily("Arial");
+
+            Image imageConfigurationManagerViewScreen = new Image();
+            imageConfigurationManagerViewScreen.Name = "imageConfigurationManagerViewScreen";
+            BitmapImage image3 = new BitmapImage();
+
+            image3.BeginInit();
+            image3.UriSource = ResourceAccessor.Get("Images/Tutorial/ConfigurationManagerScreen.png");
+            image3.SourceRect = new Int32Rect(130, 160, 830, 135);
             //image.SourceRect = new Int32Rect(720, 40, 80, 20);
             //image.DecodePixelHeight = 10;
             //image.DecodePixelWidth = 30;
-            image.EndInit();
-            ImageBehavior.SetAnimatedSource(imageConfigurationManagerScreen, image2);
-            prerequisite7.Inlines.Add(imageConfigurationManagerScreen);
-            prerequisite7.Width = 400;
-            prerequisite7.Height = 450;
+            image3.EndInit();
+            ImageBehavior.SetAnimatedSource(imageConfigurationManagerViewScreen, image3);
+            prerequisite9.Inlines.Add(imageConfigurationManagerViewScreen);
+            prerequisite9.Width = 830;
+            prerequisite9.Height = 135;
+
+            //
+            TextBlock prerequisite10 = new TextBlock();
+            prerequisite10.Text = "6. That is all. If setting is updated the background of that block setting button would turn to green.";
+            prerequisite10.FontSize = 14;
+            prerequisite10.FontFamily = new FontFamily("Arial");
 
             // Create a paragraph and add the Run and Bold to it.
             Paragraph myParagraph = new Paragraph();
@@ -353,9 +517,21 @@ namespace PSXDataFetchingApp
             myParagraph.Inlines.Add(prerequisite5);
             myParagraph.Inlines.Add(linBreak10);
             myParagraph.Inlines.Add(linBreak11);
-            myParagraph.Inlines.Add(prerequisite6);
+            
+            myParagraph.Inlines.Add(prerequisite8);
+            myParagraph.Inlines.Add(linBreak14);
+            myParagraph.Inlines.Add(prerequisite9);
+
             myParagraph.Inlines.Add(linBreak12);
+            myParagraph.Inlines.Add(linBreak13);
+            myParagraph.Inlines.Add(prerequisite6);
+            myParagraph.Inlines.Add(linBreak14);
             myParagraph.Inlines.Add(prerequisite7);
+            myParagraph.Inlines.Add(linBreak15);
+            myParagraph.Inlines.Add(linBreak16);
+            myParagraph.Inlines.Add(prerequisite10);
+
+
 
 
 
@@ -378,12 +554,40 @@ namespace PSXDataFetchingApp
 
         private void btnUseCases_Click(object sender, RoutedEventArgs e)
         {
-            btnIntroduction.Background = Brushes.Gray;
-            btnSystemRequirement.Background = Brushes.Gray;
-            btnPrerequisite.Background = Brushes.Gray;
-            btnInstallation.Background = Brushes.Gray;
-            btnConfiguration.Background = Brushes.Gray;
-            btnUseCases.Background = Brushes.DarkGray;
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        //Custom Buttons Color
+                        var bc = new BrushConverter();
+                        btnBack.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnIntroduction.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnSystemRequirement.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnPrerequisite.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnInstallation.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnConfiguration.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnUseCases.Background = (Brush)bc.ConvertFrom("#f0a500");
+
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        //Custom Button Colors
+                        btnIntroduction.Background = Brushes.Gray;
+                        btnSystemRequirement.Background = Brushes.Gray;
+                        btnPrerequisite.Background = Brushes.Gray;
+                        btnInstallation.Background = Brushes.Gray;
+                        btnConfiguration.Background = Brushes.Gray;
+                        btnUseCases.Background = Brushes.DarkGray;
+                    }
+                }
+            }
+            catch { }
+
+            
 
             // Create a FlowDocument to contain content for the RichTextBox.
             FlowDocument myFlowDoc = new FlowDocument();
@@ -506,12 +710,40 @@ namespace PSXDataFetchingApp
 
         private void btnSystemRequirement_Click(object sender, RoutedEventArgs e)
         {
-            btnIntroduction.Background = Brushes.Gray;
-            btnSystemRequirement.Background = Brushes.DarkGray;
-            btnPrerequisite.Background = Brushes.Gray;
-            btnInstallation.Background = Brushes.Gray;
-            btnConfiguration.Background = Brushes.Gray;
-            btnUseCases.Background = Brushes.Gray;
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        //Custom Buttons Color
+                        var bc = new BrushConverter();
+                        btnBack.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnIntroduction.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnSystemRequirement.Background = (Brush)bc.ConvertFrom("#f0a500");
+                        btnPrerequisite.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnInstallation.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnConfiguration.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnUseCases.Background = (Brush)bc.ConvertFrom("#ffde80");
+
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        //Custom Button Colors
+                        btnIntroduction.Background = Brushes.Gray;
+                        btnSystemRequirement.Background = Brushes.DarkGray;
+                        btnPrerequisite.Background = Brushes.Gray;
+                        btnInstallation.Background = Brushes.Gray;
+                        btnConfiguration.Background = Brushes.Gray;
+                        btnUseCases.Background = Brushes.Gray;
+                    }
+                }
+            }
+            catch { }
+
+            
 
             // Create a FlowDocument to contain content for the RichTextBox.
             FlowDocument myFlowDoc = new FlowDocument();
@@ -643,12 +875,40 @@ namespace PSXDataFetchingApp
 
         private void btnIntroduction_Click(object sender, RoutedEventArgs e)
         {
-            btnIntroduction.Background = Brushes.DarkGray;
-            btnSystemRequirement.Background = Brushes.Gray;
-            btnPrerequisite.Background = Brushes.Gray;
-            btnInstallation.Background = Brushes.Gray;
-            btnConfiguration.Background = Brushes.Gray;
-            btnUseCases.Background = Brushes.Gray;
+
+            //Client Specific Properties
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        //Custom Buttons Color
+                        var bc = new BrushConverter();
+                        btnBack.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnIntroduction.Background = (Brush)bc.ConvertFrom("#f0a500");
+                        btnSystemRequirement.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnPrerequisite.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnInstallation.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnConfiguration.Background = (Brush)bc.ConvertFrom("#ffde80");
+                        btnUseCases.Background = (Brush)bc.ConvertFrom("#ffde80");
+
+                    }
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        //Custom Button Colors
+                        btnIntroduction.Background = Brushes.DarkGray;
+                        btnSystemRequirement.Background = Brushes.Gray;
+                        btnPrerequisite.Background = Brushes.Gray;
+                        btnInstallation.Background = Brushes.Gray;
+                        btnConfiguration.Background = Brushes.Gray;
+                        btnUseCases.Background = Brushes.Gray;
+                    }
+                }
+            }
+            catch { }
+
+            
             // Create a FlowDocument to contain content for the RichTextBox.
             FlowDocument myFlowDoc = new FlowDocument();
 
