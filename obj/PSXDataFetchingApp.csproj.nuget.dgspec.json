@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\PSXDataFetchingApp\\PSXDataFetchingApp\\PSXDataFetchingApp.csproj": {}
+    "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\PSXDataFetchingApp\\PSXDataFetchingApp\\PSXDataFetchingApp.csproj": {
+    "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\PSXDataFetchingApp\\PSXDataFetchingApp\\PSXDataFetchingApp.csproj",
-        "projectName": "PSXDataFetchingApp",
-        "projectPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\PSXDataFetchingApp\\PSXDataFetchingApp\\PSXDataFetchingApp.csproj",
+        "projectUniqueName": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj",
+        "projectName": "Data Extractor Utility",
+        "projectPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj",
         "packagesPath": "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\PSXDataFetchingApp\\PSXDataFetchingApp\\obj\\",
+        "outputPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -42,25 +42,103 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.95.3, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[5.4.2, )"
+            },
+            "Elastic.Apm.NetCoreAll": {
+              "target": "Package",
+              "version": "[1.7.1, )"
+            },
+            "FluentMigrator.Runner.Oracle": {
+              "target": "Package",
+              "version": "[3.2.10, )"
+            },
             "HtmlAgilityPack.NetCore": {
               "target": "Package",
               "version": "[1.5.0.1, )"
             },
+            "Microsoft.AspNetCore": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Hosting.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[5.0.0, )"
             },
             "Microsoft.Extensions.Configuration.FileExtensions": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[5.0.0, )"
             },
             "Microsoft.Extensions.Configuration.Json": {
               "target": "Package",
-              "version": "[3.1.7, )"
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.Extensions.Hosting.Abstractions": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "Oracle.ManagedDataAccess.Core": {
+              "target": "Package",
+              "version": "[2.19.100, )"
+            },
+            "RazorEngine.Netcore": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "Syncfusion.ReportControls.WPF": {
+              "target": "Package",
+              "version": "[18.3.0.53, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.2, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "WpfAnimatedGif": {
+              "target": "Package",
+              "version": "[2.0.0, )"
             }
           },
           "imports": [
@@ -74,6 +152,9 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             },

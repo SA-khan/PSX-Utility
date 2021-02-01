@@ -1,0 +1,47 @@
+/****** Object:  StoredProcedure [dbo].[spINSERT_MARKET_SUMMARY_HISTORY]    Script Date: 25/01/2021 5:38:47 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROC [dbo].[spINSERT_MARKET_SUMMARY_HISTORY]
+		@MSH_DATE datetime,
+		@MSH_STATUS varchar(500),
+		@MSH_SECTOR varchar(500),
+		@MSH_SCRIP_NAME varchar(500),
+		@MSH_SYMBOL varchar(500),
+		@MSH_COMPANY_LDCP varchar(max),
+		@MSH_COMPANY_OPEN varchar(max),
+		@MSH_COMPANY_HIGH varchar(max),
+		@MSH_COMPANY_LOW varchar(max),
+		@MSH_COMPANY_CURRENT varchar(max),
+		@MSH_COMPANY_CHANGE varchar(max),
+		@MSH_COMPANY_VOLUME varchar(max)
+	AS
+BEGIN
+INSERT INTO [dbo].[MARKET_SUMMARY_HISTORY]
+           ([MSH_DATE]
+           ,[MSH_STATUS]
+           ,[MSH_SECTOR]
+           ,[MSH_SCRIP_NAME]
+           ,[MSH_SYMBOL]
+           ,[MSH_COMPANY_LDCP]
+           ,[MSH_COMPANY_OPEN]
+           ,[MSH_COMPANY_HIGH]
+           ,[MSH_COMPANY_LOW]
+           ,[MSH_COMPANY_CURRENT]
+           ,[MSH_COMPANY_CHANGE]
+           ,[MSH_COMPANY_VOLUME])
+     VALUES
+           (@MSH_DATE
+           ,@MSH_STATUS
+           ,@MSH_SECTOR
+           ,@MSH_SCRIP_NAME
+           ,@MSH_SYMBOL
+           ,@MSH_COMPANY_LDCP
+           ,@MSH_COMPANY_OPEN
+           ,@MSH_COMPANY_HIGH
+           ,@MSH_COMPANY_LOW
+           ,@MSH_COMPANY_CURRENT
+           ,@MSH_COMPANY_CHANGE
+           ,@MSH_COMPANY_VOLUME)
+END

@@ -1,0 +1,19 @@
+CREATE OR REPLACE PROCEDURE 
+spIsGetCompanySymbolExist
+       (
+    SYMBOL IN varchar2,
+    EXIST OUT number
+       )
+AS
+       tempData integer;
+BEGIN
+	     SELECT COUNT(*) INTO tempData FROM SCRIP_INFO WHERE SI_SYMBOL = SYMBOL;
+       IF tempData > 0 THEN   
+	        EXIST := 1;
+       ELSE
+          EXIST := 0;
+       END IF;
+EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+       EXIST := 0;
+END;

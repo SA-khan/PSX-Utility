@@ -7,11 +7,241 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< Updated upstream
     <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+=======
+    <None Remove="Downloads\notification.mp3" />
+    <None Remove="Fonts\Lato-Black.ttf" />
+    <None Remove="Fonts\Lato-BlackItalic.ttf" />
+    <None Remove="Fonts\Lato-Bold.ttf" />
+    <None Remove="Fonts\Lato-BoldItalic.ttf" />
+    <None Remove="Fonts\Lato-Italic.ttf" />
+    <None Remove="Fonts\Lato-Light.ttf" />
+    <None Remove="Fonts\Lato-LightItalic.ttf" />
+    <None Remove="Fonts\Lato-Regular.ttf" />
+    <None Remove="Fonts\Lato-Thin.ttf" />
+    <None Remove="Fonts\Lato-ThinItalic.ttf" />
+    <None Remove="Fonts\Raleway-Black.ttf" />
+    <None Remove="Fonts\Raleway-BlackItalic.ttf" />
+    <None Remove="Fonts\Raleway-Bold.ttf" />
+    <None Remove="Fonts\Raleway-BoldItalic.ttf" />
+    <None Remove="Fonts\Raleway-ExtraBold.ttf" />
+    <None Remove="Fonts\Raleway-ExtraBoldItalic.ttf" />
+    <None Remove="Fonts\Raleway-ExtraLight.ttf" />
+    <None Remove="Fonts\Raleway-ExtraLightItalic.ttf" />
+    <None Remove="Fonts\Raleway-Italic-VariableFont_wght.ttf" />
+    <None Remove="Fonts\Raleway-Italic.ttf" />
+    <None Remove="Fonts\Raleway-Light.ttf" />
+    <None Remove="Fonts\Raleway-LightItalic.ttf" />
+    <None Remove="Fonts\Raleway-Medium.ttf" />
+    <None Remove="Fonts\Raleway-MediumItalic.ttf" />
+    <None Remove="Fonts\Raleway-Regular.ttf" />
+    <None Remove="Fonts\Raleway-SemiBold.ttf" />
+    <None Remove="Fonts\Raleway-SemiBoldItalic.ttf" />
+    <None Remove="Fonts\Raleway-Thin.ttf" />
+    <None Remove="Fonts\Raleway-ThinItalic.ttf" />
+    <None Remove="Fonts\Raleway-VariableFont_wght.ttf" />
+    <None Remove="Images\add.jpg" />
+    <None Remove="Images\alert.gif" />
+    <None Remove="Images\alert.jpg" />
+    <None Remove="Images\alert.png" />
+    <None Remove="Images\alert2.gif" />
+    <None Remove="Images\alert2.png" />
+    <None Remove="Images\alert3.png" />
+    <None Remove="Images\astech.png" />
+    <None Remove="Images\back.png" />
+    <None Remove="Images\bop.gif" />
+    <None Remove="Images\BOP.png" />
+    <None Remove="Images\bucket.png" />
+    <None Remove="Images\efu.gif" />
+    <None Remove="Images\efu.jpg" />
+    <None Remove="Images\efu.png" />
+    <None Remove="Images\excel.jpg" />
+    <None Remove="Images\excel.png" />
+    <None Remove="Images\excel2.png" />
+    <None Remove="Images\exclaimation.png" />
+    <None Remove="Images\fundImage.jpg" />
+    <None Remove="Images\gear.gif" />
+    <None Remove="Images\HBL.gif" />
+    <None Remove="Images\HBL.png" />
+    <None Remove="Images\loading.gif" />
+    <None Remove="Images\mufap.jfif" />
+    <None Remove="Images\mufapMarketSummary.jpg" />
+    <None Remove="Images\mufapMarketSummary2.gif" />
+    <None Remove="Images\play.png" />
+    <None Remove="Images\processing.gif" />
+    <None Remove="Images\processing_complex.png" />
+    <None Remove="Images\psx.png" />
+    <None Remove="Images\psx2.png" />
+    <None Remove="Images\refresh.png" />
+    <None Remove="Images\refresh2.png" />
+    <None Remove="Images\report.png" />
+    <None Remove="Images\reset.jpg" />
+    <None Remove="Images\reset.png" />
+    <None Remove="Images\restart.png" />
+    <None Remove="Images\restart2.png" />
+    <None Remove="Images\restart3.jpg" />
+    <None Remove="Images\run.jpg" />
+    <None Remove="Images\search.png" />
+    <None Remove="Images\setting.png" />
+    <None Remove="Images\stockMarket.jpg" />
+    <None Remove="Images\system.png" />
+    <None Remove="Images\system2.png" />
+    <None Remove="Images\tick.gif" />
+    <None Remove="Images\tick.png" />
+    <None Remove="Images\Tutorial\ConfigurationManagerIconView.png" />
+    <None Remove="Images\Tutorial\ConfigurationManagerScreen.PNG" />
+    <None Remove="Images\uploadPSX.jpg" />
+    <None Remove="Images\web-scrap.PNG" />
+    <None Remove="Images\web-scrap2.png" />
+    <None Remove="notification.wav" />
+    <None Include="Images\web-scrap2.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.95.3" />
+    <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.7.1" />
+    <PackageReference Include="EPPlus" Version="5.4.2" />
+    <PackageReference Include="FluentMigrator.Runner.Oracle" Version="3.2.10" />
+    <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.1" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.100" />
+    <PackageReference Include="RazorEngine.Netcore" Version="3.1.0" />
+    <PackageReference Include="Syncfusion.ReportControls.WPF" Version="18.3.0.53" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\add.jpg" />
+    <Resource Include="Images\alert.gif" />
+    <Resource Include="Images\alert.jpg" />
+    <Resource Include="Images\alert.png" />
+    <Resource Include="Images\alert2.gif" />
+    <Resource Include="Images\alert2.png" />
+    <Resource Include="Images\alert3.png" />
+    <Resource Include="Images\astech.png" />
+    <Resource Include="Images\bucket.png" />
+    <Resource Include="Images\efu.gif" />
+    <Resource Include="Images\efu.jpg" />
+    <Resource Include="Images\efu.png" />
+    <Resource Include="Images\excel.jpg" />
+    <Resource Include="Images\excel.png" />
+    <Resource Include="Images\excel2.png" />
+    <Resource Include="Images\gear.gif" />
+    <Resource Include="Images\processing.gif" />
+    <Resource Include="Images\search.png" />
+    <Resource Include="Images\Tutorial\ConfigurationManagerIconView.png" />
+    <Resource Include="Images\Tutorial\ConfigurationManagerScreen.PNG" />
+    <Resource Include="notification.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\Lato-Black.ttf" />
+    <Resource Include="Fonts\Lato-BlackItalic.ttf" />
+    <Resource Include="Fonts\Lato-Bold.ttf" />
+    <Resource Include="Fonts\Lato-BoldItalic.ttf" />
+    <Resource Include="Fonts\Lato-Italic.ttf" />
+    <Resource Include="Fonts\Lato-Light.ttf" />
+    <Resource Include="Fonts\Lato-LightItalic.ttf" />
+    <Resource Include="Fonts\Lato-Regular.ttf" />
+    <Resource Include="Fonts\Lato-Thin.ttf" />
+    <Resource Include="Fonts\Lato-ThinItalic.ttf" />
+    <Resource Include="Fonts\Raleway-Black.ttf" />
+    <Resource Include="Fonts\Raleway-BlackItalic.ttf" />
+    <Resource Include="Fonts\Raleway-Bold.ttf" />
+    <Resource Include="Fonts\Raleway-BoldItalic.ttf" />
+    <Resource Include="Fonts\Raleway-ExtraBold.ttf" />
+    <Resource Include="Fonts\Raleway-ExtraBoldItalic.ttf" />
+    <Resource Include="Fonts\Raleway-ExtraLight.ttf" />
+    <Resource Include="Fonts\Raleway-ExtraLightItalic.ttf" />
+    <Resource Include="Fonts\Raleway-Italic-VariableFont_wght.ttf" />
+    <Resource Include="Fonts\Raleway-Italic.ttf" />
+    <Resource Include="Fonts\Raleway-Light.ttf" />
+    <Resource Include="Fonts\Raleway-LightItalic.ttf" />
+    <Resource Include="Fonts\Raleway-Medium.ttf" />
+    <Resource Include="Fonts\Raleway-MediumItalic.ttf" />
+    <Resource Include="Fonts\Raleway-Regular.ttf" />
+    <Resource Include="Fonts\Raleway-SemiBold.ttf" />
+    <Resource Include="Fonts\Raleway-SemiBoldItalic.ttf" />
+    <Resource Include="Fonts\Raleway-Thin.ttf" />
+    <Resource Include="Fonts\Raleway-ThinItalic.ttf" />
+    <Resource Include="Fonts\Raleway-VariableFont_wght.ttf" />
+    <Resource Include="Images\back.png" />
+    <Resource Include="Images\bop.gif" />
+    <Resource Include="Images\BOP.png" />
+    <Resource Include="Images\exclaimation.png" />
+    <Resource Include="Images\fundImage.jpg" />
+    <Resource Include="Images\HBL.gif" />
+    <Resource Include="Images\HBL.png" />
+    <Resource Include="Images\loading.gif" />
+    <Resource Include="Images\mufap.jfif" />
+    <Resource Include="Images\mufapMarketSummary.jpg" />
+    <Resource Include="Images\mufapMarketSummary2.gif" />
+    <Resource Include="Images\play.png" />
+    <Resource Include="Images\processing_complex.png" />
+    <Resource Include="Images\psx.png" />
+    <Resource Include="Images\psx2.png" />
+    <Resource Include="Images\refresh.png" />
+    <Resource Include="Images\refresh2.png" />
+    <Resource Include="Images\report.png" />
+    <Resource Include="Images\reset.jpg" />
+    <Resource Include="Images\reset.png" />
+    <Resource Include="Images\restart.png" />
+    <Resource Include="Images\restart2.png" />
+    <Resource Include="Images\restart3.jpg" />
+    <Resource Include="Images\run.jpg" />
+    <Resource Include="Images\setting.png" />
+    <Resource Include="Images\stockMarket.jpg" />
+    <Resource Include="Images\system.png" />
+    <Resource Include="Images\system2.png" />
+    <Resource Include="Images\tick.gif" />
+    <Resource Include="Images\tick.png" />
+    <Resource Include="Images\uploadPSX.jpg" />
+    <Resource Include="Images\web-scrap.PNG" />
+    <Resource Include="Images\web-scrap2.png" />
+    <EmbeddedResource Include="notification.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{c0c07587-41a7-46c8-8fbd-3f9c8ebe2ddc}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Reports\FundMarketSummary.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Reports\PSXMarketSummary.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PSXMarketSummary.rpt</DependentUpon>
+    </Compile>
+>>>>>>> Stashed changes
   </ItemGroup>
 
   <ItemGroup>

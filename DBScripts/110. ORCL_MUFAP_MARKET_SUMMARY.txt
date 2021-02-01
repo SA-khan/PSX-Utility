@@ -1,0 +1,24 @@
+create table MUFAP_MARKET_SUMMARY
+(
+  MMS_ID            INTEGER not null primary key,
+  MMS_DATE          DATE,
+  MMS_VALIDITY_DATE DATE,
+  MMS_CATEGORY      VARCHAR2(500),
+  MMS_NAME          VARCHAR2(1000),
+  MMS_RATING        VARCHAR2(500),
+  MMS_NAV           NUMBER(18,4),
+  MMS_YTD           NUMBER(18,2),
+  MMS_MTD           NUMBER(18,2),
+  MMS_1DAY          NUMBER(18,2),
+  MMS_15DAYS        NUMBER(18,2),
+  MMS_30DAYS        NUMBER(18,2),
+  MMS_90DAYS        NUMBER(18,2),
+  MMS_180DAYS       NUMBER(18,2),
+  MMS_270DAYS       NUMBER(18,2),
+  MMS_365DAYS       NUMBER(18,2),
+  MMS_TER           NUMBER(18,2),
+  MMS_MF            NUMBER(18,2),
+  MMS_SANDM         NUMBER(18,2)
+);
+
+CREATE SEQUENCE SYS_C00705229

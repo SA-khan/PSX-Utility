@@ -1,0 +1,19 @@
+CREATE OR REPLACE PROCEDURE 
+spGetFundIDByParamNAME
+       (
+    NAME IN varchar2,
+    CODE OUT number
+       )
+AS
+       tempData integer;
+BEGIN
+       SELECT COUNT(*) INTO tempData FROM FUND_INFO WHERE LOWER(FI_NAME) = LOWER(NAME);
+       IF tempData = 0 THEN
+          SELECT FUND_CODE INTO CODE FROM PMS_FUNDS WHERE LOWER(fund_mnemonic) = LOWER(NAME);
+       ELSE 
+          SELECT FI_CODE INTO CODE FROM FUND_INFO WHERE LOWER(FI_NAME) = LOWER(NAME);
+       END IF;
+EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+       CODE := 0;
+END;

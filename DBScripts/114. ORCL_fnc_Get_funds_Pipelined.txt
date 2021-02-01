@@ -1,0 +1,14 @@
+CREATE OR REPLACE FUNCTION fnc_Get_funds_Pipelined
+RETURN FUNDS
+PIPELINED
+AS
+BEGIN
+
+   FOR v_Rec IN (SELECT * FROM pms_funds) LOOP
+
+      PIPE ROW (GET_FUND_NAMES(v_Rec.Fund_Mnemonic));
+
+   END LOOP;
+
+RETURN;
+END;

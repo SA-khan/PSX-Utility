@@ -1,0 +1,25 @@
+CREATE OR REPLACE PROCEDURE 
+SPGETSYMBOLFROMCOMPANYNAME
+       (
+          CompanyName IN varchar2,
+          C_SYMBOL OUT varchar2
+       )
+AS
+      value varchar2(500) := 'Nil';
+BEGIN
+      SELECT SI_SYMBOL INTO value FROM SCRIP_INFO WHERE LOWER(SI_NAME) = LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CompanyName,'(XD)',''),'(XR)',''),'(XB)',''),'(XDXB)',''),' [ DEFAULTER SEGMENT ]',''),'(R)','')) AND ROWNUM <= 1;
+      IF value is null THEN
+          IF CompanyName like '%-JAN' OR CompanyName like '%-FEB' OR CompanyName like '%-MAR' OR CompanyName like '%-APR' OR CompanyName like '%-MAY' OR CompanyName like '%-JUN' OR CompanyName like '%-JUL' OR CompanyName like '%-AUG' OR CompanyName like '%-SEP' OR CompanyName like '%-OCT' OR CompanyName like '%-NOV' OR CompanyName like '%-DEC' THEN
+              SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CompanyName,'-OCT',''),'-NOV',''),'-DEC',''),'-JAN',''),'-FEB',''),'-MAR',''),'-APR',''),'-MAY',''),'-JUN',''),'-JUL',''),'AUG',''),'SEP','') AS C_SYMBOL into C_SYMBOL from dual;
+          ELSE
+              SELECT 'Nil' AS C_SYMBOL into C_SYMBOL from dual;
+          END IF;
+      ELSE
+          SELECT value AS C_SYMBOL into C_SYMBOL from dual;
+      END IF;
+EXCEPTION
+      When NO_DATA_FOUND Then
+      C_SYMBOL := 'Nil';
+      WHEN TOO_MANY_ROWS THEN
+      SELECT SI_SYMBOL into C_SYMBOL from SCRIP_INFO where LOWER(SI_NAME) = LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(CompanyName,'(XD)',''),'(XR)',''),'(XB)',''),'(XDXB)',''),' [ DEFAULTER SEGMENT ]',''),'(R)','')) AND ROWNUM <= 1;
+END;

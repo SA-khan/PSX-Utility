@@ -22,6 +22,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
+<<<<<<< Updated upstream
+=======
+using PSXDataFetchingApp.Model;
+using WpfAnimatedGif;
+using Oracle.ManagedDataAccess.Client;
+using System.Security;
+using System.Security.Principal;
+using Microsoft.Data.Sqlite;
+using Npgsql;
+>>>>>>> Stashed changes
 
 namespace PSXDataFetchingApp
 {
@@ -30,47 +40,458 @@ namespace PSXDataFetchingApp
     /// </summary>
     public partial class MainWindow : Window
     {
+<<<<<<< Updated upstream
         
+=======
+        //License Date 
+        DateTime ExpiryDate = DateTime.ParseExact("22/03/2021", "dd/MM/yyyy", null);
+>>>>>>> Stashed changes
         public IConfiguration Configuration { get; set; }
+        public DataContext _context;
+
+        public HtmlNodeCollection _webDataCollection = null;
+        public HtmlNodeCollection _webDataCollectionForCategory = null;
 
         public static bool isDataSaved = false;
-        public static DateTime RequestDate = DateTime.Now;
-        public static string RequestStatus = String.Empty;
-        public static double RequestValue = 0;
-        public static double RequestVolume = 0;
-        public static double RequestTrades = 0;
-        public static List<string> NAME = new List<string>();
-        public static List<string> SYMBOL = new List<string>();
-        public static List<Double> LDCP = new List<double>();
-        public static List<Double> OPEN = new List<double>();
-        public static List<Double> HIGH = new List<double>();
-        public static List<Double> LOW = new List<double>();
-        public static List<Double> CURRENT = new List<double>();
-        public static List<Double> CHANGE = new List<double>();
-        public static List<Double> VOLUME = new List<double>();
+
+        //Market Date, Status and other Variable Declarations
+        public Dictionary<string, string> _miscellenousData = new Dictionary<string, string>(){
+                                                            {"DATE", ""},
+                                                            {"STATUS", ""},
+                                                            {"VOLUME", ""},
+                                                            {"TRADES", ""},
+                                                            {"VALUE", ""}
+                                                        };
+
+        //List Categories
+        public List<string> _categoryList = new List<string>() {"", "AUTOMOBILE ASSEMBLER", "AUTOMOBILE PARTS & ACCESSORIES", "CABLE & ELECTRICAL GOODS", "CEMENT", "CHEMICAL", "CLOSE - END MUTUAL FUND", "COMMERCIAL BANKS", "ENGINEERING", "FERTILIZER", "FOOD & PERSONAL CARE PRODUCTS", "GLASS & CERAMICS", "INSURANCE", "INV. BANKS / INV. COS. / SECURITIES COS.", "LEASING COMPANIES", "LEATHER & TANNERIES", "MISCELLANEOUS", "MODARABAS", "OIL & GAS EXPLORATION COMPANIES", "OIL & GAS MARKETING COMPANIES", "PAPER & BOARD", "PHARMACEUTICALS", "POWER GENERATION & DISTRIBUTION", "REFINERY", "SUGAR & ALLIED INDUSTRIES", "SYNTHETIC & RAYON", "TECHNOLOGY & COMMUNICATION", "TEXTILE COMPOSITE", "TEXTILE SPINNING", "TEXTILE WEAVING", "TRANSPORT", "VANASPATI & ALLIED INDUSTRIES", "WOOLLEN", "REAL ESTATE INVESTMENT TRUST", "EXCHANGE TRADED FUNDS", "FUTURE CONTRACTS" };
+        //public static List<string> _categoryList = new List<string>();
+        public List<string> _categoryList2 = new List<string>() {"AUTOMOBILE ASSEMBLER", "AUTOMOBILE PARTS & ACCESSORIES", "CABLE & ELECTRICAL GOODS", "CEMENT", "CHEMICAL", "CLOSE - END MUTUAL FUND", "COMMERCIAL BANKS", "ENGINEERING", "FERTILIZER", "FOOD & PERSONAL CARE PRODUCTS", "GLASS & CERAMICS", "INSURANCE", "INV. BANKS / INV. COS. / SECURITIES COS.", "LEASING COMPANIES", "LEATHER & TANNERIES", "MISCELLANEOUS", "MODARABAS", "OIL & GAS EXPLORATION COMPANIES", "OIL & GAS MARKETING COMPANIES", "PAPER & BOARD", "PHARMACEUTICALS", "POWER GENERATION & DISTRIBUTION", "REFINERY", "SUGAR & ALLIED INDUSTRIES", "SYNTHETIC & RAYON", "TECHNOLOGY & COMMUNICATION", "TEXTILE COMPOSITE", "TEXTILE SPINNING", "TEXTILE WEAVING", "TOBACCO", "TRANSPORT", "VANASPATI & ALLIED INDUSTRIES", "WOOLLEN", "REAL ESTATE INVESTMENT TRUST", "EXCHANGE TRADED FUNDS", "FUTURE CONTRACTS" };
+
+        public static List<CurrentMarketSummary> _scripList = new List<CurrentMarketSummary>();
+
+        private BackgroundWorker worker = new BackgroundWorker();
+
         public static int statusFlag = 0;
+<<<<<<< Updated upstream
         public MainWindow()
         {
             InitializeComponent();
+=======
+        public static string statusContent = "";
+        public List<string> Exceptions = new List<string>();
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            ClientSideProperties();
+        }
+
+        public MainWindow(DataContext ctx)
+        {
+            _context = ctx;
+            InitializeComponent();
+            ClientSideProperties();
+        }
+
+        //Client Specific Properties
+        #region ClientSideProperties
+        public void ClientSideProperties()
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
+                {
+                    #region ClientSideProperties_General
+
+                    if (ConfigurationManager.AppSettings["Client"].Equals("General"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        MainWindow1.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+                        lblDemo.Foreground = (System.Windows.Media.Brush)bc.ConvertFrom("#76b0cc");
+                        lblSubHeading.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#76b0cc");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/astech.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(ClientLogo, image);
+                    }
+
+                    #endregion
+
+                    #region ClientSideProperties_BOP
+
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        MainWindow1.Background = (Brush)bc.ConvertFrom("#ffde80");
+
+                        lblDemo.Foreground = (Brush)bc.ConvertFrom("#f0a500");
+
+                        lblSubHeading.Background = (Brush)bc.ConvertFrom("#f0a500");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/BOP.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(ClientLogo, image);
+                    }
+
+                    #endregion
+
+                    #region ClientSideProperties_HBL
+
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        MainWindow1.Background = (Brush)bc.ConvertFrom("#cdcdcd");
+
+                        lblDemo.Foreground = (Brush)bc.ConvertFrom("#008269");
+
+                        lblSubHeading.Background = (Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/HBL.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(ClientLogo, image);
+                    }
+
+                    #endregion
+
+                    #region ClientSideProperties_EFU
+
+                    if (ConfigurationManager.AppSettings["Client"].Equals("EFU"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        MainWindow1.Background = (Brush)bc.ConvertFrom("#b9c9d3");
+
+                        lblDemo.Foreground = (Brush)bc.ConvertFrom("#01808d");
+
+                        lblSubHeading.Background = (Brush)bc.ConvertFrom("#01808d");
+
+                        btnGet.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnGetV2.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnGetV3.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnMufapGetMarketSummary.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnMufapGetPKRV.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnMufapGetPKFRV.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        //btnPrivacy.Foreground = (Brush)bc.ConvertFrom("#01808d");
+                        //btnTutorial.Foreground = (Brush)bc.ConvertFrom("#01808d");
+                        //btnDisclaimer.Foreground = (Brush)bc.ConvertFrom("#01808d");
+                        //lblProgress.Foreground = (Brush)bc.ConvertFrom("#01808d");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/efu.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(ClientLogo, image);
+                    }
+
+                    #endregion
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception in constructor: " + ex.Message);
+                Exceptions.Add("Exception in constructor: " + ex.Message);
+            } 
+        }
+        #endregion
+
+        #region ConfigurationManager_ButtonClick
+        private void btnConfigure_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DateTime CurrentTime = DateTime.Now;
+                DateTime ExpiredTime = ExpiryDate;
+                if (ExpiredTime <= CurrentTime)
+                {
+                    MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    Configuration Window = new Configuration(_context);
+                    Window.Show();
+                    this.Hide();
+                }
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("Internet Exception: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("General Exception: " + ex.Message);
+            }
+
+        }
+
+        #endregion
+
+        #region PSX_MarketSummary_ButtonClick
+        public void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+            DateTime CurrentTime = DateTime.Now;
+            Debug.WriteLine(CurrentTime);
+            DateTime ExpiredTime = ExpiryDate;
+            Debug.WriteLine(ExpiredTime);
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                imgWebScrap.Visibility = Visibility.Hidden;
+                progressBar.Visibility = Visibility.Visible;
+                lblProgress.Visibility = Visibility.Visible;
+                lblProgress.Content = "Processing..";
+                btnGet.IsEnabled = false;
+                btnConfigure.IsEnabled = false;
+                btnGetV2.IsEnabled = false;
+                btnGetV3.IsEnabled = false;
+                btnMufapGetMarketSummary.IsEnabled = false;
+                btnMufapGetPKRV.IsEnabled = false;
+                btnMufapGetPKFRV.IsEnabled = false;
+                progressBar.Value = 10;
+                worker.DoWork += worker_DoWork;
+                worker.ProgressChanged += worker_ProgressChanged;
+                worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+                worker.RunWorkerAsync();
+            }
+
+        }
+
+        #endregion
+
+        #region PSX_FundMarketSummary_ButtonClick
+        private void btnGetV2_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DateTime CurrentTime = DateTime.Now;
+                DateTime ExpiredTime = ExpiryDate;
+                if (ExpiredTime <= CurrentTime)
+                {
+                    MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    //if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+                    //{
+                    //    FundPreviewWindow fundPreviewWindow = new FundPreviewWindow();
+                    //    fundPreviewWindow.Show();
+                    //    this.Hide();
+                    //}
+                    //else
+                    //{
+                    FundPreviewWindow fundPreviewWindow = new FundPreviewWindow(_context);
+                    fundPreviewWindow.Show();
+                    this.Hide();
+                    //}
+                }
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show(ex.Message, "Internet Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("Internet Exception: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("General Exception: " + ex.Message);
+            }
+>>>>>>> Stashed changes
         }
 
         private HtmlNodeCollection FetchDataFromPSX(string param)
         {
+<<<<<<< Updated upstream
             string URL = "https://www.psx.com.pk/market-summary/";
+=======
+            DateTime CurrentTime = DateTime.Now;
+            DateTime ExpiredTime = ExpiryDate;
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                UploadPSXData window = new UploadPSXData();
+                window.Show();
+                this.Hide();
+            }
+        }
+
+        #endregion
+
+        #region MUFAP_MarketSummary_ButtonClick
+        private void btnMufapGetMarketSummary_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            DateTime ExpiredTime = ExpiryDate;
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MUFAPMarketSummary window = new MUFAPMarketSummary();
+                window.Show();
+                this.Hide();
+            }
+        }
+        #endregion
+
+        #region MUFAP_PKRVSummary_ButtonClick
+        private void btnMufapGetPKRV_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            DateTime ExpiredTime = ExpiryDate;
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MufapPKRV window = new MufapPKRV();
+                window.Show();
+                this.Hide();
+            }
+        }
+        #endregion
+
+        #region MUFAP_PKFRVSummary_ButtonClick
+        private void btnMufapGetPKFRV_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            DateTime ExpiredTime = ExpiryDate;
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MufapPKFRV window = new MufapPKFRV();
+                window.Show();
+                this.Hide();
+            }
+        }
+        #endregion
+
+        #region btnTutorial_Click
+
+        private void btnTutorial_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            Debug.WriteLine(CurrentTime);
+            DateTime ExpiredTime = ExpiryDate;
+            Debug.WriteLine(ExpiredTime);
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                Tutorial cls = new Tutorial();
+                cls.Show();
+                this.Hide();
+            }
+        }
+        #endregion
+
+        #region btnPrivacy_Click
+        private void btnPrivacy_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            Debug.WriteLine(CurrentTime);
+            DateTime ExpiredTime = ExpiryDate;
+            Debug.WriteLine(ExpiredTime);
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                Privacy cls = new Privacy();
+                cls.Show();
+                this.Hide();
+            }
+        }
+
+        #endregion
+
+        #region btnDisclaimer_Click
+        private void btnDisclaimer_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime CurrentTime = DateTime.Now;
+            Debug.WriteLine(CurrentTime);
+            DateTime ExpiredTime = ExpiryDate;
+            Debug.WriteLine(ExpiredTime);
+            if (ExpiredTime <= CurrentTime)
+            {
+                MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                Disclaimer cls = new Disclaimer();
+                cls.Show();
+                this.Hide();
+            }
+        }
+
+        #endregion
+
+        #region FetchDataFromPSX
+        private HtmlNodeCollection FetchDataFromPSX(string url, string param)
+        {
+            string URL = url;
+>>>>>>> Stashed changes
             HtmlDocument doc = new HtmlDocument();
             WebClient client = new WebClient();
+            HtmlNodeCollection result = null;
             try
             {
                 string html = client.DownloadString(URL);
                 doc.LoadHtml(html);
+                result = doc.DocumentNode.SelectNodes(param);
+                _webDataCollection = result;
+                return result;
             }
+<<<<<<< Updated upstream
+=======
+            catch (WebException ex)
+            {
+                Debug.WriteLine("Web Exception in FetchDataFromPSX Method: " + ex.Message);
+                Exceptions.Add("Web Exception in FetchDataFromPSX Method: " + ex.Message);
+                //MessageBox.Show("There is an internet connectivity issue.\nDetails: " + ex.Message, "Internet Connectivity Issue", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return null;
+            }
+>>>>>>> Stashed changes
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                Debug.WriteLine("Exception in FetchDataFromPSX Method: " + ex.Message);
+                Exceptions.Add("Exception in FetchDataFromPSX Method: " + ex.Message);
+                //MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return null;
             }
-            HtmlNodeCollection result = doc.DocumentNode.SelectNodes(param);
-            return result;
+            
         }
 
+<<<<<<< Updated upstream
         private string[] GetDefault()
         {
             
@@ -79,19 +500,27 @@ namespace PSXDataFetchingApp
             string[] result = new string[ 5 + name_nodes.Count];
             
             int counter = 0;
+=======
+        #endregion
+>>>>>>> Stashed changes
 
-            //Variable
-            string localdatetime = String.Empty;
-            string localstatus = String.Empty;
-            string localVolume = String.Empty;
-            string localValue = String.Empty;
-            string localTrades = String.Empty;
+        #region GetDefault
 
+        public void GetDefault()
+        {
+            //List<string> result = new List<string>();
             try
             {
 
-                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+                HtmlNodeCollection name_nodes = null;
+                HtmlNodeCollection temp = null;
+                var xpath = "//*[self::h4 or self::td]";
+                temp = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", xpath);
+                _webDataCollectionForCategory = temp;
+                name_nodes = temp != null ? temp : null;
+                if (name_nodes != null)
                 {
+<<<<<<< Updated upstream
                     if (node.InnerText.ToString().StartsWith("* LDCP")) { }
                     else if (node.InnerText.ToString().StartsWith("2020"))
                     {
@@ -110,12 +539,38 @@ namespace PSXDataFetchingApp
                         localValue = node.InnerText.ToString().Replace("Value : ", "");
                     }
                     else if (node.InnerText.ToString().StartsWith("Trades"))
+=======
+                    foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+>>>>>>> Stashed changes
                     {
-                        localTrades = node.InnerText.ToString().Replace("Trades: ", "");
+                        //Debug.WriteLine("=> Data: " + node.InnerText.ToString() );
+                        if (node.InnerText.ToString().StartsWith("* LDCP")) { }
+                        else if (node.InnerText.ToString().StartsWith(DateTime.Now.Year.ToString()))
+                        {
+                            _miscellenousData["DATE"] = node.InnerText.ToString();
+                        }
+                        else if (node.InnerText.ToString().StartsWith("Status"))
+                        {
+                            _miscellenousData["STATUS"] = node.InnerText.ToString().Replace("Status: ", "").Replace(" ", "");
+                        }
+                        else if (node.InnerText.ToString().StartsWith("Volume"))
+                        {
+                            _miscellenousData["VOLUME"] = node.InnerText.ToString().Replace("Volume: ", "");
+                        }
+                        else if (node.InnerText.ToString().StartsWith("Value"))
+                        {
+                            _miscellenousData["VALUE"] = node.InnerText.ToString().Replace("Value: ", "");
+                        }
+                        else if (node.InnerText.ToString().StartsWith("Trades"))
+                        {
+                            _miscellenousData["TRADES"] = node.InnerText.ToString().Replace("Trades: ", "");
+                        }
                     }
-                    else
-                        names[counter++] = node.InnerText.ToString() + "\n";
+                    //GetCategoryData();
+                    _categoryList = GetCategoryData();
+                    //_categoryList = new List<string>() { "", "AUTOMOBILE ASSEMBLER", "AUTOMOBILE PARTS & ACCESSORIES", "CABLE & ELECTRICAL GOODS", "CEMENT", "CHEMICAL", "CLOSE - END MUTUAL FUND", "COMMERCIAL BANKS", "ENGINEERING", "FERTILIZER", "FOOD & PERSONAL CARE PRODUCTS", "GLASS & CERAMICS", "INSURANCE", "INV. BANKS / INV. COS. / SECURITIES COS.", "LEASING COMPANIES", "LEATHER & TANNERIES", "MISCELLANEOUS", "MODARABAS", "OIL & GAS EXPLORATION COMPANIES", "OIL & GAS MARKETING COMPANIES", "PAPER & BOARD", "PHARMACEUTICALS", "POWER GENERATION & DISTRIBUTION", "REFINERY", "SUGAR & ALLIED INDUSTRIES", "SYNTHETIC & RAYON", "TECHNOLOGY & COMMUNICATION", "TEXTILE COMPOSITE", "TEXTILE SPINNING", "TEXTILE WEAVING", "TRANSPORT", "VANASPATI & ALLIED INDUSTRIES", "WOOLLEN", "REAL ESTATE INVESTMENT TRUST", "EXCHANGE TRADED FUNDS", "FUTURE CONTRACTS" };
                 }
+<<<<<<< Updated upstream
 
                 result[0] = localdatetime;
                 result[1] = localstatus;
@@ -123,17 +578,21 @@ namespace PSXDataFetchingApp
                 result[3] = localValue;
                 result[4] = localTrades;
                 for (int i = 0; i < names.Count(); i++)
+=======
+                else
+>>>>>>> Stashed changes
                 {
-                    result[i + 5] = names[i];
+                    Debug.WriteLine("Exception in GetDefault Method: Null Values Existed.");
                 }
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("Exception in GetDefault Method: " + ex.Message);
+                Exceptions.Add("Exception in GetDefault Method: " + ex.Message);
             }
-            return result;
         }
 
+<<<<<<< Updated upstream
         private string[] GetNewData()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
@@ -150,44 +609,49 @@ namespace PSXDataFetchingApp
             string localTrades = String.Empty;
 
             foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+=======
+        #endregion
+
+        #region GetCategoryData
+
+        private List<string> GetCategoryData()
+        {
+            List<string> _categoryData = new List<string>();
+            try
+>>>>>>> Stashed changes
             {
-                if (node.InnerText.ToString().StartsWith("* LDCP")) { }
-                else if (node.InnerText.ToString().StartsWith("2020"))
+                if (_webDataCollectionForCategory != null)
                 {
-                    localdatetime = node.InnerText.ToString();
-                }
-                else if (node.InnerText.ToString().StartsWith("Status"))
-                {
-                    localstatus = node.InnerText.ToString().Replace("Status: ", "").Replace(" ", "");
-                }
-                else if (node.InnerText.ToString().StartsWith("Volume"))
-                {
-                    localVolume = node.InnerText.ToString().Replace("Volume: ", "");
-                }
-                else if (node.InnerText.ToString().StartsWith("Value"))
-                {
-                    localValue = node.InnerText.ToString().Replace("Value : ", "");
-                }
-                else if (node.InnerText.ToString().StartsWith("Trades"))
-                {
-                    localTrades = node.InnerText.ToString().Replace("Trades: ", "");
+                    
+                    int counter = 0;
+                    foreach (HtmlAgilityPack.HtmlNode node in _webDataCollectionForCategory)
+                    {
+                        //Debug.WriteLine("=> Data: " + node.InnerText.ToString());
+                        //if (node.InnerText.ToString().StartsWith("* LDCP") || node.InnerText.ToString().StartsWith(DateTime.Now.Year.ToString() ) ){ }
+                        if (counter == 1 && !node.InnerText.ToString().StartsWith("* LDCP"))
+                        {
+                            _categoryData.Add(node.InnerText.ToString());
+                        }
+                        else if (node.InnerText.ToString().Contains("Data refreshes"))
+                        {
+                            counter = 1;
+                        }
+                    }
                 }
                 else
-                    names[counter++] = node.InnerText.ToString() + "\n";
+                {
+                    Debug.WriteLine("Exception in GetDefault Method: Null Values Existed.");
+                }
             }
-
-            result[0] = localdatetime;
-            result[1] = localstatus;
-            result[2] = localVolume;
-            result[3] = localValue;
-            result[4] = localTrades;
-            for (int i = 0; i < names.Count(); i++)
+            catch (Exception ex)
             {
-                result[i + 5] = names[i];
+                Debug.WriteLine("Exception in GetDefault Method: " + ex.Message);
+                Exceptions.Add("Exception in GetDefault Method: " + ex.Message);
             }
-            return result;
+            return _categoryData;
         }
 
+<<<<<<< Updated upstream
         private string[] GetFeaturedData()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
@@ -221,63 +685,95 @@ namespace PSXDataFetchingApp
         }
 
         private List<string> GetMarketSummaryCompanyNames()
+=======
+        #endregion
+
+        #region GetMarketSummaryCompanyNames
+        public List<string> GetMarketSummaryCompanyNames()
+>>>>>>> Stashed changes
         {
             // Local List of string Variable to store return value 
             List<string> result = new List<string>();
 
             // Get All Nodes of td tag
+<<<<<<< Updated upstream
             HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
 
             // Get All Data of TD Tags
             List<string> RowData = new List<string>();
             //int counter = 0;
-
-            // Start capturing relevant data flag
-            int StartCapturingflag = 0;
-
-            // Loops through all nodes
-            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+=======
+            HtmlNodeCollection name_nodes = null;
+            HtmlNodeCollection temp = null;
+            temp = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
+            name_nodes = temp != null ? temp : null ;
+            if (name_nodes != null)
             {
-                // Tap to get desired data control flow
-                if (StartCapturingflag == 1)
-                {
-                    RowData.Add(node.InnerText.ToString());
-                }
+                // Get All Data of TD Tags
+                List<string> RowData = new List<string>();
+                //int counter = 0;
+>>>>>>> Stashed changes
 
-                // Signal the flag to start capturing data when it gets Header VOLUME
-                else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
-                {
-                    StartCapturingflag = 1;
-                }
-                else
-                {
+                // Start capturing relevant data flag
+                int StartCapturingflag = 0;
 
+                // Loops through all nodes
+                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+                {
+                    // Tap to get desired data control flow
+                    if (StartCapturingflag == 1)
+                    {
+                        RowData.Add(node.InnerText.ToString());
+                    }
+
+                    // Signal the flag to start capturing data when it gets Header VOLUME
+                    else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+                    {
+                        StartCapturingflag = 1;
+                    }
+                    else
+                    {
+
+                    }
                 }
+<<<<<<< Updated upstream
             }
             //int counter2 = 0;
             Debug.WriteLine(RowData.Count());
             for (int j = 0; j < RowData.Count(); j++)
             {
                 if (j % 8 == 0)
+=======
+                for (int j = 0; j < RowData.Count(); j++)
+>>>>>>> Stashed changes
                 {
-                    if (RowData[j] != null)
+                    if (j % 8 == 0)
                     {
-                        if (RowData[j].Contains("SCRIP"))
+                        if (RowData[j] != null)
                         {
+                            if (RowData[j].Contains("SCRIP"))
+                            {
 
-                        }
-                        else
-                        {
-                            result.Add(RowData[j]);
+                            }
+                            else
+                            {
+                                result.Add(RowData[j]);
+                                _scripList.Add(new CurrentMarketSummary { Name = RowData[j] });
+                            }
                         }
                     }
                 }
+            }
+            else
+            {
+                Debug.WriteLine("Null Values in Market Names Method.");
             }
 
             // return company names
             return result;
         }
 
+<<<<<<< Updated upstream
         private List<string> GetMarketSummaryCompanySymbols(List<string> CompanyName)
         {
             List<string> result = new List<string>();
@@ -287,10 +783,26 @@ namespace PSXDataFetchingApp
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
                 SqlDataReader rd;
                 using (conn)
+=======
+        #endregion
+
+        #region GetCompanyNamesAndSymbols
+        public void GetCompanyNames()
+        {
+            HtmlNodeCollection name_nodes = null;
+            HtmlNodeCollection temp = null;
+            temp = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
+            name_nodes = temp != null ? temp : null;
+            if (name_nodes != null)
+            {
+                List<string> RowData = new List<string>();
+                int StartCapturingflag = 0;
+                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+>>>>>>> Stashed changes
                 {
-                    conn.Open();
-                    for (int i = 0; i < CompanyName.Count(); i++)
+                    if (StartCapturingflag == 1)
                     {
+<<<<<<< Updated upstream
                         SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn); // Read user-> stored procedure name
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("@CompanyName", SqlDbType.VarChar,500);
@@ -300,76 +812,567 @@ namespace PSXDataFetchingApp
                         while (rd.Read())
                         {
                             result[i] = rd[0].ToString();
+=======
+                        RowData.Add(node.InnerText.ToString());
+                    }
+                    else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+                    {
+                        StartCapturingflag = 1;
+                    }
+                }
+                for (int j = 0; j < RowData.Count(); j++)
+                {
+                    if (j % 8 == 0)
+                    {
+                        if (RowData[j] != null)
+                        {
+                            if (RowData[j].Contains("SCRIP")) { }
+                            else
+                            {
+                                _scripList.Add(new CurrentMarketSummary { Name = RowData[j], Symbol = GetCompanySymbols(RowData[j]) });
+                            }
+>>>>>>> Stashed changes
                         }
                         rd.Close();
                     }
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Null Values in Market Names Method.");
+            }
+        }
+
+        #endregion
+
+        #region GetMarketSummaryCompanySymbols
+
+        public List<string> GetMarketSummaryCompanySymbols(List<string> CompanyName)
+        {
+            List<string> result = new List<string>( new string[_scripList.Count]);
+
+            #region GetMarketSummaryCompanySymbols_MSSQLSERVER
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
+                SqlConnection conn = new SqlConnection();
+                try
+                {
+
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    using (conn)
+                    {
+                        conn.Open();
+                        for (int i = 0; i < CompanyName.Count(); i++)
+                        {
+                            SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn); // Read user-> stored procedure name
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@CompanyName", SqlDbType.VarChar, 500);
+                            cmd.Parameters["@CompanyName"].Value = CompanyName[i];
+                            using (SqlDataReader rdr = cmd.ExecuteReader())
+                            {
+                                while (rdr.Read())
+                                {
+                                    result.Insert(i, rdr.GetString(0));
+                                    _scripList[i].Symbol = rdr.GetString(0);
+                                }
+                            }
+                        }
+                        conn.Close();
+                    }
+
+
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Exception in GetStatusAndMiscellenous Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in GetStatusAndMiscellenous Method: " + ex.Message);
+                    //Debug.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception in GetStatusAndMiscellenous Method: " + ex.Message);
+                    Exceptions.Add("Exception in GetStatusAndMiscellenous Method: " + ex.Message);
+                    //Debug.WriteLine("Exception: " + ex.Message);
+                }
+                finally
+                {
                     conn.Close();
                 }
+            }
+            #endregion
 
-            }
-            catch (SqlException ex)
+            #region GetMarketSummaryCompanySymbols_ORACLE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
             {
-                Debug.WriteLine("SQL Exception: " + ex.Message);
+                string connectionString = Configuration.GetConnectionString("DefaultConnection");
+                Debug.WriteLine(connectionString);
+                //Debug.WriteLine(" "+ConfigurationManager.ConnectionStrings["DefaultConnection"].CurrentConfiguration.ToString());
+                OracleConnection con = new OracleConnection("Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=128.1.101.32)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=orcl)));load balancing=false;ha events=false;User Id=IPAMS_TEST;Password=IPAMS_TEST;");
+                con.Open();
+                for (int i = 0; i < CompanyName.Count; i++)
+                {
+                    try
+                    {
+                        OracleCommand cmd = new OracleCommand()
+                        {
+                            CommandText = "SPGETSYMBOLFROMCOMPANYNAME",
+                            Connection = con,
+                            CommandType = CommandType.StoredProcedure,
+                        };
+                        OracleParameter input = cmd.Parameters.Add("CompanyName", OracleDbType.Varchar2, 500);
+                        OracleParameter output = cmd.Parameters.Add("C_SYMBOL", OracleDbType.Varchar2, 500);
+                        input.Direction = ParameterDirection.Input;
+                        output.Direction = ParameterDirection.Output;
+                        input.Value = CompanyName[i];
+                        cmd.ExecuteNonQuery();
+                        result.Insert(i, Convert.ToString(output.Value));
+                        _scripList[i].Symbol = Convert.ToString(output.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("==" + ex.Message);
+                    }
+                }
+                con.Close();
             }
-            catch (Exception ex)
+
+            #endregion
+
+            #region GetMarketSummaryCompanySymbols_SQLITE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
             {
-                Debug.WriteLine("Exception: " + ex.Message);
+                //List<ScripInfo> scrips = _context.ScripInfo.ToList();
+                ////IQueryable<ScripInfo> scrips = _context.ScripInfo.Where(sc => sc.Name.Contains(_nameDivider[0] + " " + _nameDivider[1]) || sc.Name.Contains(_nameDivider[0]));
+                for (int i = 0; i < CompanyName.Count; i++)
+                {
+                    string[] _nameDivider = CompanyName[i].Split(" ");
+                    IQueryable<ScripInfo> scrips = _context.ScripInfo.Where(sc => sc.Name.Contains(_nameDivider[0]) || sc.Name.Contains(_nameDivider.Length > 1 ? _nameDivider[0] + " " + _nameDivider[1] : _nameDivider[0] + " " + "" ));
+                    //    if (scrips.Count() > 0)
+                    //    {
+                    for (int j = 0; j < scrips.Count(); j++)
+                    {
+                        //Debug.WriteLine("Database Record: " + scrips.ToList()[j].Name + ", Internet Record: " + NAME[i]);
+                        //if (scrips.ToList()[j].Name == NAME[i])
+                        int _nameLength = _nameDivider.Length;
+                        string _tempName = String.Empty;
+                        switch (_nameLength)
+                        {
+                            case 1:
+                                _tempName = _nameDivider[0];
+                                break;
+                            case 2:
+                                _tempName = _nameDivider[0] + " " + _nameDivider[1];
+                                break;
+                            case 3:
+                                _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2];
+                                break;
+                            //case 4:
+                            //    _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2] + " " + _nameDivider[3];
+                            //    break;
+                            //case 5:
+                            //    _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2] + " " + _nameDivider[3] + " " + _nameDivider[4];
+                            //    break;
+                            //case 6:
+                            //    _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2] + " " + _nameDivider[3] + " " + _nameDivider[4] + " " + _nameDivider[5];
+                            //    break;
+                            //case 7:
+                            //    _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2] + " " + _nameDivider[3] + " " + _nameDivider[4] + " " + _nameDivider[5] + " " + _nameDivider[6];
+                            //    break;
+                            default:
+                                _tempName = _nameDivider[0] + " " + _nameDivider[1];
+                                break;
+                        }
+                        if (scrips.ToList()[j].Name.Contains(_tempName))
+                        {
+                            result.Insert(i, scrips.ToList()[j].Symbol);
+                            _scripList[i].Symbol = scrips.ToList()[j].Symbol;
+                            break;
+                        }
+                    }
+                    //    }
+                    //result.Insert(i, " - ");
+                }
+
+                }
+
+            #endregion
+
+            #region GetMarketSummaryCompanySymbols_POSTGRE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("POSTGRE"))
+            {
+                for(int i = 0; i < CompanyName.Count; i++)
+                {
+                    result.Insert(i, "-");
+                }
             }
-            finally {
-                conn.Close();
-            }
+
+            #endregion
+
             return result;
         }
 
-        //private string[] GetMarketSummaryCompanySymbols()
-        //{
-        //    HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
-        //    string[] result = new string[name_nodes.Count];
-        //    string[] AllTableRowData = new string[name_nodes.Count];
+        #endregion
 
-        //    int counter = 0;
-        //    int StartCapturingflag = 0;
+        #region GetCompanySymbols
 
-        //    foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
-        //    {
-        //        if (StartCapturingflag == 1)
-        //        {
-        //            AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
-        //        }
-        //        else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
-        //        {
-        //            StartCapturingflag = 1;
-        //        }
-        //        else
-        //        {
+        public string GetCompanySymbols(string CompanyName)
+        {
+            string result = String.Empty;
 
-        //        }
-        //    }
-        //    int counter2 = 0;
-        //    for (int j = 0; j < AllTableRowData.Count(); j++)
-        //    {
-        //        if (j % 8 == 0)
-        //        {
-        //            if (AllTableRowData[j] != null)
-        //            {
-        //                if (AllTableRowData[j].ToString().Contains("SCRIP"))
-        //                {
+            #region GetCompanySymbols_MSSQLSERVER
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
+                SqlConnection conn = new SqlConnection();
+                try
+                {
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    using (conn)
+                    {
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn); // Read user-> stored procedure name
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@CompanyName", SqlDbType.VarChar, 500);
+                        cmd.Parameters["@CompanyName"].Value = CompanyName;
+                        using (SqlDataReader rdr = cmd.ExecuteReader())
+                        {
+                            while (rdr.Read())
+                            {
+                                result = rdr.GetString(0);
+                            }
+                        }
+                        conn.Close();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Exception in GetCompanySymbols_MSSQLSERVER Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in GetCompanySymbols_MSSQLSERVER Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception in GetStatusAndMiscellenous Method: " + ex.Message);
+                    Exceptions.Add("Exception in GetStatusAndMiscellenous Method: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            #endregion
 
-        //                }
-        //                else
-        //                {
-        //                    result[counter2++] += GetMarketSummaryCompanySymbols(AllTableRowData[j]);
+            #region GetMarketSummaryCompanySymbols_ORACLE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                //string connectionString = Configuration.GetConnectionString("DefaultConnection");
+                //Debug.WriteLine(connectionString);
+                //Debug.WriteLine(" "+ConfigurationManager.ConnectionStrings["DefaultConnection"].CurrentConfiguration.ToString());
+                OracleConnection con = new OracleConnection();//"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=128.1.101.32)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=orcl)));load balancing=false;ha events=false;User Id=IPAMS_TEST;Password=IPAMS_TEST;"
+                con.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                con.Open();
+                try
+                {
+                    OracleCommand cmd = new OracleCommand()
+                    {
+                        CommandText = "SPGETSYMBOLFROMCOMPANYNAME",
+                        Connection = con,
+                        CommandType = CommandType.StoredProcedure,
+                    };
+                    OracleParameter input = cmd.Parameters.Add("CompanyName", OracleDbType.Varchar2, 500);
+                    OracleParameter output = cmd.Parameters.Add("C_SYMBOL", OracleDbType.Varchar2, 500);
+                    input.Direction = ParameterDirection.Input;
+                    output.Direction = ParameterDirection.Output;
+                    input.Value = CompanyName.Trim().ToLower();
+                    cmd.ExecuteNonQuery();
+                    result = Convert.ToString(output.Value);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("==" + ex.Message);
+                }
+                con.Close();
+            }
 
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return result;
-        //}
+
+            #endregion
+
+            #region GetMarketSummaryCompanySymbols_SQLITE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
+            {
+                //List<ScripInfo> scrips = _context.ScripInfo.ToList();
+                ////IQueryable<ScripInfo> scrips = _context.ScripInfo.Where(sc => sc.Name.Contains(_nameDivider[0] + " " + _nameDivider[1]) || sc.Name.Contains(_nameDivider[0]));
+                string[] _nameDivider = CompanyName.Split(" ");
+                IQueryable<ScripInfo> scrips = _context.ScripInfo.Where(sc => sc.Name.Contains(_nameDivider[0]) || sc.Name.Contains(_nameDivider.Length > 1 ? _nameDivider[0] + " " + _nameDivider[1] : _nameDivider[0] + " " + ""));
+                //    if (scrips.Count() > 0)
+                //    {
+                for (int j = 0; j < scrips.Count(); j++)
+                {
+                    //Debug.WriteLine("Database Record: " + scrips.ToList()[j].Name + ", Internet Record: " + NAME[i]);
+                    //if (scrips.ToList()[j].Name == NAME[i])
+                    int _nameLength = _nameDivider.Length;
+                    string _tempName = String.Empty;
+                    switch (_nameLength)
+                    {
+                        case 1:
+                            _tempName = _nameDivider[0];
+                            break;
+                        case 2:
+                            _tempName = _nameDivider[0] + " " + _nameDivider[1];
+                            break;
+                        case 3:
+                            _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2];
+                            break;
+                        //case 4:
+                        //    _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2] + " " + _nameDivider[3];
+                        //    break;
+                        //case 5:
+                        //    _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2] + " " + _nameDivider[3] + " " + _nameDivider[4];
+                        //    break;
+                        //case 6:
+                        //    _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2] + " " + _nameDivider[3] + " " + _nameDivider[4] + " " + _nameDivider[5];
+                        //    break;
+                        //case 7:
+                        //    _tempName = _nameDivider[0] + " " + _nameDivider[1] + " " + _nameDivider[2] + " " + _nameDivider[3] + " " + _nameDivider[4] + " " + _nameDivider[5] + " " + _nameDivider[6];
+                        //    break;
+                        default:
+                            _tempName = _nameDivider[0] + " " + _nameDivider[1];
+                            break;
+                    }
+                    if (scrips.ToList()[j].Name.Contains(_tempName))
+                    {
+                        result = scrips.ToList()[j].Symbol;
+                        break;
+                    }
+                }
+                //    }
+                //result.Insert(i, " - ");
+                //}
+
+            }
+
+            #endregion
+
+            #region GetMarketSummaryCompanySymbols_POSTGRE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("POSTGRE"))
+            {
+                result = "-";
+            }
+
+            #endregion
+
+            return result;
+        }
+
+        #endregion
+
+        #region CheckCategoryStatus
+
+        public Boolean CheckCategoryStatus(string param)
+        {
+            Boolean status = false;
+            foreach(string item in _categoryList)
+            {
+                if (item.Equals(param))
+                {
+                    status = true;
+                    //break;
+                }
+            }
+            return status;
+        }
+
+        #endregion
+
+        #region GetScripDetails
+
+        public void GetScripDetails()
+        {
+            HtmlNodeCollection nodes = _webDataCollectionForCategory;
+            List<string> _filteredData = new List<string>();
+            List<int> _categoryCount = new List<int>();
+            int _counter = 0;
+            int _captureflag = 0;
+            foreach (HtmlAgilityPack.HtmlNode node in nodes)
+            {
+                for (int i = 0; i < _categoryList.Count; i++)
+                {
+                    if (node.InnerText.Equals(_categoryList[i]))
+                    {
+                        _categoryCount.Add(0);
+                        _captureflag = 1;
+                    }
+
+                    //else if (node.InnerText.ToString().Trim().Equals("VOLUME") && _captureflag == 0)
+                    //{
+
+                    //}
+                }
+                if (_captureflag == 1)
+                {
+                    _filteredData.Add(node.InnerText);
+                }
+
+            }
+
+            int flagger = 0;
+            int _scriptor = 2;
+            int volumeOccurance = 0;
+            string _tempCategory = String.Empty;
+            string _tempScrip = String.Empty;
+            for (int j = 0; j < _filteredData.Count; j++)
+            {
+                if (j > 0)
+                {
+                    
+                    if (_filteredData[j].Equals("VOLUME")) {
+                        //Debug.WriteLine("Category -> " + _filteredData[j - 8]);
+                        _tempCategory = _filteredData[j - 8];
+                        if (volumeOccurance > 0)
+                        {
+                            flagger++;
+                        }
+                    }
+                    else if (!CheckCategoryStatus(_filteredData[j])) { }
+                    else
+                    {
+                        if (_filteredData[j - 1].Equals("VOLUME"))
+                        {
+                            volumeOccurance++;
+                            _scriptor = j ;
+                            _scriptor++;
+                            _tempScrip = _filteredData[j];
+                            if (_filteredData[j].Equals(_tempCategory))
+                            {
+
+                            }
+                            else
+                            {
+                                //Debug.WriteLine("Scrip Name: " + _filteredData[j] + ", Category: " + _tempCategory + ", LDCP: " + _filteredData[_scriptor] + ", OPEN: " + _filteredData[_scriptor + 1] + ", HIGH: " + _filteredData[_scriptor + 2] + ", LOW: " + _filteredData[_scriptor + 3] + ", CURRENT: " + _filteredData[_scriptor + 4] + ", CHANGE: " + _filteredData[_scriptor + 5] + ", VOLUME: " + _filteredData[_scriptor + 6]);
+                                _scripList.Add(new CurrentMarketSummary { Name = _filteredData[j], Symbol = GetCompanySymbols(_filteredData[j]), Category = _tempCategory, Ldcp = _filteredData[_scriptor], Open = _filteredData[_scriptor + 1], High = _filteredData[_scriptor + 2], Low = _filteredData[_scriptor + 3], Current = _filteredData[_scriptor + 4], Change = _filteredData[_scriptor + 5].Trim().Replace(" ", ""), Volume = _filteredData[_scriptor + 6] });
+                            }
+                            _scriptor = 2;
+                        }
+                        if (j > 7)
+                        {
+                            if (_filteredData[j - 8] == _tempScrip)
+                            {
+                                _scriptor = j;
+                                _scriptor++;
+                                _tempScrip = _filteredData[j];
+                                if (_filteredData[j].Equals(_tempCategory))
+                                {
+
+                                }
+                                else
+                                {
+                                    //Debug.WriteLine("Scrip Name: " + _filteredData[j] + ", Category: " + _tempCategory + ", LDCP: " + _filteredData[_scriptor] + ", OPEN: " + _filteredData[_scriptor + 1] + ", HIGH: " + _filteredData[_scriptor + 2] + ", LOW: " + _filteredData[_scriptor + 3] + ", CURRENT: " + _filteredData[_scriptor + 4] + ", CHANGE: " + _filteredData[_scriptor + 5] + ", VOLUME: " + _filteredData[_scriptor + 6]);
+                                    _scripList.Add(new CurrentMarketSummary { Name = _filteredData[j], Symbol = GetCompanySymbols(_filteredData[j]), Category = _tempCategory, Ldcp = _filteredData[_scriptor], Open = _filteredData[_scriptor + 1], High = _filteredData[_scriptor + 2], Low = _filteredData[_scriptor + 3], Current = _filteredData[_scriptor + 4], Change = _filteredData[_scriptor + 5].Trim().Replace(" ", ""), Volume = _filteredData[_scriptor + 6] });
+                                }
+                                _scriptor = 2;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //counter = 0;
+            //for (int j = 1, openIndex = 2, highIndex = 3, lowIndex = 4, currentIndex = 5, changeIndex = 6, volumeIndex = 7; j < AllTableRowData.Count() || openIndex < AllTableRowData.Count() || highIndex < AllTableRowData.Count() || lowIndex < AllTableRowData.Count() || currentIndex < AllTableRowData.Count() || changeIndex < AllTableRowData.Count() ||  volumeIndex < AllTableRowData.Count() ; j += 8, openIndex += 8, highIndex = highIndex + 8, lowIndex = lowIndex + 8, currentIndex += 8, changeIndex += 8, volumeIndex += 8)
+            //{
+            //    if (AllTableRowData[j] != null)
+            //    {
+            //        if (AllTableRowData[j].Trim().Equals("LDCP"))
+            //        {
+            //        }
+            //        else
+            //        {
+            //            _scripList[counter].Ldcp = AllTableRowData[j].Trim().Replace("\n","");
+            //        }
+            //    }
+
+            //    //Test Method Open
+            //    if (AllTableRowData[openIndex] != null)
+            //    {
+            //        if (AllTableRowData[openIndex].Trim().Equals("OPEN"))
+            //        {
+            //        }
+            //        else
+            //        {
+            //            _scripList[counter].Open = AllTableRowData[openIndex].Trim().Replace("\n", "");
+            //        }
+            //    }
+
+            //    //Test Method High
+            //    if (AllTableRowData[highIndex] != null)
+            //    {
+            //        if (AllTableRowData[highIndex].Trim().Equals("HIGH")) { }
+            //        else
+            //        {
+            //            _scripList[counter].High = AllTableRowData[highIndex].Trim().Replace("\n", "");
+            //        }
+            //    }
+
+            //    //Test Method Low
+            //    if (AllTableRowData[lowIndex] != null)
+            //    {
+            //        if (AllTableRowData[lowIndex].Trim().Equals("LOW")) { }
+            //        else
+            //        {
+            //            _scripList[counter].Low = AllTableRowData[lowIndex].Trim().Replace("\n", "");
+            //        }
+            //    }
+
+            //    //Test Method Current
+            //    if (AllTableRowData[currentIndex] != null)
+            //    {
+            //        if (AllTableRowData[currentIndex].Trim().Equals("CURRENT")) { }
+            //        else
+            //        {
+            //            _scripList[counter].Current = AllTableRowData[currentIndex].Trim().Replace("\n", "");
+            //        }
+            //    }
+
+            //    //Test Method Change
+            //    if (AllTableRowData[changeIndex] != null)
+            //    {
+            //        if (AllTableRowData[changeIndex].Trim().Equals("CHANGE")) { }
+            //        else
+            //        {
+            //            _scripList[counter].Change = Convert.ToDouble(AllTableRowData[changeIndex].Trim().Replace("\n", ""));
+            //        }
+            //    }
+
+            //    //Test Method Volume
+            //    if (AllTableRowData[volumeIndex] != null)
+            //    {
+            //        if (AllTableRowData[volumeIndex].Trim().Equals("VOLUME")) { }
+            //        else
+            //        {
+            //            _scripList[counter].Volume = AllTableRowData[volumeIndex].Trim().Replace("\n", "");
+            //        }
+            //    }
+
+            //    //Increment counter
+            //    counter++;
+
+            //}
+        }
+
+        #endregion
+
+        #region GetMarketSummaryCompanyLDCP
 
         private string[] GetMarketSummaryCompanyLDCP()
         {
+<<<<<<< Updated upstream
             HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+=======
+            // HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
+            HtmlNodeCollection name_nodes = _webDataCollection;
+>>>>>>> Stashed changes
             string[] result = new string[name_nodes.Count];
             string[] AllTableRowData = new string[name_nodes.Count];
 
@@ -403,15 +1406,70 @@ namespace PSXDataFetchingApp
                     else
                     {
                         result[counter2++] += AllTableRowData[j];
+                        _scripList[j].Ldcp = AllTableRowData[j];
                     }
                 }
             }
             return result;
         }
 
+<<<<<<< Updated upstream
         private string[] GetMarketSummaryCompanyOPEN()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+            string[] result = new string[name_nodes.Count];
+=======
+        #endregion
+
+        #region GetCompanyLDCP
+
+        public void GetCompanyLDCP()
+        {
+            Debug.WriteLine("GetCompanyLDCP");
+            HtmlNodeCollection name_nodes = _webDataCollection;
+>>>>>>> Stashed changes
+            string[] AllTableRowData = new string[name_nodes.Count];
+            int counter = 0;
+            int StartCapturingflag = 0;
+            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            {
+                if (StartCapturingflag == 1)
+                {
+                    AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+                }
+                else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+                {
+                    StartCapturingflag = 1;
+                }
+            }
+            int counter2 = 0;
+            for (int j = 1; j < AllTableRowData.Count(); j = j + 8)
+            {
+                if (AllTableRowData[j] != null)
+                {
+                    if (AllTableRowData[j].Trim().Equals("LDCP"))
+                    {
+                    }
+                    else
+                    {
+                        _scripList[counter2++].Ldcp = AllTableRowData[j].Trim().Replace("\n", "");
+                    }
+                }
+            }
+        }
+
+<<<<<<< Updated upstream
+        private string[] GetMarketSummaryCompanyHIGH()
+        {
+            HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+=======
+        #endregion
+
+        #region GetMarketSummaryCompanyOPEN
+        public string[] GetMarketSummaryCompanyOPEN()
+        {
+            HtmlNodeCollection name_nodes = _webDataCollection;
+>>>>>>> Stashed changes
             string[] result = new string[name_nodes.Count];
             string[] AllTableRowData = new string[name_nodes.Count];
 
@@ -445,15 +1503,74 @@ namespace PSXDataFetchingApp
                     else
                     {
                         result[counter2++] += AllTableRowData[j];
+                        _scripList[j].Open = AllTableRowData[j];
                     }
                 }
             }
             return result;
         }
+        #endregion
 
-        private string[] GetMarketSummaryCompanyHIGH()
+<<<<<<< Updated upstream
+        private string[] GetMarketSummaryCompanyLOW()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+            string[] result = new string[name_nodes.Count];
+=======
+        #region GetCompanyOPEN
+        public void GetCompanyOPEN()
+        {
+            Debug.WriteLine("GetCompanyOPEN");
+            HtmlNodeCollection name_nodes = _webDataCollection;
+>>>>>>> Stashed changes
+            string[] AllTableRowData = new string[name_nodes.Count];
+            int counter = 0;
+            int StartCapturingflag = 0;
+
+            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            {
+                if (StartCapturingflag == 1)
+                {
+                    AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+                }
+                else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+                {
+                    StartCapturingflag = 1;
+                }
+                else
+                {
+
+                }
+            }
+            int counter2 = 0;
+            for (int j = 2; j < AllTableRowData.Count(); j = j + 8)
+            {
+                if (AllTableRowData[j] != null)
+                {
+                    if (AllTableRowData[j].Trim().Equals("OPEN"))
+                    {
+                    }
+                    else
+                    {
+                        _scripList[counter2++].Open = AllTableRowData[j].Trim().Replace("\n", "");
+                    }
+                }
+            }
+        }
+        #endregion
+
+<<<<<<< Updated upstream
+        private string[] GetMarketSummaryCompanyCURRENT()
+        {
+            HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+=======
+        #region GetMarketSummaryCompanyHIGH
+
+        public string[] GetMarketSummaryCompanyHIGH()
+        {
+            //HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
+            HtmlNodeCollection name_nodes = _webDataCollection;
+>>>>>>> Stashed changes
             string[] result = new string[name_nodes.Count];
             string[] AllTableRowData = new string[name_nodes.Count];
 
@@ -487,15 +1604,71 @@ namespace PSXDataFetchingApp
                     else
                     {
                         result[counter2++] += AllTableRowData[j];
+                        //_scripList[j].High = AllTableRowData[j];
                     }
                 }
             }
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyLOW()
+<<<<<<< Updated upstream
+        private string[] GetMarketSummaryCompanyCHANGE()
         {
             HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+            string[] result = new string[name_nodes.Count];
+=======
+        #endregion
+
+        #region GetCompanyHIGH
+        public void GetCompanyHIGH()
+        {
+            Debug.WriteLine("GetCompanyHIGH");
+            HtmlNodeCollection name_nodes = _webDataCollection;
+>>>>>>> Stashed changes
+            string[] AllTableRowData = new string[name_nodes.Count];
+
+            int counter = 0;
+            int StartCapturingflag = 0;
+
+            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            {
+                if (StartCapturingflag == 1)
+                {
+                    AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+                }
+                else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+                {
+                    StartCapturingflag = 1;
+                }
+            }
+            int counter2 = 0;
+            for (int j = 3; j < AllTableRowData.Count(); j = j + 8)
+            {
+                if (AllTableRowData[j] != null)
+                {
+                    if (AllTableRowData[j].Trim().Equals("HIGH")) { }
+                    else
+                    {
+                        _scripList[counter2++].High = AllTableRowData[j].Trim().Replace("\n", "");
+                    }
+                }
+            }
+        }
+
+<<<<<<< Updated upstream
+        private string[] GetMarketSummaryCompanyVOLUME()
+        {
+            HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+=======
+        #endregion
+
+        #region GetMarketSummaryCompanyLOW
+
+        public string[] GetMarketSummaryCompanyLOW()
+        {
+            //HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
+            HtmlNodeCollection name_nodes = _webDataCollection;
+>>>>>>> Stashed changes
             string[] result = new string[name_nodes.Count];
             string[] AllTableRowData = new string[name_nodes.Count];
 
@@ -535,15 +1708,16 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyCURRENT()
-        {
-            HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
-            string[] result = new string[name_nodes.Count];
-            string[] AllTableRowData = new string[name_nodes.Count];
+        #endregion
 
+        #region GetCompanyLOW
+        public void GetCompanyLOW()
+        {
+            Debug.WriteLine("GetCompanyLOW");
+            HtmlNodeCollection name_nodes = _webDataCollection;
+            string[] AllTableRowData = new string[name_nodes.Count];
             int counter = 0;
             int StartCapturingflag = 0;
-
             foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
             {
                 if (StartCapturingflag == 1)
@@ -560,26 +1734,122 @@ namespace PSXDataFetchingApp
                 }
             }
             int counter2 = 0;
-            for (int j = 5; j < AllTableRowData.Count(); j = j + 8)
+            for (int j = 4; j < AllTableRowData.Count(); j = j + 8)
             {
                 if (AllTableRowData[j] != null)
                 {
-                    if (AllTableRowData[j].Trim().Equals("CURRENT"))
-                    {
-                        //result[counter2++] += AllTableRowData[j];
-                    }
+                    if (AllTableRowData[j].Trim().Equals("LOW")) { }
                     else
                     {
-                        result[counter2++] += AllTableRowData[j];
+                        _scripList[counter2++].Low = AllTableRowData[j].Trim().Replace("\n", "");
                     }
                 }
             }
+        }
+
+        #endregion
+
+        #region GetMarketSummaryCompanyCURRENT
+
+        public string[] GetMarketSummaryCompanyCURRENT()
+        {
+            string[] result = null;
+            HtmlNodeCollection name_nodes = null;
+            //HtmlNodeCollection temp = null;
+            //temp = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
+            name_nodes = _webDataCollection != null ? _webDataCollection : name_nodes;
+            if (name_nodes != null)
+            {
+                //HtmlNodeCollection name_nodes = _webDataCollection;
+                result = new string[name_nodes.Count];
+                string[] AllTableRowData = new string[name_nodes.Count];
+
+                int counter = 0;
+                int StartCapturingflag = 0;
+
+                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+                {
+                    if (StartCapturingflag == 1)
+                    {
+                        AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+                    }
+                    else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+                    {
+                        StartCapturingflag = 1;
+                    }
+                    else
+                    {
+
+                    }
+                }
+                int counter2 = 0;
+                for (int j = 5; j < AllTableRowData.Count(); j = j + 8)
+                {
+                    if (AllTableRowData[j] != null)
+                    {
+                        if (AllTableRowData[j].Trim().Equals("CURRENT"))
+                        {
+                            //result[counter2++] += AllTableRowData[j];
+                        }
+                        else
+                        {
+                            result[counter2++] += AllTableRowData[j];
+                        }
+                    }
+                }
+            }
+
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyCHANGE()
+        #endregion
+
+        #region GetCompanyCURRENT
+        public void GetCompanyCURRENT()
         {
-            HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+            Debug.WriteLine("GetCompanyCURRENT");
+            string[] result = null;
+            HtmlNodeCollection name_nodes = null;
+            name_nodes = _webDataCollection != null ? _webDataCollection : name_nodes;
+            if (name_nodes != null)
+            {
+                result = new string[name_nodes.Count];
+                string[] AllTableRowData = new string[name_nodes.Count];
+                int counter = 0;
+                int StartCapturingflag = 0;
+                foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+                {
+                    if (StartCapturingflag == 1)
+                    {
+                        AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+                    }
+                    else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+                    {
+                        StartCapturingflag = 1;
+                    }
+                }
+                int counter2 = 0;
+                for (int j = 5; j < AllTableRowData.Count(); j = j + 8)
+                {
+                    if (AllTableRowData[j] != null)
+                    {
+                        if (AllTableRowData[j].Trim().Equals("CURRENT")) { }
+                        else
+                        {
+                            _scripList[counter2++].Current = AllTableRowData[j].Trim().Replace("\n", "");
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region GetMarketSummaryCompanyCHANGE
+        public string[] GetMarketSummaryCompanyCHANGE()
+        {
+            //HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
+            HtmlNodeCollection name_nodes = _webDataCollection;
             string[] result = new string[name_nodes.Count];
             string[] AllTableRowData = new string[name_nodes.Count];
 
@@ -619,9 +1889,49 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private string[] GetMarketSummaryCompanyVOLUME()
+        #endregion
+
+        #region GetCompanyCHANGE
+        public void GetCompanyCHANGE()
         {
-            HtmlNodeCollection name_nodes = FetchDataFromPSX("//td");
+            Debug.WriteLine("GetCompanyCHANGE");
+            HtmlNodeCollection name_nodes = _webDataCollection;
+            string[] AllTableRowData = new string[name_nodes.Count];
+            int counter = 0;
+            int StartCapturingflag = 0;
+            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            {
+                if (StartCapturingflag == 1)
+                {
+                    AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+                }
+                else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+                {
+                    StartCapturingflag = 1;
+                }
+            }
+            int counter2 = 0;
+            for (int j = 6; j < AllTableRowData.Count(); j = j + 8)
+            {
+                if (AllTableRowData[j] != null)
+                {
+                    if (AllTableRowData[j].Trim().Equals("CHANGE")) { }
+                    else
+                    {
+                        _scripList[counter2++].Change = AllTableRowData[j].Trim().Replace("\n", "");
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region GetMarketSummaryCompanyVOLUME
+
+        public string[] GetMarketSummaryCompanyVOLUME()
+        {
+            //HtmlNodeCollection name_nodes = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", "//td");
+            HtmlNodeCollection name_nodes = _webDataCollection;
             string[] result = new string[name_nodes.Count];
             string[] AllTableRowData = new string[name_nodes.Count];
 
@@ -661,18 +1971,566 @@ namespace PSXDataFetchingApp
             return result;
         }
 
-        private bool SavingDataToDatabase(string[] defaultData, List<string> companyName, List<string> companySymbol, string[] LDCP, string[] OPEN, string[] HIGH, string[] LOW, string[] CURRENT, string[] CHANGE, string[] VOLUME)
-        {
-            if(defaultData != null)
-            {
+        #endregion
 
+        #region GetCompanyVOLUME
+        public void GetCompanyVOLUME()
+        {
+            Debug.WriteLine("GetCompanyVOLUME");
+            HtmlNodeCollection name_nodes = _webDataCollection;
+            string[] AllTableRowData = new string[name_nodes.Count];
+            int counter = 0;
+            int StartCapturingflag = 0;
+            foreach (HtmlAgilityPack.HtmlNode node in name_nodes)
+            {
+                if (StartCapturingflag == 1)
+                {
+                    AllTableRowData[counter++] = node.InnerText.ToString() + "\n";
+                }
+                else if (node.InnerText.ToString().Trim().Equals("VOLUME"))
+                {
+                    StartCapturingflag = 1;
+                }
+            }
+            int counter2 = 0;
+            for (int j = 7; j < AllTableRowData.Count(); j = j + 8)
+            {
+                if (AllTableRowData[j] != null)
+                {
+                    if (AllTableRowData[j].Trim().Equals("VOLUME")) { }
+                    else
+                    {
+                        _scripList[counter2++].Volume = AllTableRowData[j].Trim().Replace("\n", "");
+                    }
+                }
+            }
+            Debug.WriteLine("GetCompanyVOLUME finished");
+        }
+
+        #endregion
+
+        #region SavingDataToDatabase
+
+        private bool SavingDataToDatabase( string _date, string _status, string _volume, string _value, string _trades, CurrentMarketSummary _scrip)
+        {
+            #region SavingDataToDatabase_MSSQLSERVER
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
+                if (_date != null)
+                {
+
+                    SqlConnection conn = new SqlConnection();
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+                    conn.Open();
+
+                    int isDataCleared = 0;
+
+                    //int i = 0;
+                    int k = 0;
+                    int j = 0;
+                    int l = 0;
+
+                    //Clear Truncate Current Market Summary Data
+
+                    SqlCommand cmdspClearTableData = new SqlCommand("spTRUNCATE_CURRENT_MARKET_SUMMARY", conn);
+                    cmdspClearTableData.CommandType = CommandType.StoredProcedure;
+
+                    //
+
+                    SqlCommand cmdspInsertMarketSummaryOverview = new SqlCommand("spINSERT_CURRENT_MARKET_OVERVIEW", conn);
+                    cmdspInsertMarketSummaryOverview.CommandType = CommandType.StoredProcedure;
+                    cmdspInsertMarketSummaryOverview.Parameters.Add("@DATE", SqlDbType.DateTime);
+                    cmdspInsertMarketSummaryOverview.Parameters["@DATE"].Value = Convert.ToDateTime(_date);
+                    cmdspInsertMarketSummaryOverview.Parameters.Add("@STATUS", SqlDbType.VarChar, 300);
+                    cmdspInsertMarketSummaryOverview.Parameters["@STATUS"].Value = _status;
+                    cmdspInsertMarketSummaryOverview.Parameters.Add("@VOLUME", SqlDbType.Float);
+                    cmdspInsertMarketSummaryOverview.Parameters["@VOLUME"].Value = Convert.ToDouble(_volume.Replace(",",""));
+                    cmdspInsertMarketSummaryOverview.Parameters.Add("@VALUE", SqlDbType.Float);
+                    cmdspInsertMarketSummaryOverview.Parameters["@VALUE"].Value = Convert.ToDouble(_value.Replace(",", ""));
+                    cmdspInsertMarketSummaryOverview.Parameters.Add("@TRADE", SqlDbType.Float);
+                    cmdspInsertMarketSummaryOverview.Parameters["@TRADE"].Value = Convert.ToDouble(_trades.Replace(",", ""));
+
+                    //
+
+                    try
+                    {
+
+                        isDataCleared = cmdspClearTableData.ExecuteNonQuery();
+                        k = cmdspInsertMarketSummaryOverview.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException ex)
+                    {
+                        Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                        Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                        //Debug.WriteLine("SQL Exception Occured: " + ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                        Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                        //Debug.WriteLine("Exception: " + ex.Message);
+                    }
+
+                    //for (int m = 0; m < .Count(); m++)
+                    //{
+                    try
+                    {
+                        //
+                        if (_scripList == null)
+                        {
+
+                        }
+                        else
+                        {
+                            SqlCommand cmdspInsertMarketSummary = new SqlCommand("spINSERT_CURRENT_MARKET_SUMMARY", conn);
+                            cmdspInsertMarketSummary.CommandType = CommandType.StoredProcedure;
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SECTOR", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_SECTOR"].Value = _scrip.Category;
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_NAME", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_NAME"].Value = _scrip.Name;
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_SYMBOL"].Value = _scrip.Symbol;
+
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LDCP", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_LDCP"].Value = _scrip.Ldcp;
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_OPEN", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_OPEN"].Value = _scrip.Open;
+
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_HIGH", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_HIGH"].Value = _scrip.High;
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LOW", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_LOW"].Value = _scrip.Low;
+
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CURRENT", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_CURRENT"].Value = _scrip.Current;
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CHANGE", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_CHANGE"].Value = _scrip.Change;
+                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_VOLUME", SqlDbType.VarChar, -1);
+                            cmdspInsertMarketSummary.Parameters["@COMPANY_VOLUME"].Value = _scrip.Volume;
+
+                            //
+
+                            //int nameFlag = 5;
+
+                            SqlCommand cmdForspInsertMarketSummaryHistory = new SqlCommand("spINSERT_MARKET_SUMMARY_HISTORY", conn);
+                            cmdForspInsertMarketSummaryHistory.CommandType = CommandType.StoredProcedure;
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_DATE", SqlDbType.DateTime);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_DATE"].Value = _miscellenousData["DATE"];
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_STATUS", SqlDbType.VarChar, 500);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_STATUS"].Value = _miscellenousData["STATUS"];
+
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_SECTOR", SqlDbType.VarChar, 500);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_SECTOR"].Value = _scrip.Category;
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_SCRIP_NAME", SqlDbType.VarChar, 500);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_SCRIP_NAME"].Value = _scrip.Name;
+
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_SYMBOL", SqlDbType.VarChar, 500);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_SYMBOL"].Value = _scrip.Symbol;
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_LDCP", SqlDbType.VarChar, -1);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_LDCP"].Value = _scrip.Ldcp;
+
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_OPEN", SqlDbType.VarChar, -1);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_OPEN"].Value = _scrip.Open;
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_HIGH", SqlDbType.VarChar, -1);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_HIGH"].Value = _scrip.High;
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_LOW", SqlDbType.VarChar, -1);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_LOW"].Value = _scrip.Low;
+
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_CURRENT", SqlDbType.VarChar, -1);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_CURRENT"].Value = _scrip.Current;
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_CHANGE", SqlDbType.VarChar, -1);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_CHANGE"].Value = _scrip.Change;
+                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_VOLUME", SqlDbType.VarChar, -1);
+                            cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_VOLUME"].Value = _scrip.Volume;
+
+
+                            j = cmdspInsertMarketSummary.ExecuteNonQuery();
+                            l = cmdForspInsertMarketSummaryHistory.ExecuteNonQuery();
+
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                        Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                        //MessageBox.Show(ex.Message, "SQL Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                        //Debug.WriteLine("SQL Exception: " + ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Exception in SavingDataToDatabase Method: " + ex.Message);
+                        Exceptions.Add("Exception in SavingDataToDatabase Method: " + ex.Message);
+                        //MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                        //Debug.WriteLine("Exception: " + ex.Message);
+                    }
+                    //}
+
+                    //
+
+                    if (j == 1 && k == 1 && l == 1)
+                    {
+                        //Debug.WriteLine("Data successfully saved.");
+                        return true;
+                    }
+
+                    conn.Close();
+
+                    return false;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            #endregion
+
+            #region SavingDataToDatabase_ORACLE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                return false;
+            }
+            #endregion
+
+            #region SavingDataToDatabase_SQLITE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
+            {
+                return false;
+            }
+            #endregion
+
+            #region SavingDataToDatabase_POSTGRE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("POSTGRE"))
+            {
+                return false;
+            }
+            #endregion
+
+            else
+            {
+                return false;
+            }
+
+        }
+
+        #endregion
+
+        #region Truncate_CURRENT_MARKET_SUMMARY_DB
+
+        private int Truncate_CURRENT_MARKET_SUMMARY_DB()
+        {
+            #region SavingDataToDatabase_MSSQLSERVER
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
                 SqlConnection conn = new SqlConnection();
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
                 conn.Open();
-
                 int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                SqlCommand cmd = new SqlCommand("spTRUNCATE_CURRENT_MARKET_SUMMARY", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                try
+                {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
 
+            #endregion
+
+            #region SavingDataToDatabase_ORACLE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                OracleConnection conn = new OracleConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                OracleCommand cmd = new OracleCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                cmd.CommandType = CommandType.Text;
+                try
+                {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("Oracle Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("Oracle Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
+            #endregion
+
+            #region SavingDataToDatabase_SQLITE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
+            {
+                SqliteConnection conn = new SqliteConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                SqliteCommand cmd = new SqliteCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                cmd.CommandType = CommandType.Text;
+                try
+                {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (SqliteException ex)
+                {
+                    Debug.WriteLine("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
+            #endregion
+
+            #region SavingDataToDatabase_POSTGRE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("POSTGRE"))
+            {
+                NpgsqlConnection conn = new NpgsqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                NpgsqlCommand cmd = new NpgsqlCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                cmd.CommandType = CommandType.Text;
+                try
+                {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (NpgsqlException ex)
+                {
+                    Debug.WriteLine("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
+            #endregion
+
+            #region SavingDataToDatabase_Elasticsearch
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH"))
+            {
+                //NpgsqlConnection conn = new NpgsqlConnection();
+                //conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                //conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                //NpgsqlCommand cmd = new NpgsqlCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                //cmd.CommandType = CommandType.Text;
+                //try
+                //{
+                //    isDataCleared = cmd.ExecuteNonQuery();
+                //}
+                //catch (NpgsqlException ex)
+                //{
+                //    Debug.WriteLine("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                //    Exceptions.Add("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                //    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                //}
+                //conn.Close();
+                return isDataCleared;
+            }
+            #endregion
+
+            #region ELSE
+
+            else
+            {
+                return 0;
+            }
+
+            #endregion
+
+        }
+
+        #endregion
+
+        #region Truncate_CURRENT_MARKET_OVERVIEW_DB
+
+        private int Truncate_CURRENT_MARKET_OVERVIEW_DB()
+        {
+            #region Truncate_CURRENT_MARKET_OVERVIEW_DB_MSSQLSERVER
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
+                SqlConnection conn = new SqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                SqlCommand cmd = new SqlCommand("spTRUNCATE_CURRENT_MARKET_OVERVIEW", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                try
+                {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
+
+            #endregion
+
+            #region SavingDataToDatabase_ORACLE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                OracleConnection conn = new OracleConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                OracleCommand cmd = new OracleCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                cmd.CommandType = CommandType.Text;
+                try
+                {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("Oracle Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("Oracle Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
+            #endregion
+
+            #region SavingDataToDatabase_SQLITE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
+            {
+                SqliteConnection conn = new SqliteConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                SqliteCommand cmd = new SqliteCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                cmd.CommandType = CommandType.Text;
+                try
+                {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (SqliteException ex)
+                {
+                    Debug.WriteLine("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
+            #endregion
+
+            #region SavingDataToDatabase_POSTGRE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("POSTGRE"))
+            {
+                NpgsqlConnection conn = new NpgsqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                NpgsqlCommand cmd = new NpgsqlCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                cmd.CommandType = CommandType.Text;
+                try
+                {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (NpgsqlException ex)
+                {
+                    Debug.WriteLine("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
+            #endregion
+
+            #region SavingDataToDatabase_Elasticsearch
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH"))
+            {
+                //NpgsqlConnection conn = new NpgsqlConnection();
+                //conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                //conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                //NpgsqlCommand cmd = new NpgsqlCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                //cmd.CommandType = CommandType.Text;
+                //try
+                //{
+                //    isDataCleared = cmd.ExecuteNonQuery();
+                //}
+                //catch (NpgsqlException ex)
+                //{
+                //    Debug.WriteLine("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                //    Exceptions.Add("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                //    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                //}
+                //conn.Close();
+                return isDataCleared;
+            }
+            #endregion
+
+<<<<<<< Updated upstream
                 int i = 0;
                 int k = 0;
                 int j = 0;
@@ -682,24 +2540,70 @@ namespace PSXDataFetchingApp
 
                 SqlCommand cmdspClearTableData = new SqlCommand("ClearTableData", conn);
                 cmdspClearTableData.CommandType = CommandType.StoredProcedure;
+=======
+            #region ELSE
 
-                //
+            else
+            {
+                return 0;
+            }
 
+            #endregion
+
+        }
+
+        #endregion
+>>>>>>> Stashed changes
+
+        #region INSERT_CURRENT_MARKET_OVERVIEW_DB
+
+<<<<<<< Updated upstream
                 SqlCommand cmdspInsertMarketSummaryOverview = new SqlCommand("spInsertMarketSummaryOverview", conn);
+=======
+        private int INSERT_CURRENT_MARKET_OVERVIEW_DB(string _date, string _status, string _volume, string _value, string _trade)
+        {
+            #region INSERT_CURRENT_MARKET_OVERVIEW_DB_MSSQLSERVER
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
+                SqlConnection conn = new SqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isMetaDataSaved = 0;
+                SqlCommand cmdspInsertMarketSummaryOverview = new SqlCommand("spINSERT_CURRENT_MARKET_OVERVIEW", conn);
+>>>>>>> Stashed changes
                 cmdspInsertMarketSummaryOverview.CommandType = CommandType.StoredProcedure;
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@DATE", SqlDbType.DateTime);
-                cmdspInsertMarketSummaryOverview.Parameters["@DATE"].Value = RequestDate;
+                cmdspInsertMarketSummaryOverview.Parameters["@DATE"].Value = Convert.ToDateTime(_date);
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@STATUS", SqlDbType.VarChar, 300);
-                cmdspInsertMarketSummaryOverview.Parameters["@STATUS"].Value = RequestStatus;
+                cmdspInsertMarketSummaryOverview.Parameters["@STATUS"].Value = _status;
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@VOLUME", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverview.Parameters["@VOLUME"].Value = RequestVolume;
+                cmdspInsertMarketSummaryOverview.Parameters["@VOLUME"].Value = Convert.ToDouble(_volume.Replace(",", ""));
                 cmdspInsertMarketSummaryOverview.Parameters.Add("@VALUE", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverview.Parameters["@VALUE"].Value = RequestValue;
-                cmdspInsertMarketSummaryOverview.Parameters.Add("@TRADES", SqlDbType.Float);
-                cmdspInsertMarketSummaryOverview.Parameters["@TRADES"].Value = RequestTrades;
+                cmdspInsertMarketSummaryOverview.Parameters["@VALUE"].Value = Convert.ToDouble(_value.Replace(",", ""));
+                cmdspInsertMarketSummaryOverview.Parameters.Add("@TRADE", SqlDbType.Float);
+                cmdspInsertMarketSummaryOverview.Parameters["@TRADE"].Value = Convert.ToDouble(_trade.Replace(",", ""));
+                try
+                {
+                    isMetaDataSaved = cmdspInsertMarketSummaryOverview.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingScrip Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingScrip Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception in SavingScrip Method: " + ex.Message);
+                    Exceptions.Add("Exception in SavingScrip Method: " + ex.Message);
+                }
+                conn.Close();
 
-                //
+                return isMetaDataSaved;
+            }
 
+            #endregion
+
+<<<<<<< Updated upstream
                 SqlCommand cmdspInsertMarketSummaryOverviewHistory = new SqlCommand("spInsertMarketSummaryOverviewHistory", conn);
                 cmdspInsertMarketSummaryOverviewHistory.CommandType = CommandType.StoredProcedure;
                 cmdspInsertMarketSummaryOverviewHistory.Parameters.Add("@DATE", SqlDbType.DateTime);
@@ -726,20 +2630,77 @@ namespace PSXDataFetchingApp
                 catch (SqlException)
                 {
                     Debug.WriteLine("SQL Exception Occured.");
+=======
+            #region INSERT_CURRENT_MARKET_OVERVIEW_DB_ORACLE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                OracleConnection conn = new OracleConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isMetaDataSaved = 0;
+                OracleCommand cmdspInsertMarketSummaryOverview = new OracleCommand("spINSERT_CURRENT_MARKET_OVERVIEW", conn);
+                cmdspInsertMarketSummaryOverview.CommandType = CommandType.StoredProcedure;
+                cmdspInsertMarketSummaryOverview.Parameters.Add("@DATE", OracleDbType.Date);
+                cmdspInsertMarketSummaryOverview.Parameters["@DATE"].Value = Convert.ToDateTime(_date);
+                cmdspInsertMarketSummaryOverview.Parameters.Add("@STATUS", OracleDbType.Varchar2);
+                cmdspInsertMarketSummaryOverview.Parameters["@STATUS"].Value = _status;
+                cmdspInsertMarketSummaryOverview.Parameters.Add("@VOLUME", OracleDbType.Double);
+                cmdspInsertMarketSummaryOverview.Parameters["@VOLUME"].Value = Convert.ToDouble(_volume.Replace(",", ""));
+                cmdspInsertMarketSummaryOverview.Parameters.Add("@VALUE", OracleDbType.Double);
+                cmdspInsertMarketSummaryOverview.Parameters["@VALUE"].Value = Convert.ToDouble(_value.Replace(",", ""));
+                cmdspInsertMarketSummaryOverview.Parameters.Add("@TRADE", OracleDbType.Double);
+                cmdspInsertMarketSummaryOverview.Parameters["@TRADE"].Value = Convert.ToDouble(_trade.Replace(",", ""));
+                try
+                {
+                    isMetaDataSaved = cmdspInsertMarketSummaryOverview.ExecuteNonQuery();
+                }
+                catch (OracleException ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingScrip Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingScrip Method: " + ex.Message);
+>>>>>>> Stashed changes
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Exception: " + ex.Message);
+                    Debug.WriteLine("Exception in SavingScrip Method: " + ex.Message);
+                    Exceptions.Add("Exception in SavingScrip Method: " + ex.Message);
                 }
+                conn.Close();
 
-                for (int m = 0; m < NAME.Count(); m++)
+                return isMetaDataSaved;
+            }
+            #endregion
+
+            #region INSERT_CURRENT_MARKET_OVERVIEW_DB_SQLITE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
+            {
+                SqliteConnection conn = new SqliteConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                SqliteCommand cmd = new SqliteCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                cmd.CommandType = CommandType.Text;
+                try
                 {
-                    try
-                    {
-                        //
-                        if (LDCP[m] == null)
-                        {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (SqliteException ex)
+                {
+                    Debug.WriteLine("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
+            #endregion
 
+<<<<<<< Updated upstream
                         }
                         else
                         {
@@ -749,94 +2710,219 @@ namespace PSXDataFetchingApp
                             cmdspInsertMarketSummary.Parameters["@COMPANY_NAME"].Value = companyName[m];
                             cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, 300);
                             cmdspInsertMarketSummary.Parameters["@COMPANY_SYMBOL"].Value = companySymbol[m];
+=======
+            #region INSERT_CURRENT_MARKET_OVERVIEW_DB_POSTGRE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("POSTGRE"))
+            {
+                NpgsqlConnection conn = new NpgsqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                NpgsqlCommand cmd = new NpgsqlCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                cmd.CommandType = CommandType.Text;
+                try
+                {
+                    isDataCleared = cmd.ExecuteNonQuery();
+                }
+                catch (NpgsqlException ex)
+                {
+                    Debug.WriteLine("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                }
+                conn.Close();
+                return isDataCleared;
+            }
+            #endregion
+>>>>>>> Stashed changes
 
-                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LDCP", SqlDbType.Float);
-                            cmdspInsertMarketSummary.Parameters["@COMPANY_LDCP"].Value = Double.Parse(LDCP[m]);
-                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_OPEN", SqlDbType.Float);
-                            cmdspInsertMarketSummary.Parameters["@COMPANY_OPEN"].Value = Double.Parse(OPEN[m]);
+            #region INSERT_CURRENT_MARKET_OVERVIEW_DB_Elasticsearch
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH"))
+            {
+                //NpgsqlConnection conn = new NpgsqlConnection();
+                //conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                //conn.Open();
+                int isDataCleared = 0;
+                //Clear Truncate Current Market Summary Data
+                //NpgsqlCommand cmd = new NpgsqlCommand("TRUNCATE TABLE TRUNCATE_CURRENT_MARKET_SUMMARY;", conn);
+                //cmd.CommandType = CommandType.Text;
+                //try
+                //{
+                //    isDataCleared = cmd.ExecuteNonQuery();
+                //}
+                //catch (NpgsqlException ex)
+                //{
+                //    Debug.WriteLine("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                //    Exceptions.Add("SQLite Exception in SavingDataToDatabase Method: " + ex.Message);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Debug.WriteLine("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                //    Exceptions.Add("SQL Exception in SavingDataToDatabase Method: " + ex.Message);
+                //}
+                //conn.Close();
+                return isDataCleared;
+            }
+            #endregion
 
-                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_HIGH", SqlDbType.Float);
-                            cmdspInsertMarketSummary.Parameters["@COMPANY_HIGH"].Value = Double.Parse(HIGH[m]);
-                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LOW", SqlDbType.Float);
-                            cmdspInsertMarketSummary.Parameters["@COMPANY_LOW"].Value = Double.Parse(LOW[m]);
+            #region ELSE
 
-                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CURRENT", SqlDbType.Float);
-                            cmdspInsertMarketSummary.Parameters["@COMPANY_CURRENT"].Value = Double.Parse(CURRENT[m]);
-                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CHANGE", SqlDbType.Float);
-                            cmdspInsertMarketSummary.Parameters["@COMPANY_CHANGE"].Value = Double.Parse(CHANGE[m]);
-                            cmdspInsertMarketSummary.Parameters.Add("@COMPANY_VOLUME", SqlDbType.Float);
-                            cmdspInsertMarketSummary.Parameters["@COMPANY_VOLUME"].Value = Double.Parse(VOLUME[m]);
+            else
+            {
+                return 0;
+            }
 
-                            //
+            #endregion
 
-                            int nameFlag = 5;
+        }
 
-                            SqlCommand cmdForspInsertMarketSummaryHistory = new SqlCommand("spInsertMarketSummaryHistory", conn);
-                            cmdForspInsertMarketSummaryHistory.CommandType = CommandType.StoredProcedure;
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@DATE", SqlDbType.DateTime);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@DATE"].Value = RequestDate;
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@STATUS", SqlDbType.VarChar, 500);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@STATUS"].Value = RequestStatus;
+        #endregion
 
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@SECTOR", SqlDbType.VarChar, 500);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@SECTOR"].Value = defaultData[nameFlag];
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_NAME", SqlDbType.VarChar, 500);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_NAME"].Value = companyName[m];
+        #region SavingScrip
 
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, 500);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_SYMBOL"].Value = companySymbol[m];
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_LDCP", SqlDbType.Float);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_LDCP"].Value = Double.Parse(LDCP[m]);
+        private int SavingScrip(string _date, string _status, string _volume, string _value, string _trades, CurrentMarketSummary _scrip)
+        {
+            #region SavingScrip_MSSQLSERVER
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
+                if (_date != null)
+                {
+                    SqlConnection conn = new SqlConnection();
+                    conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                    conn.Open();
+                    int isDataSaved = 0;
+                    int isDataHistorySaved = 0;
 
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_OPEN", SqlDbType.Float);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_OPEN"].Value = Double.Parse(OPEN[m]);
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_HIGH", SqlDbType.Float);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_HIGH"].Value = Double.Parse(HIGH[m]);
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_LOW", SqlDbType.Float);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_LOW"].Value = Double.Parse(LOW[0]);
+                    SqlCommand cmdspInsertMarketSummary = new SqlCommand("spINSERT_CURRENT_MARKET_SUMMARY", conn);
+                    cmdspInsertMarketSummary.CommandType = CommandType.StoredProcedure;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SECTOR", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_SECTOR"].Value = _scrip.Category;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_NAME", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_NAME"].Value = _scrip.Name;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_SYMBOL", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_SYMBOL"].Value = _scrip.Symbol;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LDCP", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_LDCP"].Value = _scrip.Ldcp;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_OPEN", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_OPEN"].Value = _scrip.Open;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_HIGH", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_HIGH"].Value = _scrip.High;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_LOW", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_LOW"].Value = _scrip.Low;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CURRENT", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_CURRENT"].Value = _scrip.Current;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_CHANGE", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_CHANGE"].Value = _scrip.Change;
+                    cmdspInsertMarketSummary.Parameters.Add("@COMPANY_VOLUME", SqlDbType.VarChar, -1);
+                    cmdspInsertMarketSummary.Parameters["@COMPANY_VOLUME"].Value = _scrip.Volume;
 
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_CURRENT", SqlDbType.Float);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_CURRENT"].Value = Double.Parse(CURRENT[m]);
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_CHANGE", SqlDbType.Float);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_CHANGE"].Value = Double.Parse(CHANGE[m]);
-                            cmdForspInsertMarketSummaryHistory.Parameters.Add("@COMPANY_VOLUME", SqlDbType.Float);
-                            cmdForspInsertMarketSummaryHistory.Parameters["@COMPANY_VOLUME"].Value = Double.Parse(VOLUME[m]);
+                    //
 
+                    SqlCommand cmdForspInsertMarketSummaryHistory = new SqlCommand("spINSERT_MARKET_SUMMARY_HISTORY", conn);
+                    cmdForspInsertMarketSummaryHistory.CommandType = CommandType.StoredProcedure;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_DATE", SqlDbType.DateTime);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_DATE"].Value = _miscellenousData["DATE"];
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_STATUS", SqlDbType.VarChar, 500);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_STATUS"].Value = _miscellenousData["STATUS"];
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_SECTOR", SqlDbType.VarChar, 500);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_SECTOR"].Value = _scrip.Category;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_SCRIP_NAME", SqlDbType.VarChar, 500);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_SCRIP_NAME"].Value = _scrip.Name;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_SYMBOL", SqlDbType.VarChar, 500);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_SYMBOL"].Value = _scrip.Symbol;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_LDCP", SqlDbType.VarChar, -1);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_LDCP"].Value = _scrip.Ldcp;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_OPEN", SqlDbType.VarChar, -1);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_OPEN"].Value = _scrip.Open;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_HIGH", SqlDbType.VarChar, -1);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_HIGH"].Value = _scrip.High;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_LOW", SqlDbType.VarChar, -1);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_LOW"].Value = _scrip.Low;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_CURRENT", SqlDbType.VarChar, -1);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_CURRENT"].Value = _scrip.Current;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_CHANGE", SqlDbType.VarChar, -1);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_CHANGE"].Value = _scrip.Change;
+                    cmdForspInsertMarketSummaryHistory.Parameters.Add("@MSH_COMPANY_VOLUME", SqlDbType.VarChar, -1);
+                    cmdForspInsertMarketSummaryHistory.Parameters["@MSH_COMPANY_VOLUME"].Value = _scrip.Volume;
 
-                            j = cmdspInsertMarketSummary.ExecuteNonQuery();
-                            l = cmdForspInsertMarketSummaryHistory.ExecuteNonQuery();
-
+                    try
+                    {
+                        if (_scripList != null)
+                        {
+                            isDataSaved = cmdspInsertMarketSummary.ExecuteNonQuery();
+                            isDataHistorySaved = cmdForspInsertMarketSummaryHistory.ExecuteNonQuery();
                         }
                     }
                     catch (SqlException ex)
                     {
-                        MessageBox.Show(ex.Message, "SQL Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Debug.WriteLine("SQL Exception: " + ex.Message);
+                        Debug.WriteLine("SQL Exception in SavingScrip Method: " + ex.Message);
+                        Exceptions.Add("SQL Exception in SavingScrip Method: " + ex.Message);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Debug.WriteLine("Exception: " + ex.Message);
+                        Debug.WriteLine("Exception in SavingScrip Method: " + ex.Message);
+                        Exceptions.Add("Exception in SavingScrip Method: " + ex.Message);
                     }
-                }
+                    conn.Close();
 
-                //
-
+<<<<<<< Updated upstream
                 if (i == 1 && j == 1 && k == 1 && l == 1)
-                {
-                    Debug.WriteLine("Data successfully saved.");
-                    return true;
+=======
+                    return isDataSaved;
                 }
-
-                conn.Close();
-
-                return false;
+                else
+>>>>>>> Stashed changes
+                {
+                    return 0;
+                }
             }
+
+            #endregion
+
+            #region SavingScrip_ORACLE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                return 0;
+            }
+            #endregion
+
+            #region SavingScrip_SQLITE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
+            {
+                return 0;
+            }
+            #endregion
+
+            #region SavingScrip_POSTGRE
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("POSTGRE"))
+            {
+                return 0;
+            }
+            #endregion
+
+            #region SavingScrip_Elasticsearch
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH"))
+            {
+                return 0;
+            }
+            #endregion
+
+            #region ELSE
+
             else
             {
-                return false;
+                return 0;
             }
+
+            #endregion
+
         }
+<<<<<<< Updated upstream
         private readonly BackgroundWorker worker = new BackgroundWorker();
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -859,24 +2945,19 @@ namespace PSXDataFetchingApp
             //    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             //}
         }
+=======
 
-        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        #endregion
+>>>>>>> Stashed changes
+
+        #region worker_DoWork
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            //if (isDataSaved)
-            //{
-                PreviewWindow window = new PreviewWindow(RequestDate, RequestStatus, RequestValue, RequestVolume, RequestTrades, NAME, SYMBOL, LDCP, OPEN, HIGH, LOW, CURRENT, CHANGE, VOLUME);
-                btnGet.IsEnabled = false;
-                window.Show();
-                this.Hide();
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Data Fetch Failed.", "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    Debug.WriteLine("Data saved Failed.");
-            //    btnGet.IsEnabled = false;
-            //}
-
+            mustWork();
         }
+        #endregion
+
+        #region worker_ProgressChanged
 
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -885,7 +2966,38 @@ namespace PSXDataFetchingApp
                 lblProgress.Content = e.UserState;
         }
 
-        #region MustWorkStart
+        #endregion
+
+        #region worker_RunWorkerCompleted
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (_scripList.Count != 0)
+            {
+                Debug.WriteLine("worker_RunWorkerCompleted Block");
+                PreviewWindow window = new PreviewWindow(_miscellenousData["DATE"], _miscellenousData["STATUS"], _miscellenousData["VALUE"].Replace(",",""), _miscellenousData["VOLUME"].Replace(",", ""), _miscellenousData["TRADES"].Replace(",", ""), _scripList);
+                btnGet.IsEnabled = false;
+                window.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Exception: " + Exceptions[Exceptions.Count - 1], "Something went wrong..", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine("Exception Details: " + Exceptions[Exceptions.Count - 1]);
+                btnGet.IsEnabled = true;
+                btnConfigure.IsEnabled = true;
+                btnGetV2.IsEnabled = true;
+                btnGetV3.IsEnabled = true;
+                btnMufapGetMarketSummary.IsEnabled = true;
+                btnMufapGetPKRV.IsEnabled = true;
+                btnMufapGetPKFRV.IsEnabled = true;
+                progressBar.Visibility = Visibility.Hidden;
+                lblProgress.Visibility = Visibility.Hidden;
+                imgWebScrap.Visibility = Visibility.Visible;
+            }
+        }
+        #endregion
+
+        #region MustWork
         public void mustWork()
         {
             int progressPercentage = Convert.ToInt32(((double)i / max) * 100);
@@ -901,6 +3013,7 @@ namespace PSXDataFetchingApp
             //SYMBOL = GetMarketSummaryCompanySymbols(NAME);
             for (int i = 0; i < NAME.Count(); i++)
             {
+<<<<<<< Updated upstream
                 SYMBOL.Insert(i, NAME[i]);
             }
 
@@ -920,9 +3033,75 @@ namespace PSXDataFetchingApp
             double[] CompanyCHANGE = new double[getCompanyLDCP.Length];
             double[] CompanyVOLUME = new double[getCompanyLDCP.Length];
 
+=======
+                GetDefault();
+                //List<string> catData = GetCategoryData();
+                GetScripDetails();
+                //foreach (string item in catData)
+                //{
+                //    Debug.WriteLine("CatData: " + item);
+                //}
+                if (_miscellenousData["DATE"] != "")
+                {
+                    worker.WorkerReportsProgress = true;
+                    statusContent = "Getting General Content..";
+                    worker.ReportProgress(10);
+                    DateTime CurrentTime = DateTime.Parse(_miscellenousData["DATE"]);
+                    Debug.WriteLine("Current Date: " + CurrentTime);
+                    DateTime ExpiredTime = ExpiryDate;
+                    Debug.WriteLine("Expired Date: " + ExpiredTime);
+                    if (ExpiredTime <= CurrentTime)
+                    {
+                        MessageBox.Show("The license of Data Extractor Utility is expired. Please contact your system administrator or software vendor.", "License Expired", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        statusContent = "Getting Scrip Names and Symbols..";
+                        worker.ReportProgress(50);
+                        //GetCompanyNames();
+                        statusContent = "Getting Scrip Details..";
+                        worker.ReportProgress(70);
+                        //GetCompanyLDCP();
+                        //GetCompanyOPEN();
+                        //GetCompanyHIGH();
+                        //GetCompanyLOW();
+                        //GetCompanyCURRENT();
+                        //GetCompanyCHANGE();
+                        //GetCompanyVOLUME();
+                        statusContent = "Dumping in Database..";
+                        Truncate_CURRENT_MARKET_SUMMARY_DB();
+                        Truncate_CURRENT_MARKET_OVERVIEW_DB();
+                        INSERT_CURRENT_MARKET_OVERVIEW_DB(_miscellenousData["DATE"], _miscellenousData["STATUS"], _miscellenousData["VOLUME"], _miscellenousData["VALUE"], _miscellenousData["TRADES"]);
+                        worker.ReportProgress(98);
+                        for (int i = 0; i < _scripList.Count; i++)
+                        {
+                            //isDataSaved = SavingDataToDatabase(_miscellenousData["DATE"], _miscellenousData["STATUS"], _miscellenousData["VOLUME"], _miscellenousData["VALUE"], _miscellenousData["TRADES"], _scripList[i]);
+                            SavingScrip(_miscellenousData["DATE"], _miscellenousData["STATUS"], _miscellenousData["VOLUME"], _miscellenousData["VALUE"], _miscellenousData["TRADES"], _scripList[i]);
+                        }
+                        worker.ReportProgress(100);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Data Not Found.", "Web Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch(WebException ex)
+            {
+                Debug.WriteLine("Web Exception in MustWork Method: " + ex.Message);
+                Exceptions.Add("Web Exception in MustWork Method: " + ex.Message);
+            }
+
+            catch(SqlException ex)
+            {
+                Debug.WriteLine("SQL Exception in MustWork Method: " + ex.Message);
+                Exceptions.Add("SQL Exception in MustWork Method: " + ex.Message);
+            }
+>>>>>>> Stashed changes
 
             for (int i = 0; i < NAME.Count(); i++)
             {
+<<<<<<< Updated upstream
                 CompanyLDCP[i] = Convert.ToDouble(getCompanyLDCP[i]);
                 CompanyOPEN[i] = Convert.ToDouble(getCompanyOPEN[i]);
                 CompanyHIGH[i] = Convert.ToDouble(getCompanyHIGH[i]);
@@ -938,6 +3117,10 @@ namespace PSXDataFetchingApp
                 CURRENT.Add(CompanyCURRENT[i]);
                 CHANGE.Add(CompanyCHANGE[i]);
                 VOLUME.Add(CompanyVOLUME[i]);
+=======
+                Debug.WriteLine("Exception in MustWork Method: " + ex.Message);
+                Exceptions.Add("Exception in MustWork Method: " + ex.Message);
+>>>>>>> Stashed changes
             }
             isDataSaved = SavingDataToDatabase(defaultData, NAME, SYMBOL, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
             //if (isDataSaved)
@@ -960,6 +3143,7 @@ namespace PSXDataFetchingApp
 
         #endregion
 
+<<<<<<< Updated upstream
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             worker.WorkerReportsProgress = true;
@@ -1026,5 +3210,22 @@ namespace PSXDataFetchingApp
             //isDataSaved = SavingDataToDatabase(defaultData, NAME, SYMBOL, getCompanyLDCP, getCompanyOPEN, getCompanyHIGH, getCompanyLOW, getCompanyCURRENT, getCompanyCHANGE, getCompanyVOLUME);
             worker.ReportProgress(100);
         }
+=======
+        #region Windows_Closing
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            //MessageBoxResult d;
+            //d = MessageBox.Show("Do you really want to close Data Extractor Utility?", "Data Extractor Utility", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            //if (d == MessageBoxResult.Yes)
+            //{
+                Application.Current.Shutdown();
+            //}
+            //else {
+            //    e.Cancel = true;
+            //}
+        }
+        #endregion
+
+>>>>>>> Stashed changes
     }
 }

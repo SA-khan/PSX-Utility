@@ -1,0 +1,47 @@
+/****** Object:  StoredProcedure [dbo].[spINSERT_FUND_MARKET_SUMMARY]    Script Date: 05/01/2021 2:39:38 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[spINSERT_FUND_MARKET_SUMMARY]
+			@MARKET_STATUS varchar(500),
+			@FUND_ID bigint,
+			@FUND_NAME varchar(MAX),
+			@SHR_NAME varchar(MAX),
+			@SHR_SYMBOL varchar(500),
+			@SHR_QUANTITY decimal,
+			@SHR_AVG_PRICE decimal,
+			@SHR_BOOK_COST decimal,
+			@SHR_MARKET_PRICE decimal,
+			@SHR_MARKET_VALUE decimal,
+			@SHR_APP_DEP varchar(MAX),
+			@SHR_CLOSING_PERCENTAGE float
+AS
+BEGIN
+INSERT INTO [dbo].[FUND_MARKET_SUMMARY]
+           ([MARKET_STATUS]
+		   ,[FUND_ID]
+		   ,[FUND_NAME]
+           ,[SHR_NAME]
+           ,[SHR_SYMBOL]
+           ,[SHR_QUANTITY]
+           ,[SHR_AVG_PRICE]
+           ,[SHR_BOOK_COST]
+           ,[SHR_MARKET_PRICE]
+           ,[SHR_MARKET_VALUE]
+           ,[SHR_APP_DEP]
+		   ,[SHR_CLOSING_PERCENTAGE])
+     VALUES
+           (@MARKET_STATUS
+		   ,@FUND_ID
+		   ,@FUND_NAME
+           ,@SHR_NAME
+           ,@SHR_SYMBOL
+           ,@SHR_QUANTITY
+           ,@SHR_AVG_PRICE
+           ,@SHR_BOOK_COST
+           ,@SHR_MARKET_PRICE
+           ,@SHR_MARKET_VALUE
+           ,@SHR_APP_DEP
+		   ,@SHR_CLOSING_PERCENTAGE)
+END

@@ -1,0 +1,16 @@
+CREATE OR REPLACE FUNCTION fnc_Get_Shares_Pipelined
+(
+   Fund_ID IN number
+)
+RETURN SHARE_table_type
+PIPELINED
+AS
+BEGIN
+   FOR v_Rec IN ( select share_name, share_symbol, (select movAvg_tranDate from pms_movingAvg where rownum <= 1 and pms_movingAvg.tradInstType_code=1 and pms_movingAvg.tradInst_code = share_code and pms_movingAvg.fund_code=Fund_ID and movAvg_tranDate<(select sysdate from dual)) as DateCostLastUpdated ,(select movAvg_average from pms_movingAvg where  rownum <= 1 and pms_movingAvg.tradInstType_code=1 and pms_movingAvg.tradInst_code = share_code and pms_movingAvg.fund_code=Fund_ID and movAvg_tranDate = (select max(movAvg_tranDate)  from pms_movingAvg where pms_movingAvg.tradInstType_code=1 and pms_movingAvg.tradInst_code = share_code and pms_movingAvg.fund_code=Fund_ID and movAvg_tranDate<(select sysdate from dual))) as LastUpdatedPerUnitCost,(select movAvg_amtMov from pms_movingAvg where rownum <= 1 and pms_movingAvg.tradInstType_code=1 and pms_movingAvg.tradInst_code = share_code and pms_movingAvg.fund_code=Fund_ID and movAvg_tranDate = (select max(movAvg_tranDate)  from pms_movingAvg where pms_movingAvg.tradInstType_code=1 and pms_movingAvg.tradInst_code = share_code and pms_movingAvg.fund_code=Fund_ID and movAvg_tranDate<(select sysdate from dual))) as LastUpdatedCost,(select movAvg_qty from pms_movingAvg where rownum <= 1 and pms_movingAvg.tradInstType_code=1 and pms_movingAvg.tradInst_code = share_code and pms_movingAvg.fund_code=Fund_ID and movAvg_tranDate = (select max(movAvg_tranDate) from pms_movingAvg where pms_movingAvg.tradInstType_code=1 and pms_movingAvg.tradInst_code = share_code and pms_movingAvg.fund_code=Fund_ID and movAvg_tranDate<(select sysdate from dual))) as LastUpdatedHolding from pms_shares ) LOOP
+ 
+      PIPE ROW (SHARE_type(v_Rec.share_name , v_Rec.share_symbol, v_Rec.Datecostlastupdated, v_Rec.Lastupdatedperunitcost, v_Rec.Lastupdatedcost, v_Rec.Lastupdatedholding));
+ 
+   END LOOP;
+RETURN;
+END;
+
