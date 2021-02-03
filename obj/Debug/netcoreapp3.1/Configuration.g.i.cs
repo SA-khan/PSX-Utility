@@ -309,7 +309,7 @@ namespace PSXDataFetchingApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/PSXDataFetchingApp;V1.0.0.0;component/configuration.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/PSXDataFetchingApp;component/configuration.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\Configuration.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

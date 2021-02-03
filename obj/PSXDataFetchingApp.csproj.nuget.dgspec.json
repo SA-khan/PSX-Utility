@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj": {}
+    "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\ReleaseManagementPortal\\psxbackup\\PSXDataFetchingApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj": {
+    "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\ReleaseManagementPortal\\psxbackup\\PSXDataFetchingApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj",
-        "projectName": "Data Extractor Utility",
-        "projectPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\PSXDataFetchingApp.csproj",
+        "projectUniqueName": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\ReleaseManagementPortal\\psxbackup\\PSXDataFetchingApp.csproj",
+        "projectName": "PSXDataFetchingApp",
+        "projectPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\ReleaseManagementPortal\\psxbackup\\PSXDataFetchingApp.csproj",
         "packagesPath": "C:\\Users\\Saad.Ahmed\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\NewPSX\\PSX-Utility\\obj\\",
+        "outputPath": "C:\\Users\\Saad.Ahmed\\Desktop\\Projects\\ReleaseManagementPortal\\psxbackup\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -111,6 +111,10 @@
             "Microsoft.Extensions.Hosting.Abstractions": {
               "target": "Package",
               "version": "[5.0.0, )"
+            },
+            "NEST": {
+              "target": "Package",
+              "version": "[7.10.1, )"
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",

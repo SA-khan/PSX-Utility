@@ -4,39 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PSXDataFetchingApp"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
-<<<<<<< Updated upstream
-        Title="PreviewWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Border Margin="10">
-=======
         Title="Data Extractor Utility" Icon="Images/web-scrap2.png" Height="620" Width="950" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Border Margin="10" Background="DarkGray">
->>>>>>> Stashed changes
-    <Grid>
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="10*" />
-<<<<<<< Updated upstream
-        </Grid.RowDefinitions>
-        
-        <Label Grid.Row="0" Content="Pakistan Stock Exchange Data Preview" HorizontalAlignment="Center" Margin="9,10,0,0" VerticalAlignment="Top" FontFamily="Candara" FontSize="24"/>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Label x:Name="lblDate" Content="Date:" FontFamily="Arial" FontSize="14" Margin="0 0 0 0"/>
-            <Label x:Name="lblStatus" Content="Status: " FontFamily="Arial" FontSize="14" Margin="70 0 0 0"/>
-            <Label x:Name="lblVolume" Content="Volume: " FontFamily="Arial" FontSize="14" Margin="70 0 0 0"/>
-            <Label x:Name="lblValue" Content="Value: " FontFamily="Arial" FontSize="14" Margin="70 0 0 0"/>
-            <Label x:Name="lblTrades" Content="Trades: " FontFamily="Arial" FontSize="14" Margin="70 0 0 0"/>
-        </StackPanel>
-        <ListView x:Name="list1" Grid.Row="2">  
-            <ListView.View>
-                    <GridView x:Name="gridView" AllowsColumnReorder="true" ColumnHeaderToolTip="Market Summary">
-                    </GridView>
-            </ListView.View>  
-        </ListView>  
-    </Grid>
-=======
-            <RowDefinition Height="*" MaxHeight="30" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="*" MaxHeight="30" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" x:Name="header" Background="DarkGray" MinHeight="40">
                 <Border Margin="2" HorizontalAlignment="Left" Padding="5" Background="White">
@@ -363,6 +340,6 @@
         
         
         
->>>>>>> Stashed changes
+
     </Border>
 </Window>

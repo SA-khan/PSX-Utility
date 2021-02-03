@@ -1392,76 +1392,61 @@ namespace PSXDataFetchingApp
 
         public void GetScripDetails()
         {
-            HtmlNodeCollection nodes = _webDataCollectionForCategory;
+            HtmlNodeCollection nodes = _webDataCollectionForCategory == null ? null : _webDataCollectionForCategory;
             List<string> _filteredData = new List<string>();
             List<int> _categoryCount = new List<int>();
             int _counter = 0;
             int _captureflag = 0;
-            foreach (HtmlAgilityPack.HtmlNode node in nodes)
+            if (nodes != null)
             {
-                for (int i = 0; i < _categoryList.Count; i++)
+                foreach (HtmlAgilityPack.HtmlNode node in nodes)
                 {
-                    if (node.InnerText.Equals(_categoryList[i]))
+                    for (int i = 0; i < _categoryList.Count; i++)
                     {
-                        _categoryCount.Add(0);
-                        _captureflag = 1;
+                        if (node.InnerText.Equals(_categoryList[i]))
+                        {
+                            _categoryCount.Add(0);
+                            _captureflag = 1;
+                        }
+
+                        //else if (node.InnerText.ToString().Trim().Equals("VOLUME") && _captureflag == 0)
+                        //{
+
+                        //}
+                    }
+                    if (_captureflag == 1)
+                    {
+                        _filteredData.Add(node.InnerText);
                     }
 
-                    //else if (node.InnerText.ToString().Trim().Equals("VOLUME") && _captureflag == 0)
-                    //{
-
-                    //}
-                }
-                if (_captureflag == 1)
-                {
-                    _filteredData.Add(node.InnerText);
                 }
 
-            }
 
-            int flagger = 0;
-            int _scriptor = 2;
-            int volumeOccurance = 0;
-            string _tempCategory = String.Empty;
-            string _tempScrip = String.Empty;
-            for (int j = 0; j < _filteredData.Count; j++)
-            {
-                if (j > 0)
+                int flagger = 0;
+                int _scriptor = 2;
+                int volumeOccurance = 0;
+                string _tempCategory = String.Empty;
+                string _tempScrip = String.Empty;
+                for (int j = 0; j < _filteredData.Count; j++)
                 {
-
-                    if (_filteredData[j].Equals("VOLUME"))
+                    if (j > 0)
                     {
-                        //Debug.WriteLine("Category -> " + _filteredData[j - 8]);
-                        _tempCategory = _filteredData[j - 8];
-                        if (volumeOccurance > 0)
-                        {
-                            flagger++;
-                        }
-                    }
-                    else if (!CheckCategoryStatus(_filteredData[j])) { }
-                    else
-                    {
-                        if (_filteredData[j - 1].Equals("VOLUME"))
-                        {
-                            volumeOccurance++;
-                            _scriptor = j;
-                            _scriptor++;
-                            _tempScrip = _filteredData[j];
-                            if (_filteredData[j].Equals(_tempCategory))
-                            {
 
-                            }
-                            else
-                            {
-                                //Debug.WriteLine("Scrip Name: " + _filteredData[j] + ", Category: " + _tempCategory + ", LDCP: " + _filteredData[_scriptor] + ", OPEN: " + _filteredData[_scriptor + 1] + ", HIGH: " + _filteredData[_scriptor + 2] + ", LOW: " + _filteredData[_scriptor + 3] + ", CURRENT: " + _filteredData[_scriptor + 4] + ", CHANGE: " + _filteredData[_scriptor + 5] + ", VOLUME: " + _filteredData[_scriptor + 6]);
-                                _scripList.Add(new CurrentMarketSummary { Name = _filteredData[j], Symbol = GetCompanySymbols(_filteredData[j]), Category = _tempCategory, Ldcp = _filteredData[_scriptor], Open = _filteredData[_scriptor + 1], High = _filteredData[_scriptor + 2], Low = _filteredData[_scriptor + 3], Current = _filteredData[_scriptor + 4], Change = _filteredData[_scriptor + 5].Trim().Replace(" ", ""), Volume = _filteredData[_scriptor + 6] });
-                            }
-                            _scriptor = 2;
-                        }
-                        if (j > 7)
+                        if (_filteredData[j].Equals("VOLUME"))
                         {
-                            if (_filteredData[j - 8] == _tempScrip)
+                            //Debug.WriteLine("Category -> " + _filteredData[j - 8]);
+                            _tempCategory = _filteredData[j - 8];
+                            if (volumeOccurance > 0)
                             {
+                                flagger++;
+                            }
+                        }
+                        else if (!CheckCategoryStatus(_filteredData[j])) { }
+                        else
+                        {
+                            if (_filteredData[j - 1].Equals("VOLUME"))
+                            {
+                                volumeOccurance++;
                                 _scriptor = j;
                                 _scriptor++;
                                 _tempScrip = _filteredData[j];
@@ -1476,9 +1461,29 @@ namespace PSXDataFetchingApp
                                 }
                                 _scriptor = 2;
                             }
+                            if (j > 7)
+                            {
+                                if (_filteredData[j - 8] == _tempScrip)
+                                {
+                                    _scriptor = j;
+                                    _scriptor++;
+                                    _tempScrip = _filteredData[j];
+                                    if (_filteredData[j].Equals(_tempCategory))
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        //Debug.WriteLine("Scrip Name: " + _filteredData[j] + ", Category: " + _tempCategory + ", LDCP: " + _filteredData[_scriptor] + ", OPEN: " + _filteredData[_scriptor + 1] + ", HIGH: " + _filteredData[_scriptor + 2] + ", LOW: " + _filteredData[_scriptor + 3] + ", CURRENT: " + _filteredData[_scriptor + 4] + ", CHANGE: " + _filteredData[_scriptor + 5] + ", VOLUME: " + _filteredData[_scriptor + 6]);
+                                        _scripList.Add(new CurrentMarketSummary { Name = _filteredData[j], Symbol = GetCompanySymbols(_filteredData[j]), Category = _tempCategory, Ldcp = _filteredData[_scriptor], Open = _filteredData[_scriptor + 1], High = _filteredData[_scriptor + 2], Low = _filteredData[_scriptor + 3], Current = _filteredData[_scriptor + 4], Change = _filteredData[_scriptor + 5].Trim().Replace(" ", ""), Volume = _filteredData[_scriptor + 6] });
+                                    }
+                                    _scriptor = 2;
+                                }
+                            }
                         }
                     }
                 }
+
             }
 
             //counter = 0;
@@ -1985,25 +1990,25 @@ namespace PSXDataFetchingApp
                                     if (fundList[i].AppDep.StartsWith('('))
                                     {
                                         
-                                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector == null ? " NOT LISTED" : fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == null ? "NOT LISTED" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "NOT LISTED" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "" ? "-" : fundList[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == null ? "NOT LISTED" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "NOT LISTED" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "" ? "-" : fundList[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
                                         //Style style = new Style();
                                         //style.TargetType = typeof(ListViewItem);
                                         //style.Setters.Add(new Setter(ListViewItem.BackgroundProperty, System.Windows.Media.Brushes.Pink));
                                         //list1.ItemContainerStyle = style;
 
-                                        string xaml = @"
-        <DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""> 
-            <TextBlock Text=""{Binding AppDep" + @"}""> 
-                <TextBlock.Style>
-                    <Style TargetType=""{x:Type TextBlock}"">
-                        <Setter Property=""Foreground"" Value=""Red"" />
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-            </DataTemplate>";
-                                        StringReader stringReader = new StringReader(xaml);
-                                        XmlReader xmlReader = XmlReader.Create(stringReader);
-                                        gvc10.CellTemplate = XamlReader.Load(xmlReader) as DataTemplate;
+        //                                string xaml = @"
+        //<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""> 
+        //    <TextBlock Text=""{Binding Path=AppDep" + @"}""> 
+        //        <TextBlock.Style>
+        //            <Style TargetType=""{x:Type TextBlock}"">
+        //                <Setter Property=""Foreground"" Value=""Red"" /><Setter Property=""HorizontalAlignment"" Value=""Right"" /><Setter Property=""TextAlignment"" Value=""Right"" />
+        //            </Style>
+        //        </TextBlock.Style>
+        //    </TextBlock>
+        //    </DataTemplate>";
+        //                                StringReader stringReader = new StringReader(xaml);
+        //                                XmlReader xmlReader = XmlReader.Create(stringReader);
+        //                                gvc10.CellTemplate = XamlReader.Load(xmlReader) as DataTemplate;
 
                                         //DataTrigger trigger = new DataTrigger();
                                         //trigger.Binding = new Binding("ShareName");
@@ -2369,10 +2374,10 @@ namespace PSXDataFetchingApp
                         while (rdr.Read())
                         {
                             // Qunatity is not Null
-                            if (!rdr.IsDBNull(5))
+                            if (!rdr.IsDBNull("LastUpdatedHolding"))
                             {
                                 // Quantity is not 0
-                                if (rdr.GetDecimal(5) != 0)
+                                if (rdr.GetDecimal("LastUpdatedHolding") != 0)
                                 {
                                     //Share_Name.Add(rdr.GetString(0).ToString());
                                     //Share_Symbol.Add(rdr.GetString(1).ToString());
@@ -2383,20 +2388,20 @@ namespace PSXDataFetchingApp
                                     //LastUpdatedCost.Add(Math.Round(rdr.GetDecimal(4)).ToString("#,##0"));
                                     //double holding = Convert.ToDouble(rdr.GetDecimal(5));
                                     CurrentMarketSummary _currentMarketSummary = new CurrentMarketSummary();
-                                    string localSymbol = String.Empty;
-                                    string localCurrent = String.Empty;
-                                    decimal localValue = 0;
+                                    //string localSymbol = String.Empty;
+                                    //string localCurrent = String.Empty;
+                                    //decimal localValue = 0;
                                     //QUANTITY.Add(rdr.GetDecimal(5));
                                     //LastUpdatedHolding.Add(holding.ToString("#,##0"));
                                     //LastUpdatedMarketPriceDate.Add(rdr.GetDateTime(6).ToString("#.##"));
-                                    if (getSymbolStatus(rdr.GetString(1).ToString()))
+                                    if (getSymbolStatus(rdr.GetString("share_symbol")))
                                     {
                                         for (int i = 0; i < _scripList.Count; i++)
                                         {
-                                            if (rdr.GetString(1).Equals(_scripList[i].Symbol == null ? "" : _scripList[i].Symbol))
+                                            if (rdr.GetString("share_symbol").Equals(_scripList[i].Symbol == null ? "" : _scripList[i].Symbol))
                                             {
                                                 _currentMarketSummary.Name = _scripList[i].Name;
-                                                _currentMarketSummary.Category = _scripList[i].Category;
+                                                _currentMarketSummary.Category = _scrip[i].Category;
                                                 _currentMarketSummary.Symbol = _scripList[i].Symbol;
                                                 _currentMarketSummary.Ldcp = _scripList[i].Ldcp;
                                                 _currentMarketSummary.Open = _scripList[i].Open;
@@ -2419,7 +2424,7 @@ namespace PSXDataFetchingApp
                                     //MarketPriceCurrent.Add(localCurrent);
                                     //MarketValue.Add(Convert.ToInt32(Math.Round(localValue)).ToString("#,##0"));
                                     //decimal appreciation = localValue - rdr.GetDecimal(4);
-                                    decimal appreciation = (Convert.ToDecimal(_currentMarketSummary.Current) * rdr.GetDecimal(5)) - rdr.GetDecimal(4);
+                                    decimal appreciation = (Convert.ToDecimal(_currentMarketSummary.Current) * rdr.GetDecimal("LastUpdatedHolding")) - rdr.GetDecimal("LastUpdatedCost");
                                     //APPRECIATION_DEPRECIATION.Add(appreciation.ToString());
                                     string localAppreciate = Math.Round(appreciation, 2).ToString("#,##0");
                                     if (appreciation < 0)
@@ -2443,21 +2448,21 @@ namespace PSXDataFetchingApp
                                     //decimal lbookcost = Convert.ToDecimal(fundList[i].BookCost.Replace(",", "").Replace(" ", ""));
                                     //Debug.WriteLine("lbookcost: " + lbookcost);
                                     decimal closing = 0;
-                                    if (rdr.GetDecimal(4) > 0)
-                                        closing = appreciation / rdr.GetDecimal(4);
+                                    if (rdr.GetDecimal("LastUpdatedCost") > 0)
+                                        closing = appreciation / rdr.GetDecimal("LastUpdatedCost");
                                     //Debug.WriteLine("closing: " + closing);
                                     //fundList[i].ClosingPercentage = closing.ToString();
 
                                     FundwiseMarketSummary item = new FundwiseMarketSummary();
                                     item.FundwiseMarketSummaryId = total++;
-                                    item.ShareName = rdr.GetString(0);
-                                    item.Sector = _currentMarketSummary.Category;
-                                    item.Symbol = rdr.GetString(1);
-                                    item.Quantity = rdr.GetDecimal(5).ToString("#,##0");
-                                    item.AveragePrice = Decimal.Round(rdr.GetDecimal(3), 2).ToString("N2");
-                                    item.BookCost = Decimal.Round(rdr.GetDecimal(4), 2).ToString("N2");
+                                    item.ShareName = rdr.GetString("share_name");
+                                    item.Sector = rdr.GetString("sector_name");
+                                    item.Symbol = rdr.GetString("share_symbol");
+                                    item.Quantity = rdr.GetDecimal("LastUpdatedHolding").ToString("#,##0");
+                                    item.AveragePrice = Decimal.Round(rdr.GetDecimal("LastUpdatedPerUnitCost"), 2).ToString("N2");
+                                    item.BookCost = Decimal.Round(rdr.GetDecimal("LastUpdatedCost"), 2).ToString("N2");
                                     item.MarketPrice = _currentMarketSummary.Current == "" ? "0" : _currentMarketSummary.Current;
-                                    item.MarketValue = Decimal.Round((Convert.ToDecimal(_currentMarketSummary.Current) * rdr.GetDecimal(5)), 2).ToString("N2");
+                                    item.MarketValue = Decimal.Round((Convert.ToDecimal(_currentMarketSummary.Current) * rdr.GetDecimal("LastUpdatedHolding")), 2).ToString("N2");
                                     item.AppDep = String.Format("{0:N0}", localAppreciate);
                                     item.ClosingPercentage = closing.ToString();
                                     fundList.Add(item);

@@ -180,7 +180,9 @@ namespace PSXDataFetchingApp
             {
                 list1.Items.Clear();
                 _Date = pkrvDatepicker.SelectedDate.Value.ToString("dddd, dd MMMM yyyy");
-                string url = "http://mufap.com.pk/pdf/PKRVs/" + pkrvDatepicker.SelectedDate.Value.Year + "/" + _monthString + "/PKRV" + _day + _month + _year + ".csv";
+                char[] _dayToChar = _day.ToCharArray();
+                char[] _monthToChar = _month.ToString().ToCharArray();
+                string url = "http://mufap.com.pk/pdf/PKRVs/" + pkrvDatepicker.SelectedDate.Value.Year + "/" + _monthString + "/PKRV" + ((_dayToChar.Length > 1) ? _day : "0" + _day) + ((_monthToChar.Length > 1) ? _month.ToString() : "0" + _month.ToString()) + _year + ".csv";
                 //Debug.WriteLine("URL: " +url );
                 List<Pkrv> _summaryData = new List<Pkrv>();
                 try

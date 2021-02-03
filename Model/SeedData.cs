@@ -13,6 +13,7 @@ namespace PSXDataFetchingApp.Model
         {
             if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER")) { }
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE")) { }
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH")) { }
             else
             {
                 context.Database.Migrate();

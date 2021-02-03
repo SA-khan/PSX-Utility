@@ -4,23 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Saad.Ahmed\Desktop\Projects\PSXDataFetchingApp\PSXDataFetchingApp\obj\Debug\netcoreapp3.1\
+C:\Users\Saad.Ahmed\Desktop\Projects\ReleaseManagementPortal\psxbackup\obj\Debug\netcoreapp3.1\
 PSXDataFetchingApp
 none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1
-C:\Users\Saad.Ahmed\Desktop\Projects\PSXDataFetchingApp\PSXDataFetchingApp\App.xaml
-21181415416
+C:\Users\Saad.Ahmed\Desktop\Projects\ReleaseManagementPortal\psxbackup\App.xaml
+14-1977993886
 
-<<<<<<< Updated upstream
-4-1950127017
-202-1268166995
-MainWindow.xaml;PreviewWindow.xaml;
-=======
-41-1586639976
-380469920669
+431171875670
+381-1402104847
 Configuration.xaml;Disclaimer.xaml;FundBucket.xaml;FundPopupWindow.xaml;FundPreviewWindow.xaml;MainWindow.xaml;MUFAPMarketSummary.xaml;MufapPKFRV.xaml;MufapPKRV.xaml;PreviewWindow.xaml;Privacy.xaml;Report.xaml;Tutorial.xaml;UploadPSXData.xaml;
->>>>>>> Stashed changes
 
 False
 

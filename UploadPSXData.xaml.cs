@@ -40,6 +40,8 @@ namespace PSXDataFetchingApp
         //
         public List<MarketSummary> _tempItems = new List<MarketSummary>();
 
+        #region UploadPSXData
+
         public UploadPSXData()
         {
             InitializeComponent();
@@ -82,6 +84,10 @@ namespace PSXDataFetchingApp
             catch { }
 
         }
+
+        #endregion
+
+        #region btnReset_Click
 
         private async void btnReset_Click(object sender, RoutedEventArgs e)
         {
@@ -165,6 +171,10 @@ namespace PSXDataFetchingApp
             btnReset.IsEnabled = true;
         }
 
+        #endregion 
+
+        #region btnGet_Click
+
         private async void btnGet_Click(object sender, RoutedEventArgs e)
         {
             
@@ -204,6 +214,7 @@ namespace PSXDataFetchingApp
                                             orderby item.Name
                                             select item;
                         _summaryData = _selectedItem.ToList();
+
                         int counter = 0;
                         for (int i = 0; i < _summaryData.Count; i++)
                         {
@@ -246,6 +257,10 @@ namespace PSXDataFetchingApp
             ImageBehavior.SetAnimatedSource(imgStatus, image2);
         }
 
+        #endregion
+
+        #region FetchDataFromPSX
+
         private HtmlNodeCollection FetchDataFromPSX(string url, string param)
         {
             string URL = url;
@@ -263,6 +278,10 @@ namespace PSXDataFetchingApp
             HtmlNodeCollection result = doc.DocumentNode.SelectNodes(param);
             return result;
         }
+
+        #endregion 
+
+        #region GetFileUploadPSXMarketSummary
 
         public List<MarketSummary> GetFileUploadPSXMarketSummary(int _year, int _month, int _day)
         {
@@ -331,6 +350,9 @@ namespace PSXDataFetchingApp
 
                             ClearMarketSummaryClosing();
 
+                            //CLearing In Ipams
+                            ClearMarketSummaryClosingIpams();
+
                             ///
                             /// Iterating Each Line of Market Summary Closing File
                             ///
@@ -383,7 +405,10 @@ namespace PSXDataFetchingApp
 
                                 int _DbStatus = SavingMarketSummaryClosing(counter,Convert.ToDateTime(_Date), lCategory, lClosing.ToString("N2"), Item);
 
-                                if(_DbStatus == 0)
+                                // Saving in Ipams
+                                SavingMarketSummaryClosingIpams(counter, Convert.ToDateTime(_Date), lCategory, lClosing.ToString("N2"), Item);
+
+                                if (_DbStatus == 0)
                                 {
                                     Debug.WriteLine("Database Insertion Status: " + _DbStatus + "\n At Name: "+ lName);
                                 }
@@ -423,11 +448,18 @@ namespace PSXDataFetchingApp
             //Code Runner End
         }
 
+        #endregion
+
+        #region wc_DownloadProgressChanged
         // Event to track the progress
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             progressBar.Value = e.ProgressPercentage;
         }
+
+        #endregion
+
+        #region btnBack_Click
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
@@ -435,6 +467,10 @@ namespace PSXDataFetchingApp
             window.Show();
             this.Close();
         }
+
+        #endregion
+
+        #region UnzipPSXFile
 
         public bool UnzipPSXFile(string path)
         {
@@ -456,6 +492,10 @@ namespace PSXDataFetchingApp
             }
         }
 
+        #endregion
+
+        #region btnPsxLink_Click
+
         private void btnPsxLink_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -472,6 +512,10 @@ namespace PSXDataFetchingApp
                 MessageBox.Show("Something went wrong..\nDetails: "+ ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
+
+        #endregion
+
+        #region btnSearch_Click
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
@@ -497,6 +541,10 @@ namespace PSXDataFetchingApp
             }
         }
 
+        #endregion
+
+        #region SearchTermTextBox_TextChanged
+
         private void SearchTermTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             list1.Items.Clear();
@@ -513,6 +561,10 @@ namespace PSXDataFetchingApp
                 list1.Items.Add(new FundMarket { SERIAL = ++counter, NAME = _searchList[i].Name, SYMBOL = _searchList[i].Symbol, LDCP = _searchList[i].LDCP, OPEN = _searchList[i].OPEN, HIGH = _searchList[i].HIGH, LOW = _searchList[i].LOW, CURRENT = _searchList[i].CURRENT, CHANGE = _searchList[i].Change.ToString(), VOLUME = _searchList[i].Volume });
             }
         }
+
+        #endregion
+
+        #region btnSave_Click
 
         private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -541,6 +593,10 @@ namespace PSXDataFetchingApp
             ImageBehavior.SetAnimatedSource(imgStatus, image2);
             btnSave.IsEnabled = true;
         }
+
+        #endregion
+
+        #region ClearMarketSummaryClosing
 
         private int ClearMarketSummaryClosing()
         {
@@ -615,6 +671,10 @@ namespace PSXDataFetchingApp
             return status;
 
         }
+
+        #endregion
+
+        #region SavingMarketSummaryClosing
 
         public int SavingMarketSummaryClosing(Int64 _id,DateTime _date, Int64 _category, string _closing, MarketSummary summary)
         {
@@ -749,6 +809,10 @@ namespace PSXDataFetchingApp
             return status;
 
         }
+
+        #endregion
+
+        #region RunExcel
 
         public void RunExcel()
         {
@@ -908,6 +972,8 @@ namespace PSXDataFetchingApp
 
         }
 
+        #endregion
+
         #region getMarketSummaryClosing
 
         public List<MarketSummary> getMarketSummaryClosing()
@@ -992,9 +1058,230 @@ namespace PSXDataFetchingApp
 
         #endregion
 
+        #region datepsxpicker_DateValidationError
+
         private void datepsxpicker_DateValidationError(object sender, DatePickerDateValidationErrorEventArgs e)
         {
             MessageBox.Show("Please select a valid date first..", "No Valid Date Selected!", MessageBoxButton.OK, MessageBoxImage.Hand);
         }
+
+        #endregion
+
+        #region ClearMarketSummaryClosing
+
+        private int ClearMarketSummaryClosingIpams()
+        {
+            int status = 0;
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
+                SqlConnection conn = new SqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
+                conn.Open();
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("spTRUNCATE_MARKET_SUMMARY_CLOSING_IPAMS", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    status = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                    status = 0;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                    status = 0;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                OracleConnection conn = new OracleConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
+                conn.Open();
+                try
+                {
+                    OracleCommand cmd = new OracleCommand("TRUNCATE TABLE MARKET_SUMMARY_CLOSING_IPAMS", conn);
+                    cmd.CommandType = CommandType.Text;
+                    status = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                    status = 0;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                    status = 0;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+            #region SQLITE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
+            {
+
+            }
+
+            #endregion
+
+            return status;
+
+        }
+
+        #endregion
+
+        #region SavingMarketSummaryClosing
+
+        public int SavingMarketSummaryClosingIpams(Int64 _id, DateTime _date, Int64 _category, string _closing, MarketSummary summary)
+        {
+            int status = 0;
+
+            #region SavingMarketSummaryClosingIpams_MSSQLSERVER
+
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
+                SqlConnection conn = new SqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
+
+                conn.Open();
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("spINSERT_MARKET_SUMMARY_CLOSING_IPAMS", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@MSC_DATE", SqlDbType.DateTime);
+                    cmd.Parameters["@MSC_DATE"].Value = _date;
+                    cmd.Parameters.Add("@MSC_SYMBOL", SqlDbType.VarChar, 500);
+                    cmd.Parameters["@MSC_SYMBOL"].Value = summary.Symbol;
+                    cmd.Parameters.Add("@MSC_CATEGORY", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@MSC_CATEGORY"].Value = _category.ToString();
+                    cmd.Parameters.Add("@MSC_NAME", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@MSC_NAME"].Value = summary.Name;
+                    cmd.Parameters.Add("@MSC_OPEN", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@MSC_OPEN"].Value = summary.OPEN;
+                    cmd.Parameters.Add("@MSC_HIGH", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@MSC_HIGH"].Value = summary.HIGH;
+                    cmd.Parameters.Add("@MSC_LOW", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@MSC_LOW"].Value = summary.LOW;
+                    cmd.Parameters.Add("@MSC_CLOSING", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@MSC_CLOSING"].Value = _closing;
+                    cmd.Parameters.Add("@MSC_VOLUME", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@MSC_VOLUME"].Value = summary.Volume;
+                    cmd.Parameters.Add("@MSC_LDCP", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@MSC_LDCP"].Value = summary.LDCP;
+                    status = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+            #endregion
+
+            #region SavingMarketSummaryClosingIpams_ORACLE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                OracleConnection conn = new OracleConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["IpamsConnection"].ConnectionString;
+
+                conn.Open();
+                try
+                {
+                    OracleCommand cmd = new OracleCommand("spINSERT_MARKET_SUMMARY_CLOSE_IPAMS", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("ID", OracleDbType.Int64);
+                    cmd.Parameters["ID"].Value = _id;
+                    cmd.Parameters["ID"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("DATE_", OracleDbType.Date);
+                    cmd.Parameters["DATE_"].Value = _date;
+                    cmd.Parameters["DATE_"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("SYMBOL", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["SYMBOL"].Value = summary.Symbol;
+                    cmd.Parameters["SYMBOL"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("CATEGORY", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["CATEGORY"].Value = _category.ToString();
+                    cmd.Parameters["CATEGORY"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("NAME", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["NAME"].Value = summary.Name;
+                    cmd.Parameters["NAME"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("OPEN", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["OPEN"].Value = summary.OPEN;
+                    cmd.Parameters["OPEN"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("HIGH", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["HIGH"].Value = summary.HIGH;
+                    cmd.Parameters["HIGH"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("LOW", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["LOW"].Value = summary.LOW;
+                    cmd.Parameters["LOW"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("CLOSING", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["CLOSING"].Value = _closing;
+                    cmd.Parameters["CLOSING"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("VOLUME", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["VOLUME"].Value = summary.Volume;
+                    cmd.Parameters["VOLUME"].Direction = ParameterDirection.Input;
+                    cmd.Parameters.Add("LDCP", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["LDCP"].Value = summary.LDCP;
+                    cmd.Parameters["LDCP"].Direction = ParameterDirection.Input;
+                    status = cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+            #endregion
+
+            #region SavingMarketSummaryClosingIpams_SQLITE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
+            {
+
+            }
+
+            #endregion
+
+            return status;
+
+        }
+
+        #endregion
+
     }
 }

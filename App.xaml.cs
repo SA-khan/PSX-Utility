@@ -19,8 +19,6 @@ namespace PSXDataFetchingApp
     /// </summary>
     public partial class App : Application
     {
-<<<<<<< Updated upstream
-=======
         public ServiceProvider serviceProvider;
         public void ConfigureServices(IServiceCollection services)
         => services.AddDbContext<DataContext>();
@@ -53,7 +51,6 @@ namespace PSXDataFetchingApp
             services.AddSingleton<MainWindow>();
             serviceProvider = services.BuildServiceProvider();
         }
->>>>>>> Stashed changes
 
 
 

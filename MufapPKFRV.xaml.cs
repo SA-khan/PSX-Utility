@@ -158,7 +158,9 @@ namespace PSXDataFetchingApp
                 {
                     list1.Items.Clear();
                     _Date = pkfrvDatepicker.SelectedDate.Value.ToString("dddd, dd MMMM yyyy");
-                    string url = "http://mufap.com.pk/pdf/PKFRVs/" + pkfrvDatepicker.SelectedDate.Value.Year + "/" + _monthString + "/PKFRV" + _day + _month + _year + ".csv";
+                    char[] _dayToChar = _day.ToCharArray();
+                    char[] _monthToChar = _month.ToString().ToCharArray();
+                    string url = "http://mufap.com.pk/pdf/PKFRVs/" + pkfrvDatepicker.SelectedDate.Value.Year + "/" + _monthString + "/PKFRV" + ( (_dayToChar.Length > 1) ? _day : "0" + _day)  + ((_monthToChar.Length > 1) ? _month.ToString() : "0" + _month.ToString()) + _year + ".csv";
                     List<Pkfrv> _summaryData = new List<Pkfrv>();
                     try
                     {
@@ -316,7 +318,7 @@ namespace PSXDataFetchingApp
                                     string lVCPL = data[11].ToString();
                                     string lFMA = data[12].ToString();
 
-                                    //Debug.WriteLine("=> Floating Rate Bond: " + lFloatingRateBond + ", Issuence Date: " + lIssuanceDate + ", Maturity Date: " + lMaturityDate);
+                                    Debug.WriteLine("=> Floating Rate Bond: " + lFloatingRateBond + ", Issuence Date: " + lIssuanceDate + ", Maturity Date: " + lMaturityDate);
                                     Pkfrv Item = new Pkfrv { PkfrvId = counter, FloatingRateBond = lFloatingRateBond, IssuanceDate = lIssuanceDate, MaturityDate = lMaturityDate, CouponFrequency = lCouponFrequency, BMA = lBMA, CANDM = lCANDM, CMKA = lCMKA, IONE = lIONE, JSCM = lJSCM, MCPL = lMCPL, SCPL = lSCPL, VCPL = lVCPL, FMA = lFMA };
 
                                     ///

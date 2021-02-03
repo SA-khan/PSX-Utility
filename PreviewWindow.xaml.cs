@@ -1,7 +1,4 @@
-<<<<<<< Updated upstream
-﻿using System;
-=======
-﻿using HtmlAgilityPack;
+using HtmlAgilityPack;
 using Microsoft.Data.Sqlite;
 using Npgsql;
 using OfficeOpenXml;
@@ -9,19 +6,21 @@ using OfficeOpenXml.Style;
 using Oracle.ManagedDataAccess.Client;
 using PSXDataFetchingApp.Model;
 using System;
->>>>>>> Stashed changes
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
 using System.Data;
-<<<<<<< Updated upstream
-=======
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
->>>>>>> Stashed changes
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -30,6 +29,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using WpfAnimatedGif;
 
 namespace PSXDataFetchingApp
 {
@@ -38,30 +39,9 @@ namespace PSXDataFetchingApp
     /// </summary>
     public partial class PreviewWindow : Window
     {
-<<<<<<< Updated upstream
-        public class MarketSummary
-        {
-            public string Name { get; set; }
-            public string Symbol { get; set; }
-            public double CURRENT { get; set; }
-            public double OPEN { get; set; }
-            public double HIGH { get; set; }
-            public double LOW { get; set; }
-            public double Change { get; set; }
-            public double Volume { get; set; }
-        }
-        public PreviewWindow(DateTime date, string status, Double Volume, Double Value, Double Trades, List<string> companyName, List<string> companySymbol, List<double> LDCP, List<double> OPEN, List<double> HIGH, List<double> LOW, List<double> CURRENT, List<double> CHANGE, List<double> VOLUME)
-        {
-            InitializeComponent();
-            lblDate.Content += date.ToString();
-            lblStatus.Content += status.ToString();
-            lblVolume.Content += Volume.ToString();
-            lblValue.Content += Value.ToString();
-            lblTrades.Content += Trades.ToString();
-=======
 
         //15/10/2020
-        DateTime ExpiryDate = DateTime.Parse("2021/03/25 15:17:00");
+        DateTime ExpiryDate = DateTime.Parse("2025/03/25 15:17:00");
 
         public DataContext _context;
 
@@ -222,47 +202,41 @@ namespace PSXDataFetchingApp
             lblVolume.Text += Convert.ToDouble(Volume).ToString("#,##0");
             lblValue.Text += Convert.ToDouble(Value).ToString("#,##0");
             lblTrades.Text += Convert.ToDouble(Trades).ToString("#,##0");
->>>>>>> Stashed changes
 
             //MarketSummary[] data = new MarketSummary[companyName.Count];
 
-            GridViewColumn col1 = new GridViewColumn();
-            GridViewColumn col2 = new GridViewColumn();
-            GridViewColumn col3 = new GridViewColumn();
-            GridViewColumn col4 = new GridViewColumn();
-            GridViewColumn col5 = new GridViewColumn();
-            GridViewColumn col6 = new GridViewColumn();
-            GridViewColumn col7 = new GridViewColumn();
-            GridViewColumn col8 = new GridViewColumn();
-            gridView.Columns.Add(col1);
-            gridView.Columns.Add(col2);
-            gridView.Columns.Add(col3);
-            gridView.Columns.Add(col4);
-            gridView.Columns.Add(col5);
-            gridView.Columns.Add(col6);
-            gridView.Columns.Add(col7);
-            gridView.Columns.Add(col8);
-            col1.DisplayMemberBinding = new Binding("Name");
-            col2.DisplayMemberBinding = new Binding("Symbol");
-            col3.DisplayMemberBinding = new Binding("CURRENT");
-            col4.DisplayMemberBinding = new Binding("OPEN");
-            col5.DisplayMemberBinding = new Binding("HIGH");
-            col6.DisplayMemberBinding = new Binding("LOW");
-            col7.DisplayMemberBinding = new Binding("Change");
-            col8.DisplayMemberBinding = new Binding("Volume");
-            col1.Header = "Name";
-            col2.Header = "Symbol";
-            col3.Header = "CURRENT";
-            col4.Header = "OPEN";
-            col5.Header = "HIGH";
-            col6.Header = "LOW";
-            col7.Header = "CHANGE";
-            col8.Header = "VOLUME";
-
-<<<<<<< Updated upstream
-            //lblMessage.Content = "COMPANY NAME - SYMBOL - CURRENT - LDCP - OPEN - HIGH - LOW - CURRENT - CHANGE - VOLUME \n" ;
-            for (int i = 0; i < companyName.Count; i++)
-=======
+            //GridViewColumn col1 = new GridViewColumn();
+            //GridViewColumn col2 = new GridViewColumn();
+            //GridViewColumn col3 = new GridViewColumn();
+            //GridViewColumn col4 = new GridViewColumn();
+            //GridViewColumn col5 = new GridViewColumn();
+            //GridViewColumn col6 = new GridViewColumn();
+            //GridViewColumn col7 = new GridViewColumn();
+            //GridViewColumn col8 = new GridViewColumn();
+            //gridView.Columns.Add(col1);
+            //gridView.Columns.Add(col2);
+            //gridView.Columns.Add(col3);
+            //gridView.Columns.Add(col4);
+            //gridView.Columns.Add(col5);
+            //gridView.Columns.Add(col6);
+            //gridView.Columns.Add(col7);
+            //gridView.Columns.Add(col8);
+            //col1.DisplayMemberBinding = new Binding("Name");
+            //col2.DisplayMemberBinding = new Binding("Symbol");
+            //col3.DisplayMemberBinding = new Binding("CURRENT");
+            //col4.DisplayMemberBinding = new Binding("OPEN");
+            //col5.DisplayMemberBinding = new Binding("HIGH");
+            //col6.DisplayMemberBinding = new Binding("LOW");
+            //col7.DisplayMemberBinding = new Binding("Change");
+            //col8.DisplayMemberBinding = new Binding("Volume");
+            //col1.Header = "Name";
+            //col2.Header = "Symbol";
+            //col3.Header = "CURRENT";
+            //col4.Header = "OPEN";
+            //col5.Header = "HIGH";
+            //col6.Header = "LOW";
+            //col7.Header = "CHANGE";
+            //col8.Header = "VOLUME";
 
             //gridView.Columns.Add(col1);
             //gridView.Columns.Add(col2);
@@ -304,19 +278,11 @@ namespace PSXDataFetchingApp
             categoryList.Add(_scrip[0].Category.Trim());
             string tempcategory = _scrip[0].Category;
             for (int i = 0; i < _scrip.Count; i++)
->>>>>>> Stashed changes
             {
                 if (_scrip[i] == null) { }
                 else if (_scrip[i].Volume.Trim() == "CHANGE") { }
                 else
                 {
-<<<<<<< Updated upstream
-
-                    list1.Items.Add(new MarketSummary { Name = companyName[i], Symbol = companySymbol[i], CURRENT = CURRENT[i], OPEN = OPEN[i], HIGH = HIGH[i], LOW = LOW[i], Change = CHANGE[i], Volume = VOLUME[i] });
-                }
-            }
-        }
-=======
                     if(_scrip[i].Category != tempcategory)
                     {
                         categoryList.Add(_scrip[i].Category.Trim());
@@ -2450,7 +2416,5 @@ namespace PSXDataFetchingApp
 
         #endregion
 
-        
->>>>>>> Stashed changes
     }
 }

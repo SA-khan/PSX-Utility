@@ -1,0 +1,69 @@
+﻿<Window x:Class="PSXDataFetchingApp.Disclaimer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PSXDataFetchingApp"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        mc:Ignorable="d"
+        Icon="Images/web-scrap2.png"
+        Title="Web Extractor Utility" Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
+    <Border x:Name="HeaderColor"  Background="DarkGray">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MaxHeight="60"/>
+                <RowDefinition Height="*" MaxHeight="60" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" MaxHeight="60" />
+            </Grid.RowDefinitions>
+            <Border>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border>
+                        <Image x:Name="HeaderImage" />
+                    </Border>
+                    <Border Grid.Column="1">
+                        <Image />
+                    </Border>
+                </Grid>
+            </Border>
+            <Border Grid.Row="1" Margin="0 15 0 0" Background="White">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MaxWidth="90" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Border>
+                        <Button Grid.Column="0" x:Name="btnBack" FontFamily="/Fonts/#Lato" Click="btnBack_Click" Height="30" VerticalAlignment="Center" Width="70" HorizontalAlignment="Left" ToolTip="Go To Main Menu" Margin="5 0 0 0">
+                            <Button.Content>
+                                <StackPanel Width="70" Height="30" VerticalAlignment="Center" Margin="2 0 2 0">
+                                    <Grid Width="70" Height="30">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Image Source="Images/back.png" Stretch="Uniform" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="1" Text="Back" FontSize="13" FontFamily="Fonts/#Raleway" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                    </Grid>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </Border>
+                    <Border Grid.Column="1" x:Name="borderHeading" HorizontalAlignment="Left">
+                        <TextBlock Text=" Disclaimer" FontSize="26" FontFamily="Fonts/#Raleway" VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </Border>
+            <Border Grid.Row="2" Padding="2">
+                <RichTextBox x:Name="richDisclaimer" TextBlock.FontFamily="Arial" FontSize="14" Padding="5">
+
+                </RichTextBox>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

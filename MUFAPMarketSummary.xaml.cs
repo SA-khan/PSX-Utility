@@ -126,9 +126,11 @@ namespace PSXDataFetchingApp
 
             await Task.Run(() => __fundSummaryDetails = GetMUFAPFundSummaryData(_selectedCategory));
 
+            int total = 1;
             foreach (MufapMarketSummary item in __fundSummaryDetails)
             {
-                list1.Items.Add(new MufapMarketSummary { Name = item.Name, Category = item.Category, Rating = item.Rating, ValidityDate = item.ValidityDate, Nav = item.Nav, Ytd = item.Ytd, Mtd = item.Mtd, _1Day = item._1Day, _15Days = item._15Days, _30Days = item._30Days, _90Days = item._90Days, _180Days = item._180Days, _270Days = item._270Days, _365Days = item._365Days, Ter = item.Ter, Mf = item.Mf, Sandm = item.Sandm });
+                //Debug.WriteLine("Validity Date: " + item.ValidityDate);
+                list1.Items.Add(new MufapMarketSummary {MufapMarketSummaryId = total++, Name = item.Name, Category = item.Category, Rating = item.Rating, ValidityDate = item.ValidityDate, Nav = item.Nav, Ytd = item.Ytd, Mtd = item.Mtd, _1Day = item._1Day, _15Days = item._15Days, _30Days = item._30Days, _90Days = item._90Days, _180Days = item._180Days, _270Days = item._270Days, _365Days = item._365Days, Ter = item.Ter, Mf = item.Mf, Sandm = item.Sandm });
             }
 
             FundImage.Visibility = Visibility.Hidden;

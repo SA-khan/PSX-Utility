@@ -1,0 +1,172 @@
+﻿<Window x:Class="PSXDataFetchingApp.MufapPKRV"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PSXDataFetchingApp"
+        mc:Ignorable="d"
+        Title="Data Extractor Utility" Icon="Images/web-scrap2.png" Height="650" Width="920" WindowStartupLocation="CenterScreen">
+    <Border Margin="10" Background="DarkGray">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition Height="14*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="HeaderColor" Grid.Row="0" Background="#f0a500">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image x:Name="HeaderImage"  Source="Images/BOP.png" HorizontalAlignment="Left" Margin="5" gif:ImageBehavior.AnimatedSource="Images/bop.gif" Stretch="Fill" Width="200" />
+
+                <TextBlock Grid.Column="0"  Text="MUFAP PKRV Summary" FontSize="26" FontFamily="/Fonts/#Lato" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Margin="0 0 10 0" />
+                <Grid Grid.Column="0" HorizontalAlignment="Right" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="txtDate" Grid.Row="0" FontFamily="/Fonts/#Lato" VerticalAlignment="Bottom" Margin="0 0 2 0" />
+                    <TextBlock x:Name="txtStatus" Grid.Row="1" FontFamily="/Fonts/#Lato" VerticalAlignment="Top" Margin="0 2 0 0" />
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="1" Margin="1 5 1 5" Background="#fff" MaxHeight="35">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MaxWidth="81" />
+                    <ColumnDefinition Width="3*" MaxWidth="350" />
+                    <ColumnDefinition Width="2*" MaxWidth="60"/>
+                    <ColumnDefinition Width="2*" MaxWidth="60"/>
+                    <ColumnDefinition Width="2*" MaxWidth="60"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="btnBack" FontFamily="/Fonts/#Lato" Click="btnBack_Click" Height="30" VerticalAlignment="Center" Width="70" HorizontalAlignment="Left" Margin="5 0 0 0" ToolTip="Go To Main Menu">
+                    <Button.Content>
+                        <StackPanel>
+                            <Grid Width="70" Height="25">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                            <Image Source="Images/back.png" Stretch="Uniform" Width="15" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="Back" VerticalAlignment="Center" FontSize="13" FontFamily="Fonts/#Raleway" />
+                            </Grid>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <DatePicker Grid.Column="1" Name="pkrvDatepicker" FontFamily="Fonts/#Raleway" VerticalContentAlignment="Center" Margin="5 0 0 0" MinWidth="250" MaxWidth="450" HorizontalAlignment="Stretch" Height="30" ToolTip="Select Date.." DateValidationError="pkrvDatepicker_DateValidationError" />
+                <Button x:Name="btnGet" Grid.Column="2" FontFamily="/Fonts/#Lato-Bold" FontSize="13" Width="50" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnGet_Click" Background="Transparent" BorderBrush="Transparent" ToolTip="Get Shares of Fund">
+                    <Button.Content>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="50">
+                            <Image Source="Images/play.png" Stretch="Uniform" >
+                            </Image>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button x:Name="btnSave" Grid.Column="3" FontFamily="/Fonts/#Lato-Bold" FontSize="13" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" BorderBrush="Transparent" ToolTip="Generate Excel Report" Click="btnSave_Click">
+                    <Button.Content>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="35" >
+                            <Image Source="Images/excel.jpg" Stretch="Fill"  >
+                            </Image>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button x:Name="btnReset" Grid.Column="4" Margin="5" FontFamily="/Fonts/#Lato-Bold" FontSize="13" MaxWidth="40" MinWidth="40" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btnReset_Click" Background="White" BorderBrush="Transparent">
+                    <Button.Content>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Source="Images/reset.png" Margin="1" Stretch="Fill" MaxHeight="25" ToolTip="Refresh Information" >
+                            </Image>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </Grid>
+            <Border x:Name="loadingImage" Visibility="Hidden" Grid.Row="2" Background="White">
+                <Image HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" gif:ImageBehavior.AnimatedSource="Images/loading.gif" Source="Images/Exclaimation.png" />
+            </Border>
+            <Image x:Name="FundImage" Grid.Row="2" Source="Images/mufapMarketSummary.jpg" gif:ImageBehavior.AnimatedSource="Images/mufapMarketSummary2.gif" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Fill"/>
+            <ListView x:Name="list1" Grid.Row="2" Width="Auto" Visibility="Hidden" FontFamily="/Fonts/#Lato" HorizontalContentAlignment="Left" >
+                <ListView.Resources>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    </Style>
+                    <Style TargetType="ListViewItem" x:Key="PkrvId">
+                        <Setter Property="Background" Value="LightGray" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView x:Name="gridView" AllowsColumnReorder="true" ColumnHeaderToolTip="MUFAP PKRV Summary">
+                        <GridViewColumn x:Name="col1" Width="50" >
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Sr. No." Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Width="50" HorizontalAlignment="Right" TextAlignment="Right" Text="{Binding PkrvId}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col2" Width="260">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Tenor" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Width="260" HorizontalAlignment="Right" TextAlignment="Right" Text="{Binding Tenor}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col3" Width="270">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Mid Rate" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="270">
+                                        <TextBlock Text="{Binding MidRate}" HorizontalAlignment="Right" TextAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn x:Name="col4" Width="270">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Background="#455A64" Foreground="#fff" FontSize="16" Content="Change" Padding="2"></GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <ItemContainerTemplate>
+                                    <Grid HorizontalAlignment="Right" Width="270">
+                                        <TextBlock Text="{Binding Change}" HorizontalAlignment="Right" TextAlignment="Right"/>
+                                    </Grid>
+                                </ItemContainerTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Grid Grid.Row="3" Background="DarkGray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="6*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StatusBar DockPanel.Dock="Bottom" Grid.Column="0" HorizontalAlignment="Stretch" Name="statusBar"  VerticalAlignment="Center" Background="Transparent" Foreground="Black" Margin="1">
+                    <StatusBarItem>
+                        <TextBlock Name="lblStatus" Text="Status: Ready" FontFamily="/Fonts/#Lato" FontSize="11" Background="Transparent" />
+                    </StatusBarItem>
+                </StatusBar>
+                <TextBlock Grid.Column="1" FontSize="14" HorizontalAlignment="Center" Text="Data Source: http://www.mufap.com.pk/ " FontFamily="Fonts/#Lato" Foreground="Black" VerticalAlignment="Center" FontWeight="Bold" />
+                <StatusBar DockPanel.Dock="Bottom" Grid.Column="2" Name="statusBar2" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Background="Transparent" Foreground="Black" Margin="1">
+                    <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Bottom" MaxHeight="50" Background="Transparent">
+                        <Border Background="Transparent">
+                            <Image x:Name="imgStatus" gif:ImageBehavior.AnimatedSource="Images/tick.gif" Source="Images/tick.png" MaxHeight="30" MaxWidth="30"/>
+                        </Border>
+                    </StatusBarItem>
+                </StatusBar>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
