@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:PSXDataFetchingApp"
         mc:Ignorable="d"
         Title="Data Extractor Utility" FontFamily="/Fonts/#Lato" Height="650" Width="1115" Icon="/Images/web-scrap2.png" WindowStartupLocation="CenterScreen"
-        Closing="Window_Closing">
+        Closing="Window_Closing" WindowState="Maximized">
         
     <Window.Resources>
         <Style TargetType="{x:Type ListViewItem}">
@@ -32,15 +32,36 @@
                 </Grid.ColumnDefinitions>
                 
                 <Image x:Name="HeaderImage"  Source="Images/BOP.png" HorizontalAlignment="Left" Margin="5" gif:ImageBehavior.AnimatedSource="Images/bop.gif" Stretch="Fill" Width="200" />
+                <Grid Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Fund Market Summary" FontSize="26" FontFamily="/Fonts/#Raleway" FontWeight="Bold"  TextAlignment="Center" />
+                    <TextBlock Grid.Row="1" Text="Real Time Fund Market View of Your Portfolio " FontSize="12" FontFamily="/Fonts/#Raleway" FontWeight="Normal"  TextAlignment="Center" />
+                </Grid>
                 
-                <TextBlock Grid.Column="0"  Text="Fund Market Summary" FontSize="26" FontFamily="/Fonts/#Lato" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center" Margin="0 0 10 0" />
-                <Grid Grid.Column="0" HorizontalAlignment="Right" Margin="5">
+                <Grid Grid.Column="0" HorizontalAlignment="Right" Margin="10" MinWidth="250">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="txtDate" Grid.Row="0" FontFamily="/Fonts/#Lato" VerticalAlignment="Bottom" Margin="0 0 2 0" />
-                    <TextBlock x:Name="txtStatus" Grid.Row="1" FontFamily="/Fonts/#Lato" VerticalAlignment="Top" Margin="0 2 0 0" />
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="lblDate" Grid.Column="0" Padding="5" Background="White" Text="DATE" FontFamily="/Fonts/#Lato" VerticalAlignment="Bottom" TextAlignment="Right" Opacity="0.9" />
+                        <TextBlock x:Name="txtDate" Grid.Column="1" Padding="5" Background="White" FontFamily="/Fonts/#Lato" VerticalAlignment="Bottom" FontWeight="Bold" />
+                    </Grid>
+                    <Grid x:Name="gridStatus" Grid.Row="1" Visibility="Hidden">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"  />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="lbltxtStatus" Grid.Column="0" Padding="5" Background="White" Text="STATUS" FontFamily="/Fonts/#Lato" VerticalAlignment="Top" TextAlignment="Right" Opacity="0.9" />
+                        <TextBlock x:Name="txtStatus" Grid.Column="1" Padding="5" Background="White" FontFamily="/Fonts/#Lato" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextAlignment="Left" FontWeight="ExtraBold" />
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid Grid.Row="1" Margin="1 5 1 5" Background="#fff" MaxHeight="40">
@@ -135,12 +156,30 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Image Source="Images/search.png" Stretch="Uniform" Margin="1" HorizontalAlignment="Right" VerticalAlignment="Center"  />
+                            <Image Source="Images/search.png" Stretch="Uniform" Margin="0" HorizontalAlignment="Right" VerticalAlignment="Center"  />
                         </Grid>
                     </StackPanel>
                 </Button>
-            
-            <TextBlock x:Name="lblFundID" Grid.Column="5" Visibility="Hidden" Text="FUND ID:" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" />
+                <Grid Grid.Column="8" VerticalAlignment="Center" Background="CornflowerBlue" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="AUTO UPDATE" HorizontalAlignment="Center" Foreground="White" FontSize="12" Padding="2" Margin="0 2" FontWeight="DemiBold" />
+                    <Grid Grid.Column="1" Background="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text=" OFF" FontWeight="Bold" Padding="2" Margin="0 2" Foreground="Black" />
+                        <Slider x:Name="sliderRecur" Grid.Column="1" Value="1" Maximum="1" Padding="2" Margin="0 2" />
+                        <TextBlock Grid.Column="2" Text="ON " FontWeight="Bold" Padding="2" Margin="0 2" Foreground="Black" />
+                    </Grid>
+                    
+                </Grid>
+
+                <TextBlock x:Name="lblFundID" Grid.Column="5" Visibility="Hidden" Text="FUND ID:" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" />
                 <TextBox Grid.Column="6" Name="txtFundID" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
                 <TextBlock x:Name="lblFundNAME" Grid.Column="7" Text="FUND NAME:" Visibility="Hidden" FontWeight="Bold" Foreground="Gray" FontFamily="/Fonts/#Lato"  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5"/>
                 <TextBox Grid.Column="8" Name="txtFund" Visibility="Hidden" IsEnabled="False" FontFamily="/Fonts/#Lato" MinWidth="100" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center"></TextBox>
@@ -186,7 +225,15 @@
                 </Grid.ColumnDefinitions>
                 <StatusBar DockPanel.Dock="Bottom" Grid.Column="0" HorizontalAlignment="Stretch" Name="statusBar"  VerticalAlignment="Center" Background="Transparent" Foreground="Black" Margin="1">
                     <StatusBarItem>
-                        <TextBlock Name="lblStatus" Text="Status: Ready" FontFamily="/Fonts/#Lato" FontSize="11" Background="Transparent" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Padding="3" Text="Status:" FontFamily="/Fonts/#Lato" FontSize="11" Background="White" />
+                            <TextBlock Name="lblStatus" Padding="3" Grid.Column="1" Text="Ready" FontFamily="/Fonts/#Lato" FontSize="11" Background="Red" FontWeight="Bold" Foreground="Black" />
+                        </Grid>
+                        
                     </StatusBarItem>
                 </StatusBar>
                 <TextBlock Grid.Column="1" FontSize="14" HorizontalAlignment="Center" Text="The Data of Market Rates are getting from Pakistan Stock Exchange Website With 5 Minutes Interval." FontFamily="Fonts/#Lato" Foreground="Black" VerticalAlignment="Center" FontWeight="Bold" />

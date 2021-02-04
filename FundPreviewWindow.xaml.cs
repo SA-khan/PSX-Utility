@@ -48,6 +48,9 @@ namespace PSXDataFetchingApp
         //Automation Process Initial
         public DataContext _context;
 
+        //Get Time Reset Interval
+        public static decimal Interval = Convert.ToDecimal(ConfigurationManager.AppSettings["Interval"]);
+
         //Default MS SQL Connections
         public static SqlConnection connDefault = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
 
@@ -74,7 +77,11 @@ namespace PSXDataFetchingApp
                                                             {"FUND_NAME", ""},
                                                         };
 
-        public static List<CurrentMarketSummary> shareList = new List<CurrentMarketSummary>();
+        // Current Market Summary Scrip List
+        public static List<CurrentMarketSummary> _scripList = new List<CurrentMarketSummary>();
+
+        // Share List
+        List<FundwiseMarketSummary> fundList = new List<FundwiseMarketSummary>();
 
         GridView myGridView = new GridView();
         GridViewColumn gvc1 = new GridViewColumn();
@@ -89,35 +96,28 @@ namespace PSXDataFetchingApp
         GridViewColumn gvc10 = new GridViewColumn();
         GridViewColumn gvc11 = new GridViewColumn();
 
-        DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        DispatcherTimer dispatcherTimer = null;
+
+        // Counter to Reset Data
         int countTimer = 0;
 
-        //New Edition 11/17/2020
-        //By Saad
-        List<FundwiseMarketSummary> fundList = new List<FundwiseMarketSummary>();
-
-        //New Edition 11/18/2020
-        //By Saad
+        // Permission to Reset Data In Dispatcher 
         bool resetFlag = false;
 
         //New Edition 11/23/2020
         public static bool FundPopUpWindowFlag = false;
 
-        public HtmlNodeCollection _webDataCollectionForCategory = null;
-
         //List Categories
         public List<string> _categoryList = new List<string>() { "", "AUTOMOBILE ASSEMBLER", "AUTOMOBILE PARTS & ACCESSORIES", "CABLE & ELECTRICAL GOODS", "CEMENT", "CHEMICAL", "CLOSE - END MUTUAL FUND", "COMMERCIAL BANKS", "ENGINEERING", "FERTILIZER", "FOOD & PERSONAL CARE PRODUCTS", "GLASS & CERAMICS", "INSURANCE", "INV. BANKS / INV. COS. / SECURITIES COS.", "LEASING COMPANIES", "LEATHER & TANNERIES", "MISCELLANEOUS", "MODARABAS", "OIL & GAS EXPLORATION COMPANIES", "OIL & GAS MARKETING COMPANIES", "PAPER & BOARD", "PHARMACEUTICALS", "POWER GENERATION & DISTRIBUTION", "REFINERY", "SUGAR & ALLIED INDUSTRIES", "SYNTHETIC & RAYON", "TECHNOLOGY & COMMUNICATION", "TEXTILE COMPOSITE", "TEXTILE SPINNING", "TEXTILE WEAVING", "TRANSPORT", "VANASPATI & ALLIED INDUSTRIES", "WOOLLEN", "REAL ESTATE INVESTMENT TRUST", "EXCHANGE TRADED FUNDS", "FUTURE CONTRACTS" };
-        //public static List<string> _categoryList = new List<string>();
         public List<string> _categoryList2 = new List<string>() { "AUTOMOBILE ASSEMBLER", "AUTOMOBILE PARTS & ACCESSORIES", "CABLE & ELECTRICAL GOODS", "CEMENT", "CHEMICAL", "CLOSE - END MUTUAL FUND", "COMMERCIAL BANKS", "ENGINEERING", "FERTILIZER", "FOOD & PERSONAL CARE PRODUCTS", "GLASS & CERAMICS", "INSURANCE", "INV. BANKS / INV. COS. / SECURITIES COS.", "LEASING COMPANIES", "LEATHER & TANNERIES", "MISCELLANEOUS", "MODARABAS", "OIL & GAS EXPLORATION COMPANIES", "OIL & GAS MARKETING COMPANIES", "PAPER & BOARD", "PHARMACEUTICALS", "POWER GENERATION & DISTRIBUTION", "REFINERY", "SUGAR & ALLIED INDUSTRIES", "SYNTHETIC & RAYON", "TECHNOLOGY & COMMUNICATION", "TEXTILE COMPOSITE", "TEXTILE SPINNING", "TEXTILE WEAVING", "TOBACCO", "TRANSPORT", "VANASPATI & ALLIED INDUSTRIES", "WOOLLEN", "REAL ESTATE INVESTMENT TRUST", "EXCHANGE TRADED FUNDS", "FUTURE CONTRACTS" };
         public List<string> _categoryList3 = new List<string>();
-
-        public static List<CurrentMarketSummary> _scripList = new List<CurrentMarketSummary>();
+        
 
         #region FundPreviewWindow_
         public FundPreviewWindow()
         {
             InitializeComponent();
-            txtDate.Text = "Date:" + DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
+            txtDate.Text = DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
             ClientSideProperties();
         }
 
@@ -129,7 +129,7 @@ namespace PSXDataFetchingApp
         {
             InitializeComponent();
             _context = ctx;
-            txtDate.Text = "Date:" + DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
+            txtDate.Text = DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
             ClientSideProperties();
 
             comboCategory.Items.Add("All Categories");
@@ -292,7 +292,6 @@ namespace PSXDataFetchingApp
                         var bc = new BrushConverter();
                         CriteriaSection.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
                         HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#76b0cc");
-                        Footer.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#76b0cc");
 
                         //Setting Logo
                         var image = new BitmapImage();
@@ -300,6 +299,20 @@ namespace PSXDataFetchingApp
                         image.UriSource = ResourceAccessor.Get("Images/astech.png");
                         image.EndInit();
                         ImageBehavior.SetAnimatedSource(HeaderImage, image);
+
+                        CriteriaSection.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+
+                        //list1.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+
+                        lblDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+                        txtDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+                        txtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+                        lbltxtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+
+                        lblStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#76b0cc");
+
+                        Footer.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#76b0cc");
+
                     }
 
                     #endregion
@@ -317,6 +330,18 @@ namespace PSXDataFetchingApp
                         image.UriSource = ResourceAccessor.Get("Images/BOP.gif");
                         image.EndInit();
                         ImageBehavior.SetAnimatedSource(HeaderImage, image);
+
+
+                        CriteriaSection.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
+
+                        //list1.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
+
+                        lblStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
+
+                        //lblDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
+                        txtDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
+                        txtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
+                        //lbltxtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
 
                         Footer.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
                     }
@@ -336,6 +361,17 @@ namespace PSXDataFetchingApp
                         image.EndInit();
                         ImageBehavior.SetAnimatedSource(HeaderImage, image);
 
+                        CriteriaSection.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cdcdcd");
+
+                        //list1.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cdcdcd");
+
+                        lblStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+
+                        lblDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cdcdcd");
+                        txtDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cdcdcd");
+                        txtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cdcdcd");
+                        lbltxtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cdcdcd");
+
                         Footer.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
                     }
                     #endregion
@@ -346,9 +382,7 @@ namespace PSXDataFetchingApp
                     {
                         // Header Background Color 
                         var bc = new BrushConverter();
-                        CriteriaSection.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
                         HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#01808d");
-                        Footer.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#01808d");
 
                         //Setting Logo
                         var image = new BitmapImage();
@@ -356,6 +390,20 @@ namespace PSXDataFetchingApp
                         image.UriSource = ResourceAccessor.Get("Images/efu.gif");
                         image.EndInit();
                         ImageBehavior.SetAnimatedSource(HeaderImage, image);
+
+                        CriteriaSection.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+
+                        //list1.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+
+                        lblStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#01808d");
+
+                        lblDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        txtDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        txtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        lbltxtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+
+                        Footer.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#01808d");
+
                     }
 
                     #endregion
@@ -572,7 +620,7 @@ namespace PSXDataFetchingApp
                 HtmlNodeCollection temp = null;
                 var xpath = "//*[self::h4 or self::td]";
                 temp = FetchDataFromPSX("https://www.psx.com.pk/market-summary/", xpath);
-                _webDataCollectionForCategory = temp;
+                _webDataCollection = temp;
                 name_nodes = temp != null ? temp : null;
                 if (name_nodes != null)
                 {
@@ -626,11 +674,11 @@ namespace PSXDataFetchingApp
             List<string> _categoryData = new List<string>();
             try
             {
-                if (_webDataCollectionForCategory != null)
+                if (_webDataCollection != null)
                 {
 
                     int counter = 0;
-                    foreach (HtmlAgilityPack.HtmlNode node in _webDataCollectionForCategory)
+                    foreach (HtmlAgilityPack.HtmlNode node in _webDataCollection)
                     {
                         //Debug.WriteLine("=> Data: " + node.InnerText.ToString());
                         //if (node.InnerText.ToString().StartsWith("* LDCP") || node.InnerText.ToString().StartsWith(DateTime.Now.Year.ToString() ) ){ }
@@ -796,7 +844,7 @@ namespace PSXDataFetchingApp
                         StartCapturingflag = 1;
                     }
                 }
-                if (RowData != null)  shareList.Clear();
+                if (RowData != null)  _scripList.Clear();
                 for (int j = 0; j < RowData.Count(); j++)
                 {
                     if (j % 8 == 0)
@@ -806,7 +854,7 @@ namespace PSXDataFetchingApp
                             if (RowData[j].Contains("SCRIP")) { }
                             else
                             {
-                                shareList.Add(new CurrentMarketSummary { Name = RowData[j].Trim().Replace(" ", ""), Symbol = GetCompanySymbols(RowData[j]) });
+                                _scripList.Add(new CurrentMarketSummary { Name = RowData[j].Trim().Replace(" ", ""), Symbol = GetCompanySymbols(RowData[j]) });
                             }
                         }
                     }
@@ -1203,7 +1251,7 @@ namespace PSXDataFetchingApp
                         if (AllTableRowData[j].Trim().Equals("CURRENT")) { }
                         else
                         {
-                            shareList[counter2++].Current = AllTableRowData[j].Trim().Replace(" ","");
+                            _scripList[counter2++].Current = AllTableRowData[j].Trim().Replace(" ","");
                         }
                     }
                 }
@@ -1392,7 +1440,7 @@ namespace PSXDataFetchingApp
 
         public void GetScripDetails()
         {
-            HtmlNodeCollection nodes = _webDataCollectionForCategory == null ? null : _webDataCollectionForCategory;
+            HtmlNodeCollection nodes = _webDataCollection == null ? null : _webDataCollection;
             List<string> _filteredData = new List<string>();
             List<int> _categoryCount = new List<int>();
             int _counter = 0;
@@ -1408,19 +1456,14 @@ namespace PSXDataFetchingApp
                             _categoryCount.Add(0);
                             _captureflag = 1;
                         }
-
-                        //else if (node.InnerText.ToString().Trim().Equals("VOLUME") && _captureflag == 0)
-                        //{
-
-                        //}
                     }
+
                     if (_captureflag == 1)
                     {
                         _filteredData.Add(node.InnerText);
                     }
 
                 }
-
 
                 int flagger = 0;
                 int _scriptor = 2;
@@ -1431,10 +1474,8 @@ namespace PSXDataFetchingApp
                 {
                     if (j > 0)
                     {
-
                         if (_filteredData[j].Equals("VOLUME"))
                         {
-                            //Debug.WriteLine("Category -> " + _filteredData[j - 8]);
                             _tempCategory = _filteredData[j - 8];
                             if (volumeOccurance > 0)
                             {
@@ -1450,13 +1491,9 @@ namespace PSXDataFetchingApp
                                 _scriptor = j;
                                 _scriptor++;
                                 _tempScrip = _filteredData[j];
-                                if (_filteredData[j].Equals(_tempCategory))
-                                {
-
-                                }
+                                if (_filteredData[j].Equals(_tempCategory)) { }
                                 else
                                 {
-                                    //Debug.WriteLine("Scrip Name: " + _filteredData[j] + ", Category: " + _tempCategory + ", LDCP: " + _filteredData[_scriptor] + ", OPEN: " + _filteredData[_scriptor + 1] + ", HIGH: " + _filteredData[_scriptor + 2] + ", LOW: " + _filteredData[_scriptor + 3] + ", CURRENT: " + _filteredData[_scriptor + 4] + ", CHANGE: " + _filteredData[_scriptor + 5] + ", VOLUME: " + _filteredData[_scriptor + 6]);
                                     _scripList.Add(new CurrentMarketSummary { Name = _filteredData[j], Symbol = GetCompanySymbols(_filteredData[j]), Category = _tempCategory, Ldcp = _filteredData[_scriptor], Open = _filteredData[_scriptor + 1], High = _filteredData[_scriptor + 2], Low = _filteredData[_scriptor + 3], Current = _filteredData[_scriptor + 4], Change = _filteredData[_scriptor + 5].Trim().Replace(" ", ""), Volume = _filteredData[_scriptor + 6] });
                                 }
                                 _scriptor = 2;
@@ -1468,13 +1505,9 @@ namespace PSXDataFetchingApp
                                     _scriptor = j;
                                     _scriptor++;
                                     _tempScrip = _filteredData[j];
-                                    if (_filteredData[j].Equals(_tempCategory))
-                                    {
-
-                                    }
+                                    if (_filteredData[j].Equals(_tempCategory)) { }
                                     else
                                     {
-                                        //Debug.WriteLine("Scrip Name: " + _filteredData[j] + ", Category: " + _tempCategory + ", LDCP: " + _filteredData[_scriptor] + ", OPEN: " + _filteredData[_scriptor + 1] + ", HIGH: " + _filteredData[_scriptor + 2] + ", LOW: " + _filteredData[_scriptor + 3] + ", CURRENT: " + _filteredData[_scriptor + 4] + ", CHANGE: " + _filteredData[_scriptor + 5] + ", VOLUME: " + _filteredData[_scriptor + 6]);
                                         _scripList.Add(new CurrentMarketSummary { Name = _filteredData[j], Symbol = GetCompanySymbols(_filteredData[j]), Category = _tempCategory, Ldcp = _filteredData[_scriptor], Open = _filteredData[_scriptor + 1], High = _filteredData[_scriptor + 2], Low = _filteredData[_scriptor + 3], Current = _filteredData[_scriptor + 4], Change = _filteredData[_scriptor + 5].Trim().Replace(" ", ""), Volume = _filteredData[_scriptor + 6] });
                                     }
                                     _scriptor = 2;
@@ -1483,89 +1516,7 @@ namespace PSXDataFetchingApp
                         }
                     }
                 }
-
             }
-
-            //counter = 0;
-            //for (int j = 1, openIndex = 2, highIndex = 3, lowIndex = 4, currentIndex = 5, changeIndex = 6, volumeIndex = 7; j < AllTableRowData.Count() || openIndex < AllTableRowData.Count() || highIndex < AllTableRowData.Count() || lowIndex < AllTableRowData.Count() || currentIndex < AllTableRowData.Count() || changeIndex < AllTableRowData.Count() ||  volumeIndex < AllTableRowData.Count() ; j += 8, openIndex += 8, highIndex = highIndex + 8, lowIndex = lowIndex + 8, currentIndex += 8, changeIndex += 8, volumeIndex += 8)
-            //{
-            //    if (AllTableRowData[j] != null)
-            //    {
-            //        if (AllTableRowData[j].Trim().Equals("LDCP"))
-            //        {
-            //        }
-            //        else
-            //        {
-            //            _scripList[counter].Ldcp = AllTableRowData[j].Trim().Replace("\n","");
-            //        }
-            //    }
-
-            //    //Test Method Open
-            //    if (AllTableRowData[openIndex] != null)
-            //    {
-            //        if (AllTableRowData[openIndex].Trim().Equals("OPEN"))
-            //        {
-            //        }
-            //        else
-            //        {
-            //            _scripList[counter].Open = AllTableRowData[openIndex].Trim().Replace("\n", "");
-            //        }
-            //    }
-
-            //    //Test Method High
-            //    if (AllTableRowData[highIndex] != null)
-            //    {
-            //        if (AllTableRowData[highIndex].Trim().Equals("HIGH")) { }
-            //        else
-            //        {
-            //            _scripList[counter].High = AllTableRowData[highIndex].Trim().Replace("\n", "");
-            //        }
-            //    }
-
-            //    //Test Method Low
-            //    if (AllTableRowData[lowIndex] != null)
-            //    {
-            //        if (AllTableRowData[lowIndex].Trim().Equals("LOW")) { }
-            //        else
-            //        {
-            //            _scripList[counter].Low = AllTableRowData[lowIndex].Trim().Replace("\n", "");
-            //        }
-            //    }
-
-            //    //Test Method Current
-            //    if (AllTableRowData[currentIndex] != null)
-            //    {
-            //        if (AllTableRowData[currentIndex].Trim().Equals("CURRENT")) { }
-            //        else
-            //        {
-            //            _scripList[counter].Current = AllTableRowData[currentIndex].Trim().Replace("\n", "");
-            //        }
-            //    }
-
-            //    //Test Method Change
-            //    if (AllTableRowData[changeIndex] != null)
-            //    {
-            //        if (AllTableRowData[changeIndex].Trim().Equals("CHANGE")) { }
-            //        else
-            //        {
-            //            _scripList[counter].Change = Convert.ToDouble(AllTableRowData[changeIndex].Trim().Replace("\n", ""));
-            //        }
-            //    }
-
-            //    //Test Method Volume
-            //    if (AllTableRowData[volumeIndex] != null)
-            //    {
-            //        if (AllTableRowData[volumeIndex].Trim().Equals("VOLUME")) { }
-            //        else
-            //        {
-            //            _scripList[counter].Volume = AllTableRowData[volumeIndex].Trim().Replace("\n", "");
-            //        }
-            //    }
-
-            //    //Increment counter
-            //    counter++;
-
-            //}
         }
 
         #endregion
@@ -1600,8 +1551,18 @@ namespace PSXDataFetchingApp
         {
             try
             {
+                //
+                if (dispatcherTimer != null)
+                {
+                    dispatcherTimer.Stop();
+                    dispatcherTimer = null; // = false;
+                }
+
                 //setting background task to off
                 resetFlag = false;
+
+                // resetting timer 
+                countTimer = 0;
 
                 //setting bucket buttun to hide
                 btnBorderBucket.Visibility = Visibility.Hidden;
@@ -1626,7 +1587,7 @@ namespace PSXDataFetchingApp
                 image.UriSource = ResourceAccessor.Get("Images/gear.gif");
                 image.EndInit();
                 ImageBehavior.SetAnimatedSource(imgStatus, image);
-                lblStatus.Text = "Status: Processing";
+                lblStatus.Text = "In Process";
 
                 _miscellenousData["FUND_NAME"] = comboFund.Text;
                 if (_miscellenousData["FUND_NAME"] == "Select..")
@@ -1670,15 +1631,19 @@ namespace PSXDataFetchingApp
                 {
                     txtSearch.Text = "";
                     comboCategory.SelectedIndex = 0;
+                    
 
                     FundImage.Visibility = Visibility.Hidden;
                     list1.Visibility = Visibility.Hidden;
                     loadingImage.Visibility = Visibility.Visible;
-                    _miscellenousData["FUND_ID"] = getFundId(_miscellenousData["FUND_NAME"]).ToString();
+                    _miscellenousData["FUND_ID"] = Convert.ToString(getFundId(_miscellenousData["FUND_NAME"]));
                     await Task.Run(() => mustWork(_miscellenousData["FUND_NAME"]));
                     //await Task.Run(() => getDefault());
-                    txtDate.Text = "Date: " + _miscellenousData["DATE"];
-                    txtStatus.Text = "Status: " + _miscellenousData["STATUS"];
+                    txtDate.Text = DateTime.Parse(_miscellenousData["DATE"]).ToString("dddd, dd MMMM yyyy hh:mm tt");
+                    txtStatus.Text =  _miscellenousData["STATUS"].ToUpper();
+                    gridStatus.Visibility = Visibility.Visible;
+                    var bctext = new BrushConverter();
+                    txtStatus.Foreground = _miscellenousData["STATUS"] == "Open" ? (System.Windows.Media.Brush)bctext.ConvertFrom("#228B22") : (System.Windows.Media.Brush)bctext.ConvertFrom("#FF4500");
                     //col1.DisplayMemberBinding = new Binding("FundwiseMarketSummaryId");
                     //col2.DisplayMemberBinding = new Binding("ShareName");
                     //col3.DisplayMemberBinding = new Binding("Symbol");
@@ -2166,7 +2131,7 @@ namespace PSXDataFetchingApp
                     image.EndInit();
                     ImageBehavior.SetAnimatedSource(imgStatus, image);
 
-                    lblStatus.Text = "Status: Ready";
+                    lblStatus.Text = "Ready";
 
                     if (ConfigurationManager.AppSettings["PopupAlert"] == "1")
                     {
@@ -2202,11 +2167,25 @@ namespace PSXDataFetchingApp
                         }
                     }
 
-                    DispatcherTimer dispatcherTimer = new DispatcherTimer();
-                    dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-                    dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-                    dispatcherTimer.Start();
-                    resetFlag = true;
+                    if (sliderRecur.Value == 1)
+                    {
+
+                        if (dispatcherTimer == null)
+                        {
+                            dispatcherTimer = new DispatcherTimer();
+                            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                            dispatcherTimer.Start();
+                            resetFlag = true;
+                            countTimer = 0;
+                        }
+
+                    }
+
+                    else
+                    {
+                        Debug.WriteLine("Recurring is set to OFF.");
+                    }
 
                 }
 
@@ -2232,12 +2211,15 @@ namespace PSXDataFetchingApp
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            countTimer++;
-            if (countTimer % 180 == 0 && resetFlag == true)
+            if (sliderRecur.Value == 1)
             {
-                ButtonAutomationPeer peer = new ButtonAutomationPeer(btnReset);
-                IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
-                invokeProv.Invoke();
+                countTimer++;
+                if (countTimer % Interval == 0 && resetFlag == true)
+                {
+                    ButtonAutomationPeer peer = new ButtonAutomationPeer(btnReset);
+                    IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
+                    invokeProv.Invoke();
+                }
             }
         }
 
@@ -2368,48 +2350,27 @@ namespace PSXDataFetchingApp
                 fundList = new List<FundwiseMarketSummary>();
                 try
                 {
-
                     connDefault.Open();
-                    // 1.  create a command object identifying the stored procedure
                     SqlCommand cmd = new SqlCommand("spGetFundIDByParamNAME", connDefault);
-
-                    // 2. set the command object so it knows to execute a stored procedure
                     cmd.CommandType = CommandType.StoredProcedure;
-
-                    // 3. add parameter to command, which will be passed to the stored procedure
                     cmd.Parameters.Add(new SqlParameter("@FUND_NAME", FundName));
-
-                    // execute the command
                     using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
-                        // iterate through results, printing each to console
                         while (rdr.Read())
                         {
                             _miscellenousData["FUND_ID"] = Convert.ToInt32(rdr["FI_CODE"]).ToString();
                         }
                     }
-
                     connDefault.Close();
-
                     getShareDetail();
-
                     connIpams.Open();
-
                     if (_miscellenousData["FUND_ID"] == "0")
                     {
-                        // 1.  create a command object identifying the stored procedure
                         SqlCommand getFundIdByNameCmd = new SqlCommand("spGetFundIDByParamNAME", connIpams);
-
-                        // 2. set the command object so it knows to execute a stored procedure
                         getFundIdByNameCmd.CommandType = CommandType.StoredProcedure;
-
-                        // 3. add parameter to command, which will be passed to the stored procedure
                         getFundIdByNameCmd.Parameters.Add(new SqlParameter("@FUND_NAME", FundName));
-
-                        // execute the command
                         using (SqlDataReader rdr2 = getFundIdByNameCmd.ExecuteReader())
                         {
-                            // iterate through results, printing each to console
                             while (rdr2.Read())
                             {
                                 _miscellenousData["FUND_ID"] = Convert.ToInt32(rdr2["FUND_CODE"]).ToString();
@@ -2417,40 +2378,11 @@ namespace PSXDataFetchingApp
                         }
 
                     }
-                    //connIpams.Close();
 
-                    //connIpams.Open();
-
-
-                    // 1.  create a command object identifying the stored procedure
                     SqlCommand cmdforFetchingShare = new SqlCommand("spGetShareDetailByParamFundIdAndDate", connIpams);
-
-                    // 2. set the command object so it knows to execute a stored procedure
                     cmdforFetchingShare.CommandType = CommandType.StoredProcedure;
-
-                    // 3. add parameter to command, which will be passed to the stored procedure
                     cmdforFetchingShare.Parameters.Add(new SqlParameter("@FUND_ID", _miscellenousData["FUND_ID"]));
-                    //cmdforFetchingShare.Parameters.Add(new SqlParameter("@DATE", DateTime.Now.AddYears(-1)));
                     cmdforFetchingShare.Parameters.Add(new SqlParameter("@DATE", DateTime.Now));
-                    //Share_Name = new List<String>();
-                    //Share_Symbol = new List<String>();
-                    //DateCostLastUpdated = new List<String>();
-                    //LastUpdatedPerUnitCost = new List<String>();
-                    //LastUpdatedCost = new List<String>();
-                    //LastUpdatedHolding = new List<String>();
-                    //LastUpdatedMarketPriceDate = new List<String>();
-                    //MarketSymbol = new List<String>();
-                    //MarketPriceCurrent = new List<String>();
-                    //MarketValue = new List<String>();
-                    //Appreciation_Depreciation = new List<String>();
-                    
-                    //// execute the command
-                    //QUANTITY = new List<Decimal>();
-                    //AVERAGE_PRICE = new List<Decimal>();
-                    //BOOK_COST = new List<Decimal>();
-                    //MARKET_PRICE = new List<Decimal>();
-                    //MARKET_VALUE = new List<Decimal>();
-                    //APPRECIATION_DEPRECIATION = new List<String>();
                     int total = 1;
                     using (SqlDataReader rdr = cmdforFetchingShare.ExecuteReader())
                     {
@@ -2462,85 +2394,50 @@ namespace PSXDataFetchingApp
                                 // Quantity is not 0
                                 if (rdr.GetDecimal("LastUpdatedHolding") != 0)
                                 {
-                                    //Share_Name.Add(rdr.GetString(0).ToString());
-                                    //Share_Symbol.Add(rdr.GetString(1).ToString());
-                                    //DateCostLastUpdated.Add(rdr.GetDateTime(2).ToString());
-                                    //AVERAGE_PRICE.Add(rdr.GetDecimal(3).ToString() == null ? 0 : rdr.GetDecimal(3));
-                                    //LastUpdatedPerUnitCost.Add(rdr.GetDecimal(3).ToString("#.##"));
-                                    //BOOK_COST.Add(rdr.GetDecimal(4));
-                                    //LastUpdatedCost.Add(Math.Round(rdr.GetDecimal(4)).ToString("#,##0"));
-                                    //double holding = Convert.ToDouble(rdr.GetDecimal(5));
+                                    //Storing reader data in a local current market summary variable
                                     CurrentMarketSummary _currentMarketSummary = new CurrentMarketSummary();
-                                    //string localSymbol = String.Empty;
-                                    //string localCurrent = String.Empty;
-                                    //decimal localValue = 0;
-                                    //QUANTITY.Add(rdr.GetDecimal(5));
-                                    //LastUpdatedHolding.Add(holding.ToString("#,##0"));
-                                    //LastUpdatedMarketPriceDate.Add(rdr.GetDateTime(6).ToString("#.##"));
+                                    // If database returns true i.e. if if scrip symbol exists
                                     if (getSymbolStatus(rdr.GetString("share_symbol")))
                                     {
+                                        // Iterates through market scrip list
                                         for (int i = 0; i < _scripList.Count; i++)
                                         {
+                                            // If market symbol from crawler and database symbol matches
                                             if (rdr.GetString("share_symbol").Equals(_scripList[i].Symbol == null ? "" : _scripList[i].Symbol))
                                             {
+                                                // Store crawler scrip data in the current market summary variable
                                                 _currentMarketSummary.Name = _scripList[i].Name;
-                                                _currentMarketSummary.Category = _scrip[i].Category;
+                                                _currentMarketSummary.Category = _scripList[i].Category;
                                                 _currentMarketSummary.Symbol = _scripList[i].Symbol;
                                                 _currentMarketSummary.Ldcp = _scripList[i].Ldcp;
                                                 _currentMarketSummary.Open = _scripList[i].Open;
                                                 _currentMarketSummary.High = _scripList[i].High;
                                                 _currentMarketSummary.Low = _scripList[i].Low;
                                                 _currentMarketSummary.Current = _scripList[i].Current;
-                                                //Debug.WriteLine("| Name: " + _scripList[i].Name + "| Category: " + _scripList[i].Category + "| Price: " + _scripList[i].Current);
                                                 _currentMarketSummary.Change = _scripList[i].Change;
                                                 _currentMarketSummary.Volume = _scripList[i].Volume;
-                                                //localSymbol = _scripList[i].Symbol;
-                                                //localCurrent = String.Format("{0:N2}", _scripList[i].Current);
-                                                //MARKET_PRICE.Add(Decimal.Parse(shareList[i].Current));
-                                                //localValue = Convert.ToDecimal(_scripList[i].Current) * rdr.GetDecimal(5);
-                                                //MARKET_VALUE.Add(localValue);
-
                                             }
                                         }
                                     }
-                                    //MarketSymbol.Add(localSymbol);
-                                    //MarketPriceCurrent.Add(localCurrent);
-                                    //MarketValue.Add(Convert.ToInt32(Math.Round(localValue)).ToString("#,##0"));
-                                    //decimal appreciation = localValue - rdr.GetDecimal(4);
+
+                                    //Appreciation Calculating and Styling
                                     decimal appreciation = (Convert.ToDecimal(_currentMarketSummary.Current) * rdr.GetDecimal("LastUpdatedHolding")) - rdr.GetDecimal("LastUpdatedCost");
-                                    //APPRECIATION_DEPRECIATION.Add(appreciation.ToString());
                                     string localAppreciate = Math.Round(appreciation, 2).ToString("#,##0");
                                     if (appreciation < 0)
                                     {
                                         localAppreciate = "(" + localAppreciate.Replace("-", "") + ")";
                                     }
-                                    //Appreciation_Depreciation.Add(localAppreciate);
 
-                                    //Closing Percentage Calculation
-                                    //decimal lappdepp;
-                                    //if (fundList[i].AppDep.Contains("("))
-                                    //{
-                                    //    Debug.WriteLine("fundList[i].AppDep: " + fundList[i].AppDep.Replace("(", "").Replace(")", "").Replace(",", ""));
-                                    //    lappdepp = Convert.ToDecimal("-" + fundList[i].AppDep.Replace("(", "").Replace(")", "").Replace(",", ""));
-                                    //}
-                                    //else
-                                    //{
-                                    //    lappdepp = Convert.ToDecimal(fundList[i].AppDep.Replace("(", "").Replace(")", "").Replace(",", ""));
-                                    //}
-                                    //Debug.WriteLine("lappdepp: " + lappdepp);
-                                    //decimal lbookcost = Convert.ToDecimal(fundList[i].BookCost.Replace(",", "").Replace(" ", ""));
-                                    //Debug.WriteLine("lbookcost: " + lbookcost);
+                                    //Closing Percentage Calculating
                                     decimal closing = 0;
                                     if (rdr.GetDecimal("LastUpdatedCost") > 0)
                                         closing = appreciation / rdr.GetDecimal("LastUpdatedCost");
-                                    //Debug.WriteLine("closing: " + closing);
-                                    //fundList[i].ClosingPercentage = closing.ToString();
 
                                     FundwiseMarketSummary item = new FundwiseMarketSummary();
                                     item.FundwiseMarketSummaryId = total++;
                                     item.ShareName = rdr.GetString("share_name");
-                                    item.Sector = rdr.GetString("sector_name");
                                     item.Symbol = rdr.GetString("share_symbol");
+                                    item.Sector = rdr.GetString("sector_name");
                                     item.Quantity = rdr.GetDecimal("LastUpdatedHolding").ToString("#,##0");
                                     item.AveragePrice = Decimal.Round(rdr.GetDecimal("LastUpdatedPerUnitCost"), 2).ToString("N2");
                                     item.BookCost = Decimal.Round(rdr.GetDecimal("LastUpdatedCost"), 2).ToString("N2");
@@ -2757,14 +2654,14 @@ namespace PSXDataFetchingApp
                                 decimal localValue = 0;
                                 if (getSymbolStatus(rdr.GetString(1).ToString()))
                                 {
-                                    for (int i = 0; i < shareList.Count; i++)
+                                    for (int i = 0; i < _scripList.Count; i++)
                                     {
-                                        if (shareList[i] != null && shareList[i].Symbol != null && rdr.GetString(1).Equals(shareList[i].Symbol == null ? "" : shareList[i].Symbol))
+                                        if (_scripList[i] != null && _scripList[i].Symbol != null && rdr.GetString(1).Equals(_scripList[i].Symbol == null ? "" : _scripList[i].Symbol))
                                         {
-                                            localSymbol = shareList[i].Symbol;
-                                            localCurrent = String.Format("{0:d}", shareList[i].Current);
+                                            localSymbol = _scripList[i].Symbol;
+                                            localCurrent = String.Format("{0:d}", _scripList[i].Current);
                                             //MARKET_PRICE.Add(Decimal.Parse(shareList[i].Current));
-                                            localValue = Convert.ToDecimal(shareList[i].Current) * rdr.GetDecimal(5);
+                                            localValue = Convert.ToDecimal(_scripList[i].Current) * rdr.GetDecimal(5);
                                             //MARKET_VALUE.Add(localValue);
                                         }
                                     }
@@ -2904,7 +2801,14 @@ namespace PSXDataFetchingApp
 
         private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Run( () => RunExcel() );
+            if (fundList.Count > 0)
+            {
+                await Task.Run(() => RunExcel());
+            }
+            else
+            {
+                MessageBox.Show("Please Get Data First.", "No Data Found", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         #endregion
@@ -2919,135 +2823,87 @@ namespace PSXDataFetchingApp
             image.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image);
 
-            lblStatus.Text = "Status: Processing";
+            lblStatus.Text = "In Process";
 
-            if (list1.Visibility == Visibility.Visible && resetFlag == true )
+            if (true)
             {
-                fundList.Clear();
-                _miscellenousData["FUND_NAME"] = comboFund.Text;
-                //_miscellenousData["FUND_ID"] = getFundId(_miscellenousData["FUND_NAME"]).ToString();
-                await Task.Run(() => mustWork(_miscellenousData["FUND_NAME"]));
-                //await Task.Run(() => getDefault());
-                //txtDate.Text = "DATE: " + _miscellenousData["DATE"];
-                //txtStatus.Text = "STATUS: " + _miscellenousData["STATUS"];
-                //col1.DisplayMemberBinding = new Binding("FundwiseMarketSummaryId");
-                //col2.DisplayMemberBinding = new Binding("ShareName");
-                //col3.DisplayMemberBinding = new Binding("Symbol");
-                list1.Items.Clear();
-                if (list1.Items.Count == 0 && fundList.Count > 0)
-                {
-                    for (int i = 0; i < fundList.Count; i++)
-                    {
-                        if (fundList[i].ShareName == null) { }
-                        else
-                        {
 
-                            //
-                            string _keyword = txtSearch.Text.ToLower().Trim();
-                            string _category = comboCategory.SelectedItem.ToString().ToLower().Trim();
-                            string _categoryKind = comboCategory.SelectedItem.ToString().Trim();
-                            if ((_keyword == "") && _category == "all categories")
-                            {
-                                list1.Items.Clear();
-                                for (int j = 0; j < fundList.Count; j++)
-                                {
-                                    if (fundList[j] == null) { }
-                                    //else if (fundList[i].Volume.Trim() == "CHANGE") { }
-                                    else
-                                    {
-                                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = fundList[j].ShareName, Symbol = fundList[j].Symbol, Sector = fundList[j].Sector, Quantity = fundList[j].Quantity, AveragePrice = fundList[j].AveragePrice, BookCost = fundList[j].BookCost, MarketPrice = fundList[j].MarketPrice == null || fundList[j].MarketPrice == "0" ? "NOT LISTED" : fundList[j].MarketPrice, MarketValue = fundList[j].MarketValue == "0.00" ? "NOT LISTED" : fundList[j].MarketValue, AppDep = fundList[j].AppDep.Trim(), ClosingPercentage = fundList[j].ClosingPercentage == "" ? "-" : fundList[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
-                                    }
-                                }
-                            }
+                if (list1.Visibility == Visibility.Visible && resetFlag == true)
+                {
+                    fundList.Clear();
+                    _miscellenousData["FUND_NAME"] = comboFund.Text;
+                    await Task.Run(() => mustWork(_miscellenousData["FUND_NAME"]));
+                    list1.Items.Clear();
+                    if (list1.Items.Count == 0 && fundList.Count > 0)
+                    {
+                        for (int i = 0; i < fundList.Count; i++)
+                        {
+                            if (fundList[i].ShareName == null) { }
                             else
                             {
-                                IEnumerable<FundwiseMarketSummary> _query = fundList;
-                                if (_category != "all categories")
+                                string _keyword = txtSearch.Text.ToLower().Trim();
+                                string _category = comboCategory.SelectedItem.ToString().ToLower().Trim();
+                                string _categoryKind = comboCategory.SelectedItem.ToString().Trim();
+                                if ((_keyword == "") && _category == "all categories")
                                 {
-                                    _query = fundList.Where(q => q.Sector.ToLower().Trim().Contains(_category));
-                                }
-                                _query = _query.Where(q => (q.ShareName.ToString().ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_keyword)) || (q.Symbol.ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_category) && _keyword == "") || (q.Sector.ToLower().Trim().Contains(_category) && q.ShareName.ToLower().Trim().Contains(_keyword)));
-                                List<FundwiseMarketSummary> _tempscrip = _query.ToList();
-                                list1.Items.Clear();
-                                for (int j = 0; j < _tempscrip.Count; j++)
-                                {
-                                    if (_tempscrip[j] == null) { }
-                                    //else if (_tempscrip[i].Volume.Trim() == "CHANGE") { }
-                                    else
+                                    list1.Items.Clear();
+                                    for (int j = 0; j < fundList.Count; j++)
                                     {
-                                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = _tempscrip[j].ShareName, Symbol = _tempscrip[j].Symbol, Sector = _tempscrip[j].Sector, Quantity = _tempscrip[j].Quantity, AveragePrice = _tempscrip[j].AveragePrice, BookCost = _tempscrip[j].BookCost, MarketPrice = _tempscrip[j].MarketPrice == null || _tempscrip[j].MarketPrice == "0" ? "NOT LISTED" : _tempscrip[j].MarketPrice, MarketValue = _tempscrip[j].MarketValue == "0.00" ? "NOT LISTED" : _tempscrip[j].MarketValue, AppDep = _tempscrip[j].AppDep.Trim(), ClosingPercentage = _tempscrip[j].ClosingPercentage == "" ? "-" : _tempscrip[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(_tempscrip[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
-                                        //list1.Items.Add(_tempscrip[i]);
+                                        if (fundList[j] == null) { }
+                                        else
+                                        {
+                                            list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = fundList[j].ShareName, Symbol = fundList[j].Symbol, Sector = fundList[j].Sector, Quantity = fundList[j].Quantity, AveragePrice = fundList[j].AveragePrice, BookCost = fundList[j].BookCost, MarketPrice = fundList[j].MarketPrice == null || fundList[j].MarketPrice == "0" ? "NOT LISTED" : fundList[j].MarketPrice, MarketValue = fundList[j].MarketValue == "0.00" ? "NOT LISTED" : fundList[j].MarketValue, AppDep = fundList[j].AppDep.Trim(), ClosingPercentage = fundList[j].ClosingPercentage == "" ? "-" : fundList[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    IEnumerable<FundwiseMarketSummary> _query = fundList;
+                                    if (_category != "all categories")
+                                    {
+                                        _query = fundList.Where(q => q.Sector.ToLower().Trim().Contains(_category));
+                                    }
+                                    _query = _query.Where(q => (q.ShareName.ToString().ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_keyword)) || (q.Symbol.ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_category) && _keyword == "") || (q.Sector.ToLower().Trim().Contains(_category) && q.ShareName.ToLower().Trim().Contains(_keyword)));
+                                    List<FundwiseMarketSummary> _tempscrip = _query.ToList();
+                                    list1.Items.Clear();
+                                    for (int j = 0; j < _tempscrip.Count; j++)
+                                    {
+                                        if (_tempscrip[j] == null) { }
+                                        else
+                                        {
+                                            list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = _tempscrip[j].ShareName, Symbol = _tempscrip[j].Symbol, Sector = _tempscrip[j].Sector, Quantity = _tempscrip[j].Quantity, AveragePrice = _tempscrip[j].AveragePrice, BookCost = _tempscrip[j].BookCost, MarketPrice = _tempscrip[j].MarketPrice == null || _tempscrip[j].MarketPrice == "0" ? "NOT LISTED" : _tempscrip[j].MarketPrice, MarketValue = _tempscrip[j].MarketValue == "0.00" ? "NOT LISTED" : _tempscrip[j].MarketValue, AppDep = _tempscrip[j].AppDep.Trim(), ClosingPercentage = _tempscrip[j].ClosingPercentage == "" ? "-" : _tempscrip[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(_tempscrip[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                        }
                                     }
                                 }
                             }
 
-                            //if (Convert.ToDecimal(fundList[i].ClosingPercentage) >= Convert.ToDecimal(CLOSING_PERCENTAGE))
-                            //{
-                            //    FundPopUpWindowFlag = true;
-                            //    string getSymbol = getFundSymbolExist(fundList[i].Symbol);
-                            //    if (getSymbol != "Nil")
-                            //    {
-                            //        int flagBucket = UpdateToFundBacket(Convert.ToDateTime(_miscellenousData["DATE"]), _miscellenousData["STATUS"].ToUpper(), Convert.ToInt64(getFundId(FundName)), FundName, fundList[i].ShareName, fundList[i].Symbol, Convert.ToDecimal(fundList[i].Quantity.Replace(",", "")), Convert.ToDecimal(fundList[i].AveragePrice), Convert.ToDecimal(fundList[i].BookCost), Convert.ToDecimal(fundList[i].MarketPrice == "" ? "0" : fundList[i].MarketPrice), Convert.ToDecimal(fundList[i].MarketValue), Convert.ToDecimal(fundList[i].AppDep.Trim()), Convert.ToDecimal(fundList[i].ClosingPercentage));
-                            //    }
-                            //    else
-                            //    {
-                            //        int flagBucket = SavingToFundBacket(_miscellenousData["DATE"], _miscellenousData["STATUS"].ToUpper(), false, Convert.ToInt64(getFundId(FundName)), FundName, fundList[i].ShareName, fundList[i].Symbol, Convert.ToDecimal(fundList[i].Quantity.Replace(",", "")), Convert.ToDecimal(fundList[i].AveragePrice), Convert.ToDecimal(fundList[i].BookCost), Convert.ToDecimal(fundList[i].MarketPrice == "" ? "0" : fundList[i].MarketPrice), Convert.ToDecimal(fundList[i].MarketValue), Convert.ToDecimal(fundList[i].AppDep.Trim()), Convert.ToDecimal(fundList[i].ClosingPercentage));
-                            //    }
-                            //}
-                            //list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == "0" ? "Not Listed" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "Not Listed" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "-1.00%" ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
-
-                            //decimal lappdepp;
-                            //if (Appreciation_Depreciation[i].Contains("("))
-                            //{
-                            //    lappdepp = Convert.ToDecimal("-" + Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
-                            //}
-                            //else
-                            //{
-                            //    lappdepp = Convert.ToDecimal(Appreciation_Depreciation[i].Replace("(", "").Replace(")", "").Replace(",", ""));
-                            //}
-                            //decimal lbookcost = Convert.ToDecimal(LastUpdatedCost[i].Replace(",", ""));
-                            //decimal closing = lappdepp / lbookcost;
-                            //if (closing >= CLOSING_PERCENTAGE)
-                            //{
-                            //    FundPopUpWindowFlag = true;
-                            //    string getSymbol = getFundSymbolExist(Share_Symbol[i]);
-                            //    if (getSymbol != "Nil")
-                            //    {
-                            //        int flagBucket = UpdateToFundBacket(Convert.ToDateTime(_miscellenousData["DATE"]), _miscellenousData["STATUS"].ToUpper(), Convert.ToInt64(getFundId(FundName)), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i].Replace(",", "")), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i] == "" ? "0" : MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), Convert.ToDecimal(lappdepp), Convert.ToDecimal(closing));
-                            //    }
-                            //    else
-                            //    {
-                            //        int flagBucket = SavingToFundBacket(Convert.ToDateTime(_miscellenousData["DATE"]), _miscellenousData["STATUS"].ToUpper(), false, Convert.ToInt64(getFundId(FundName)), FundName, Share_Name[i], Share_Symbol[i], Convert.ToDecimal(LastUpdatedHolding[i].Replace(",", "")), Convert.ToDecimal(LastUpdatedPerUnitCost[i]), lbookcost, Convert.ToDecimal(MarketPriceCurrent[i] == "" ? "0" : MarketPriceCurrent[i]), Convert.ToDecimal(MarketValue[i]), Convert.ToDecimal(lappdepp), Convert.ToDecimal(closing));
-                            //    }
-
-                            //}
-                            //decimal laverageprice = Convert.ToDecimal(LastUpdatedPerUnitCost[i]);
-                            //decimal lmarketprice = Convert.ToDecimal(MarketPriceCurrent[i] == "" ? "0.00" : MarketPriceCurrent[i]);
-                            ////list1.Items.Add(new FundwiseMarketSummary { FundId = fundList[i].FundId, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue, AppDep = fundList[i].AppDep });
-
-                            //list1.Items.Add(new FundMarket { SERIAL = i + 1, NAME = Share_Name[i], SYMBOL = Share_Symbol[i], CURRENT = LastUpdatedHolding[i], LDCP = laverageprice.ToString("N2"), OPEN = LastUpdatedCost[i], HIGH = "", LOW = "", CHANGE = lmarketprice.ToString("N2") == "0.00" ? "Not Listed" : lmarketprice.ToString("N2"), VOLUME = MarketValue[i] == "0" ? "Not Listed" : MarketValue[i], APPRECIATION_DEPRECIATION = Appreciation_Depreciation[i].Trim(), PERCENTAGE_CLOSING = MarketPriceCurrent[i] == "" ? "-" : String.Format("{0:N2}", Math.Round(closing, 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
-
                         }
-
                     }
+                    else
+                    {
+                        Debug.WriteLine("Already Items Located.");
+                    }
+
+                    FundImage.Visibility = Visibility.Hidden;
+                    list1.Visibility = Visibility.Visible;
+                    loadingImage.Visibility = Visibility.Hidden;
+
+                    txtDate.Text = DateTime.Parse(_miscellenousData["DATE"]).ToString("dddd, dd MMMM yyyy hh:mm tt"); ;
+                    txtStatus.Text = _miscellenousData["STATUS"].ToUpper();
+                    gridStatus.Visibility = Visibility.Visible;
+
                 }
+
                 else
                 {
-                    Debug.WriteLine("Already Items Located.");
+                    MessageBox.Show("Run the Fund Selection First.", "No Data Found.", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-
-                FundImage.Visibility = Visibility.Hidden;
-                list1.Visibility = Visibility.Visible;
-                loadingImage.Visibility = Visibility.Hidden;
-
-                txtDate.Text = "Date: " + _miscellenousData["DATE"];
-                txtStatus.Text = "Status: " + _miscellenousData["STATUS"];
 
             }
 
             else
             {
-                MessageBox.Show("Run the Fund Selection First.", "No Data Found.", MessageBoxButton.OK, MessageBoxImage.Information);
+                Debug.WriteLine("Dispatcher Timer is Null.");
             }
 
             //txtBucketCount.Text = " (" + getCountFundBucket().ToString() + ") ";
@@ -3058,7 +2914,7 @@ namespace PSXDataFetchingApp
             image2.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image2);
 
-            lblStatus.Text = "Status: Ready";
+            lblStatus.Text = "Ready";
 
             if (ConfigurationManager.AppSettings["PopupAlert"] == "1")
             {
