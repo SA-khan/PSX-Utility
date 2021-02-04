@@ -1668,6 +1668,9 @@ namespace PSXDataFetchingApp
                 }
                 else
                 {
+                    txtSearch.Text = "";
+                    comboCategory.SelectedIndex = 0;
+
                     FundImage.Visibility = Visibility.Hidden;
                     list1.Visibility = Visibility.Hidden;
                     loadingImage.Visibility = Visibility.Visible;
@@ -1688,298 +1691,301 @@ namespace PSXDataFetchingApp
                     {
                         if (fundList != null)
                         {
-                            var bc = new BrushConverter();
+                            try
+                            {
+                                var bc = new BrushConverter();
 
-                            myGridView.AllowsColumnReorder = true;
-                            myGridView.ColumnHeaderToolTip = "Fund Market Information";
+                                myGridView.AllowsColumnReorder = true;
+                                myGridView.ColumnHeaderToolTip = "Fund Market Information";
 
-                            #region Serial_Number
-                            DataTemplate templateHeader = new DataTemplate();
-                            FrameworkElementFactory factoryHeader = new FrameworkElementFactory(typeof(TextBlock));
-                            factoryHeader.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            factoryHeader.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            factoryHeader.SetValue(TextBlock.TextProperty, "Sr. No.");
-                            factoryHeader.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            factoryHeader.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            factoryHeader.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            factoryHeader.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            factoryHeader.SetValue(TextBlock.WidthProperty, 50.0);
-                            factoryHeader.SetValue(TextBlock.HeightProperty, 30.0);
-                            templateHeader.VisualTree = factoryHeader;
-                            Binding binding = new Binding("FundwiseMarketSummaryId");
-                            DataTemplate template = new DataTemplate();
-                            FrameworkElementFactory factory = new FrameworkElementFactory(typeof(TextBlock));
-                            factory.SetBinding(TextBlock.TextProperty, binding);
-                            factory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
-                            factory.SetValue(TextBlock.WidthProperty, 35.0);
-                            factory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            template.VisualTree = factory;
-                            gvc1.HeaderTemplate = templateHeader;
-                            gvc1.Width = 50;
-                            gvc1.CellTemplate = template;
-                            myGridView.Columns.Add(gvc1);
-                            #endregion
+                                #region Serial_Number
+                                DataTemplate templateHeader = new DataTemplate();
+                                FrameworkElementFactory factoryHeader = new FrameworkElementFactory(typeof(TextBlock));
+                                factoryHeader.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                factoryHeader.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                factoryHeader.SetValue(TextBlock.TextProperty, "Sr. No.");
+                                factoryHeader.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                factoryHeader.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                factoryHeader.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                factoryHeader.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                factoryHeader.SetValue(TextBlock.WidthProperty, 50.0);
+                                factoryHeader.SetValue(TextBlock.HeightProperty, 30.0);
+                                templateHeader.VisualTree = factoryHeader;
+                                Binding binding = new Binding("FundwiseMarketSummaryId");
+                                DataTemplate template = new DataTemplate();
+                                FrameworkElementFactory factory = new FrameworkElementFactory(typeof(TextBlock));
+                                factory.SetBinding(TextBlock.TextProperty, binding);
+                                factory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
+                                factory.SetValue(TextBlock.WidthProperty, 35.0);
+                                factory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                template.VisualTree = factory;
+                                gvc1.HeaderTemplate = templateHeader;
+                                gvc1.Width = 50;
+                                gvc1.CellTemplate = template;
+                                myGridView.Columns.Add(gvc1);
+                                #endregion
 
-                            #region Name
-                            DataTemplate NameHeader = new DataTemplate();
-                            FrameworkElementFactory NameFactoryHeader = new FrameworkElementFactory(typeof(TextBlock));
-                            NameFactoryHeader.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            NameFactoryHeader.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            NameFactoryHeader.SetValue(TextBlock.TextProperty, "Name");
-                            NameFactoryHeader.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            NameFactoryHeader.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            NameFactoryHeader.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            NameFactoryHeader.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            NameFactoryHeader.SetValue(TextBlock.WidthProperty, 220.0);
-                            NameFactoryHeader.SetValue(TextBlock.HeightProperty, 30.0);
-                            NameHeader.VisualTree = NameFactoryHeader;
-                            DataTemplate NameTemplate = new DataTemplate();
-                            FrameworkElementFactory NameFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            NameFactory.SetBinding(TextBlock.TextProperty, new Binding("ShareName"));
-                            NameFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Left);
-                            NameFactory.SetValue(TextBlock.WidthProperty, 220.0);
-                            NameFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            NameTemplate.VisualTree = NameFactory;
-                            gvc2.HeaderTemplate = NameHeader;
-                            gvc2.Width = 220;
-                            gvc2.CellTemplate = NameTemplate;
-                            myGridView.Columns.Add(gvc2);
-                            #endregion
+                                #region Name
+                                DataTemplate NameHeader = new DataTemplate();
+                                FrameworkElementFactory NameFactoryHeader = new FrameworkElementFactory(typeof(TextBlock));
+                                NameFactoryHeader.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                NameFactoryHeader.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                NameFactoryHeader.SetValue(TextBlock.TextProperty, "Name");
+                                NameFactoryHeader.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                NameFactoryHeader.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                NameFactoryHeader.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                NameFactoryHeader.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                NameFactoryHeader.SetValue(TextBlock.WidthProperty, 220.0);
+                                NameFactoryHeader.SetValue(TextBlock.HeightProperty, 30.0);
+                                NameHeader.VisualTree = NameFactoryHeader;
+                                DataTemplate NameTemplate = new DataTemplate();
+                                FrameworkElementFactory NameFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                NameFactory.SetBinding(TextBlock.TextProperty, new Binding("ShareName"));
+                                NameFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Left);
+                                NameFactory.SetValue(TextBlock.WidthProperty, 220.0);
+                                NameFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                NameTemplate.VisualTree = NameFactory;
+                                gvc2.HeaderTemplate = NameHeader;
+                                gvc2.Width = 220;
+                                gvc2.CellTemplate = NameTemplate;
+                                myGridView.Columns.Add(gvc2);
+                                #endregion
 
-                            #region Symbol
-                            DataTemplate SymbolHeader = new DataTemplate();
-                            FrameworkElementFactory SymbolHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            SymbolHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            SymbolHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            SymbolHeaderFactory.SetValue(TextBlock.TextProperty, "Symbol");
-                            SymbolHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            SymbolHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            SymbolHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            SymbolHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            SymbolHeaderFactory.SetValue(TextBlock.WidthProperty, 70.0);
-                            SymbolHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
-                            SymbolHeader.VisualTree = SymbolHeaderFactory;
-                            DataTemplate SymbolTemplate = new DataTemplate();
-                            FrameworkElementFactory SymbolFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            SymbolFactory.SetBinding(TextBlock.TextProperty, new Binding("Symbol"));
-                            SymbolFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            SymbolFactory.SetValue(TextBlock.WidthProperty, 70.0);
-                            SymbolFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            SymbolTemplate.VisualTree = SymbolFactory;
-                            gvc3.HeaderTemplate = SymbolHeader;
-                            gvc3.Width = 70;
-                            gvc3.CellTemplate = SymbolTemplate;
-                            myGridView.Columns.Add(gvc3);
-                            #endregion
+                                #region Symbol
+                                DataTemplate SymbolHeader = new DataTemplate();
+                                FrameworkElementFactory SymbolHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                SymbolHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                SymbolHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                SymbolHeaderFactory.SetValue(TextBlock.TextProperty, "Symbol");
+                                SymbolHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                SymbolHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                SymbolHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                SymbolHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                SymbolHeaderFactory.SetValue(TextBlock.WidthProperty, 70.0);
+                                SymbolHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
+                                SymbolHeader.VisualTree = SymbolHeaderFactory;
+                                DataTemplate SymbolTemplate = new DataTemplate();
+                                FrameworkElementFactory SymbolFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                SymbolFactory.SetBinding(TextBlock.TextProperty, new Binding("Symbol"));
+                                SymbolFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                SymbolFactory.SetValue(TextBlock.WidthProperty, 70.0);
+                                SymbolFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                SymbolTemplate.VisualTree = SymbolFactory;
+                                gvc3.HeaderTemplate = SymbolHeader;
+                                gvc3.Width = 70;
+                                gvc3.CellTemplate = SymbolTemplate;
+                                myGridView.Columns.Add(gvc3);
+                                #endregion
 
-                            #region Category
-                            DataTemplate CategoryHeaderTemplate = new DataTemplate();
-                            FrameworkElementFactory CategoryHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            CategoryHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            CategoryHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            CategoryHeaderFactory.SetValue(TextBlock.TextProperty, "Sector");
-                            CategoryHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            CategoryHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            CategoryHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            CategoryHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            CategoryHeaderFactory.SetValue(TextBlock.WidthProperty, 180.0);
-                            CategoryHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
-                            CategoryHeaderTemplate.VisualTree = CategoryHeaderFactory;
-                            DataTemplate CategoryTemplate = new DataTemplate();
-                            FrameworkElementFactory CategoryFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            CategoryFactory.SetBinding(TextBlock.TextProperty, new Binding("Sector"));
-                            CategoryFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Left);
-                            CategoryFactory.SetValue(TextBlock.WidthProperty, 200.0);
-                            CategoryFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            CategoryTemplate.VisualTree = CategoryFactory;
-                            gvc4.HeaderTemplate = CategoryHeaderTemplate;
-                            gvc4.Width = 180;
-                            gvc4.CellTemplate = CategoryTemplate;
-                            myGridView.Columns.Add(gvc4);
-                            #endregion
+                                #region Category
+                                DataTemplate CategoryHeaderTemplate = new DataTemplate();
+                                FrameworkElementFactory CategoryHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                CategoryHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                CategoryHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                CategoryHeaderFactory.SetValue(TextBlock.TextProperty, "Sector");
+                                CategoryHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                CategoryHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                CategoryHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                CategoryHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                CategoryHeaderFactory.SetValue(TextBlock.WidthProperty, 180.0);
+                                CategoryHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
+                                CategoryHeaderTemplate.VisualTree = CategoryHeaderFactory;
+                                DataTemplate CategoryTemplate = new DataTemplate();
+                                FrameworkElementFactory CategoryFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                CategoryFactory.SetBinding(TextBlock.TextProperty, new Binding("Sector"));
+                                CategoryFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Left);
+                                CategoryFactory.SetValue(TextBlock.WidthProperty, 200.0);
+                                CategoryFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                CategoryTemplate.VisualTree = CategoryFactory;
+                                gvc4.HeaderTemplate = CategoryHeaderTemplate;
+                                gvc4.Width = 180;
+                                gvc4.CellTemplate = CategoryTemplate;
+                                myGridView.Columns.Add(gvc4);
+                                #endregion
 
-                            #region Quantity
-                            DataTemplate QuantityHeaderTemplate = new DataTemplate();
-                            FrameworkElementFactory QuantityHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            QuantityHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            QuantityHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            QuantityHeaderFactory.SetValue(TextBlock.TextProperty, "Quantity");
-                            QuantityHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            QuantityHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            QuantityHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            QuantityHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            QuantityHeaderFactory.SetValue(TextBlock.WidthProperty, 100.0);
-                            QuantityHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
-                            QuantityHeaderTemplate.VisualTree = QuantityHeaderFactory;
-                            DataTemplate QuantityTemplate = new DataTemplate();
-                            FrameworkElementFactory QuantityFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            QuantityFactory.SetBinding(TextBlock.TextProperty, new Binding("Quantity"));
-                            QuantityFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
-                            QuantityFactory.SetValue(TextBlock.WidthProperty, 85.0);
-                            QuantityFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            QuantityTemplate.VisualTree = QuantityFactory;
-                            gvc5.HeaderTemplate = QuantityHeaderTemplate;
-                            gvc5.Width = 100;
-                            gvc5.CellTemplate = QuantityTemplate;
-                            myGridView.Columns.Add(gvc5);
-                            #endregion
+                                #region Quantity
+                                DataTemplate QuantityHeaderTemplate = new DataTemplate();
+                                FrameworkElementFactory QuantityHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                QuantityHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                QuantityHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                QuantityHeaderFactory.SetValue(TextBlock.TextProperty, "Quantity");
+                                QuantityHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                QuantityHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                QuantityHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                QuantityHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                QuantityHeaderFactory.SetValue(TextBlock.WidthProperty, 100.0);
+                                QuantityHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
+                                QuantityHeaderTemplate.VisualTree = QuantityHeaderFactory;
+                                DataTemplate QuantityTemplate = new DataTemplate();
+                                FrameworkElementFactory QuantityFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                QuantityFactory.SetBinding(TextBlock.TextProperty, new Binding("Quantity"));
+                                QuantityFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
+                                QuantityFactory.SetValue(TextBlock.WidthProperty, 85.0);
+                                QuantityFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                QuantityTemplate.VisualTree = QuantityFactory;
+                                gvc5.HeaderTemplate = QuantityHeaderTemplate;
+                                gvc5.Width = 100;
+                                gvc5.CellTemplate = QuantityTemplate;
+                                myGridView.Columns.Add(gvc5);
+                                #endregion
 
-                            #region AveragePrice
-                            DataTemplate AveragePriceHeaderTemplate = new DataTemplate();
-                            FrameworkElementFactory AveragePriceHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            AveragePriceHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            AveragePriceHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            AveragePriceHeaderFactory.SetValue(TextBlock.TextProperty, "Average Price");
-                            AveragePriceHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            AveragePriceHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            AveragePriceHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            AveragePriceHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            AveragePriceHeaderFactory.SetValue(TextBlock.WidthProperty, 100.0);
-                            AveragePriceHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
-                            AveragePriceHeaderTemplate.VisualTree = AveragePriceHeaderFactory;
-                            DataTemplate AveragePriceTemplate = new DataTemplate();
-                            FrameworkElementFactory AveragePriceFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            AveragePriceFactory.SetBinding(TextBlock.TextProperty, new Binding("AveragePrice"));
-                            AveragePriceFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
-                            AveragePriceFactory.SetValue(TextBlock.WidthProperty, 85.0);
-                            AveragePriceFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            AveragePriceTemplate.VisualTree = AveragePriceFactory;
-                            gvc6.HeaderTemplate = AveragePriceHeaderTemplate;
-                            gvc6.Width = 100;
-                            gvc6.CellTemplate = AveragePriceTemplate;
-                            myGridView.Columns.Add(gvc6);
-                            #endregion
+                                #region AveragePrice
+                                DataTemplate AveragePriceHeaderTemplate = new DataTemplate();
+                                FrameworkElementFactory AveragePriceHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                AveragePriceHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                AveragePriceHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                AveragePriceHeaderFactory.SetValue(TextBlock.TextProperty, "Average Price");
+                                AveragePriceHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                AveragePriceHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                AveragePriceHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                AveragePriceHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                AveragePriceHeaderFactory.SetValue(TextBlock.WidthProperty, 100.0);
+                                AveragePriceHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
+                                AveragePriceHeaderTemplate.VisualTree = AveragePriceHeaderFactory;
+                                DataTemplate AveragePriceTemplate = new DataTemplate();
+                                FrameworkElementFactory AveragePriceFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                AveragePriceFactory.SetBinding(TextBlock.TextProperty, new Binding("AveragePrice"));
+                                AveragePriceFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
+                                AveragePriceFactory.SetValue(TextBlock.WidthProperty, 85.0);
+                                AveragePriceFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                AveragePriceTemplate.VisualTree = AveragePriceFactory;
+                                gvc6.HeaderTemplate = AveragePriceHeaderTemplate;
+                                gvc6.Width = 100;
+                                gvc6.CellTemplate = AveragePriceTemplate;
+                                myGridView.Columns.Add(gvc6);
+                                #endregion
 
-                            #region BookCost
-                            DataTemplate BookCostHeaderTemplate = new DataTemplate();
-                            FrameworkElementFactory BookCostHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            BookCostHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            BookCostHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            BookCostHeaderFactory.SetValue(TextBlock.TextProperty, "Book Cost");
-                            BookCostHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            BookCostHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            BookCostHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            BookCostHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            BookCostHeaderFactory.SetValue(TextBlock.WidthProperty, 120.0);
-                            BookCostHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
-                            BookCostHeaderTemplate.VisualTree = BookCostHeaderFactory;
-                            DataTemplate BookCostTemplate = new DataTemplate();
-                            FrameworkElementFactory BookCostFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            BookCostFactory.SetBinding(TextBlock.TextProperty, new Binding("BookCost"));
-                            BookCostFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
-                            BookCostFactory.SetValue(TextBlock.WidthProperty, 105.0);
-                            BookCostFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            BookCostTemplate.VisualTree = BookCostFactory;
-                            gvc7.HeaderTemplate = BookCostHeaderTemplate;
-                            gvc7.Width = 120;
-                            gvc7.CellTemplate = BookCostTemplate;
-                            myGridView.Columns.Add(gvc7);
-                            #endregion
+                                #region BookCost
+                                DataTemplate BookCostHeaderTemplate = new DataTemplate();
+                                FrameworkElementFactory BookCostHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                BookCostHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                BookCostHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                BookCostHeaderFactory.SetValue(TextBlock.TextProperty, "Book Cost");
+                                BookCostHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                BookCostHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                BookCostHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                BookCostHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                BookCostHeaderFactory.SetValue(TextBlock.WidthProperty, 120.0);
+                                BookCostHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
+                                BookCostHeaderTemplate.VisualTree = BookCostHeaderFactory;
+                                DataTemplate BookCostTemplate = new DataTemplate();
+                                FrameworkElementFactory BookCostFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                BookCostFactory.SetBinding(TextBlock.TextProperty, new Binding("BookCost"));
+                                BookCostFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
+                                BookCostFactory.SetValue(TextBlock.WidthProperty, 105.0);
+                                BookCostFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                BookCostTemplate.VisualTree = BookCostFactory;
+                                gvc7.HeaderTemplate = BookCostHeaderTemplate;
+                                gvc7.Width = 120;
+                                gvc7.CellTemplate = BookCostTemplate;
+                                myGridView.Columns.Add(gvc7);
+                                #endregion
 
-                            #region MarketPrice
-                            DataTemplate MarketPriceHeaderTemplate = new DataTemplate();
-                            FrameworkElementFactory MarketPriceHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            MarketPriceHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            MarketPriceHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            MarketPriceHeaderFactory.SetValue(TextBlock.TextProperty, "Market Price");
-                            MarketPriceHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            MarketPriceHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            MarketPriceHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            MarketPriceHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            MarketPriceHeaderFactory.SetValue(TextBlock.WidthProperty, 120.0);
-                            MarketPriceHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
-                            MarketPriceHeaderTemplate.VisualTree = MarketPriceHeaderFactory;
-                            DataTemplate MarketPriceTemplate = new DataTemplate();
-                            FrameworkElementFactory MarketPriceFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            MarketPriceFactory.SetBinding(TextBlock.TextProperty, new Binding("MarketPrice"));
-                            MarketPriceFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
-                            MarketPriceFactory.SetValue(TextBlock.WidthProperty, 105.0);
-                            MarketPriceFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            MarketPriceTemplate.VisualTree = MarketPriceFactory;
-                            gvc8.HeaderTemplate = MarketPriceHeaderTemplate;
-                            gvc8.Width = 120;
-                            gvc8.CellTemplate = MarketPriceTemplate;
-                            myGridView.Columns.Add(gvc8);
-                            #endregion
+                                #region MarketPrice
+                                DataTemplate MarketPriceHeaderTemplate = new DataTemplate();
+                                FrameworkElementFactory MarketPriceHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                MarketPriceHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                MarketPriceHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                MarketPriceHeaderFactory.SetValue(TextBlock.TextProperty, "Market Price");
+                                MarketPriceHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                MarketPriceHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                MarketPriceHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                MarketPriceHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                MarketPriceHeaderFactory.SetValue(TextBlock.WidthProperty, 120.0);
+                                MarketPriceHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
+                                MarketPriceHeaderTemplate.VisualTree = MarketPriceHeaderFactory;
+                                DataTemplate MarketPriceTemplate = new DataTemplate();
+                                FrameworkElementFactory MarketPriceFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                MarketPriceFactory.SetBinding(TextBlock.TextProperty, new Binding("MarketPrice"));
+                                MarketPriceFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
+                                MarketPriceFactory.SetValue(TextBlock.WidthProperty, 105.0);
+                                MarketPriceFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                MarketPriceTemplate.VisualTree = MarketPriceFactory;
+                                gvc8.HeaderTemplate = MarketPriceHeaderTemplate;
+                                gvc8.Width = 120;
+                                gvc8.CellTemplate = MarketPriceTemplate;
+                                myGridView.Columns.Add(gvc8);
+                                #endregion
 
-                            #region MarkeValue
-                            DataTemplate MarketValueHeaderTemplate = new DataTemplate();
-                            FrameworkElementFactory MarketValueHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            MarketValueHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            MarketValueHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            MarketValueHeaderFactory.SetValue(TextBlock.TextProperty, "Market Value");
-                            MarketValueHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            MarketValueHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            MarketValueHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            MarketValueHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            MarketValueHeaderFactory.SetValue(TextBlock.WidthProperty, 120.0);
-                            MarketValueHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
-                            MarketValueHeaderTemplate.VisualTree = MarketValueHeaderFactory;
-                            DataTemplate MarketValueTemplate = new DataTemplate();
-                            FrameworkElementFactory MarketValueFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            MarketValueFactory.SetBinding(TextBlock.TextProperty, new Binding("MarketValue"));
-                            MarketValueFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
-                            MarketValueFactory.SetValue(TextBlock.WidthProperty, 105.0);
-                            MarketValueFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            MarketValueTemplate.VisualTree = MarketValueFactory;
-                            gvc9.HeaderTemplate = MarketValueHeaderTemplate;
-                            gvc9.Width = 120;
-                            gvc9.CellTemplate = MarketValueTemplate;
-                            myGridView.Columns.Add(gvc9);
-                            #endregion
+                                #region MarkeValue
+                                DataTemplate MarketValueHeaderTemplate = new DataTemplate();
+                                FrameworkElementFactory MarketValueHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                MarketValueHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                MarketValueHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                MarketValueHeaderFactory.SetValue(TextBlock.TextProperty, "Market Value");
+                                MarketValueHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                MarketValueHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                MarketValueHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                MarketValueHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                MarketValueHeaderFactory.SetValue(TextBlock.WidthProperty, 120.0);
+                                MarketValueHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
+                                MarketValueHeaderTemplate.VisualTree = MarketValueHeaderFactory;
+                                DataTemplate MarketValueTemplate = new DataTemplate();
+                                FrameworkElementFactory MarketValueFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                MarketValueFactory.SetBinding(TextBlock.TextProperty, new Binding("MarketValue"));
+                                MarketValueFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
+                                MarketValueFactory.SetValue(TextBlock.WidthProperty, 105.0);
+                                MarketValueFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                MarketValueTemplate.VisualTree = MarketValueFactory;
+                                gvc9.HeaderTemplate = MarketValueHeaderTemplate;
+                                gvc9.Width = 120;
+                                gvc9.CellTemplate = MarketValueTemplate;
+                                myGridView.Columns.Add(gvc9);
+                                #endregion
 
-                            #region AppDep
-                            DataTemplate AppDepHeaderTemplate = new DataTemplate();
-                            FrameworkElementFactory AppDepHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            AppDepHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            AppDepHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            AppDepHeaderFactory.SetValue(TextBlock.TextProperty, "App. / (Dep.)");
-                            AppDepHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            AppDepHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            AppDepHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            AppDepHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            AppDepHeaderFactory.SetValue(TextBlock.WidthProperty, 100.0);
-                            AppDepHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
-                            AppDepHeaderTemplate.VisualTree = AppDepHeaderFactory;
-                            DataTemplate AppDepTemplate = new DataTemplate();
-                            FrameworkElementFactory AppDepFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            AppDepFactory.SetBinding(TextBlock.TextProperty, new Binding("AppDep"));
-                            AppDepFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
-                            AppDepFactory.SetValue(TextBlock.WidthProperty, 85.0);
-                            AppDepFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            AppDepTemplate.VisualTree = AppDepFactory;
-                            gvc10.HeaderTemplate = AppDepHeaderTemplate;
-                            gvc10.Width = 100;
-                            gvc10.CellTemplate = AppDepTemplate;
-                            myGridView.Columns.Add(gvc10);
-                            #endregion
+                                #region AppDep
+                                DataTemplate AppDepHeaderTemplate = new DataTemplate();
+                                FrameworkElementFactory AppDepHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                AppDepHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                AppDepHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                AppDepHeaderFactory.SetValue(TextBlock.TextProperty, "App. / (Dep.)");
+                                AppDepHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                AppDepHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                AppDepHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                AppDepHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                AppDepHeaderFactory.SetValue(TextBlock.WidthProperty, 100.0);
+                                AppDepHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
+                                AppDepHeaderTemplate.VisualTree = AppDepHeaderFactory;
+                                DataTemplate AppDepTemplate = new DataTemplate();
+                                FrameworkElementFactory AppDepFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                AppDepFactory.SetBinding(TextBlock.TextProperty, new Binding("AppDep"));
+                                AppDepFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
+                                AppDepFactory.SetValue(TextBlock.WidthProperty, 85.0);
+                                AppDepFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                AppDepTemplate.VisualTree = AppDepFactory;
+                                gvc10.HeaderTemplate = AppDepHeaderTemplate;
+                                gvc10.Width = 100;
+                                gvc10.CellTemplate = AppDepTemplate;
+                                myGridView.Columns.Add(gvc10);
+                                #endregion
 
-                            #region ClosingPercentage
-                            DataTemplate ClosingPercentageHeaderTemplate = new DataTemplate();
-                            FrameworkElementFactory ClosingPercentageHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            ClosingPercentageHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
-                            ClosingPercentageHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
-                            ClosingPercentageHeaderFactory.SetValue(TextBlock.TextProperty, "Closing Percentage");
-                            ClosingPercentageHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
-                            ClosingPercentageHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
-                            ClosingPercentageHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
-                            ClosingPercentageHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
-                            ClosingPercentageHeaderFactory.SetValue(TextBlock.WidthProperty, 140.0);
-                            ClosingPercentageHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
-                            ClosingPercentageHeaderTemplate.VisualTree = ClosingPercentageHeaderFactory;
-                            DataTemplate ClosingPercentageTemplate = new DataTemplate();
-                            FrameworkElementFactory ClosingPercentageFactory = new FrameworkElementFactory(typeof(TextBlock));
-                            ClosingPercentageFactory.SetBinding(TextBlock.TextProperty, new Binding("ClosingPercentage"));
-                            ClosingPercentageFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
-                            ClosingPercentageFactory.SetValue(TextBlock.WidthProperty, 125.0);
-                            ClosingPercentageFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
-                            ClosingPercentageTemplate.VisualTree = ClosingPercentageFactory;
-                            gvc11.HeaderTemplate = ClosingPercentageHeaderTemplate;
-                            gvc11.Width = 140;
-                            gvc11.CellTemplate = ClosingPercentageTemplate;
-                            myGridView.Columns.Add(gvc11);
-                            #endregion
-
+                                #region ClosingPercentage
+                                DataTemplate ClosingPercentageHeaderTemplate = new DataTemplate();
+                                FrameworkElementFactory ClosingPercentageHeaderFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                ClosingPercentageHeaderFactory.SetValue(TextBlock.BackgroundProperty, System.Windows.Media.Brushes.DarkSlateGray);
+                                ClosingPercentageHeaderFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.White);
+                                ClosingPercentageHeaderFactory.SetValue(TextBlock.TextProperty, "Closing Percentage");
+                                ClosingPercentageHeaderFactory.SetValue(TextBlock.FontSizeProperty, 14.0);
+                                ClosingPercentageHeaderFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center);
+                                ClosingPercentageHeaderFactory.SetValue(TextBlock.PaddingProperty, new Thickness(0, 5, 0, 5));
+                                ClosingPercentageHeaderFactory.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+                                ClosingPercentageHeaderFactory.SetValue(TextBlock.WidthProperty, 140.0);
+                                ClosingPercentageHeaderFactory.SetValue(TextBlock.HeightProperty, 30.0);
+                                ClosingPercentageHeaderTemplate.VisualTree = ClosingPercentageHeaderFactory;
+                                DataTemplate ClosingPercentageTemplate = new DataTemplate();
+                                FrameworkElementFactory ClosingPercentageFactory = new FrameworkElementFactory(typeof(TextBlock));
+                                ClosingPercentageFactory.SetBinding(TextBlock.TextProperty, new Binding("ClosingPercentage"));
+                                ClosingPercentageFactory.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Right);
+                                ClosingPercentageFactory.SetValue(TextBlock.WidthProperty, 125.0);
+                                ClosingPercentageFactory.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Black);
+                                ClosingPercentageTemplate.VisualTree = ClosingPercentageFactory;
+                                gvc11.HeaderTemplate = ClosingPercentageHeaderTemplate;
+                                gvc11.Width = 140;
+                                gvc11.CellTemplate = ClosingPercentageTemplate;
+                                myGridView.Columns.Add(gvc11);
+                                #endregion
+                            }
+                            catch(Exception ex) { Debug.WriteLine("Doomed."); }
 
 
                             for (int i = 0; i < fundList.Count; i++)
@@ -1989,26 +1995,65 @@ namespace PSXDataFetchingApp
                                 {
                                     if (fundList[i].AppDep.StartsWith('('))
                                     {
-                                        
-                                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == null ? "NOT LISTED" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "NOT LISTED" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "" ? "-" : fundList[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+
+                                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == null || fundList[i].MarketPrice == "0" ? "NOT LISTED" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "NOT LISTED" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "" ? "-" : fundList[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+
+                                        //string _keyword = txtSearch.Text.ToLower().Trim();
+                                        //string _category = comboCategory.SelectedItem.ToString().ToLower().Trim();
+                                        //string _categoryKind = comboCategory.SelectedItem.ToString().Trim();
+                                        //if ((_keyword == "") && _category == "all categories")
+                                        //{
+                                        //    list1.Items.Clear();
+                                        //    for (int j = 0; j < fundList.Count; j++)
+                                        //    {
+                                        //        if (fundList[j] == null) { }
+                                        //        //else if (fundList[i].Volume.Trim() == "CHANGE") { }
+                                        //        else
+                                        //        {
+                                        //            list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = fundList[j].ShareName, Symbol = fundList[j].Symbol, Sector = fundList[j].Sector, Quantity = fundList[j].Quantity, AveragePrice = fundList[j].AveragePrice, BookCost = fundList[j].BookCost, MarketPrice = fundList[j].MarketPrice == null || fundList[j].MarketPrice == "0" ? "NOT LISTED" : fundList[j].MarketPrice, MarketValue = fundList[j].MarketValue == "0.00" ? "NOT LISTED" : fundList[j].MarketValue, AppDep = fundList[j].AppDep.Trim(), ClosingPercentage = fundList[j].ClosingPercentage == "" ? "-" : fundList[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                        //        }
+                                        //    }
+                                        //}
+                                        //else
+                                        //{
+                                        //    IEnumerable<FundwiseMarketSummary> _query = fundList;
+                                        //    if (_category != "all categories")
+                                        //    {
+                                        //        _query = fundList.Where(q => q.Sector.ToLower().Trim().Contains(_category));
+                                        //    }
+                                        //    _query = _query.Where(q => (q.ShareName.ToString().ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_keyword)) || (q.Symbol.ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_category) && _keyword == "") || (q.Sector.ToLower().Trim().Contains(_category) && q.ShareName.ToLower().Trim().Contains(_keyword)));
+                                        //    List<FundwiseMarketSummary> _tempscrip = _query.ToList();
+                                        //    list1.Items.Clear();
+                                        //    for (int j = 0; j < _tempscrip.Count; j++)
+                                        //    {
+                                        //        if (_tempscrip[j] == null) { }
+                                        //        //else if (_tempscrip[i].Volume.Trim() == "CHANGE") { }
+                                        //        else
+                                        //        {
+                                        //            list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = _tempscrip[j].ShareName, Symbol = _tempscrip[j].Symbol, Sector = _tempscrip[j].Sector, Quantity = _tempscrip[j].Quantity, AveragePrice = _tempscrip[j].AveragePrice, BookCost = _tempscrip[j].BookCost, MarketPrice = _tempscrip[j].MarketPrice == null || _tempscrip[j].MarketPrice == "0" ? "NOT LISTED" : _tempscrip[j].MarketPrice, MarketValue = _tempscrip[j].MarketValue == "0.00" ? "NOT LISTED" : _tempscrip[j].MarketValue, AppDep = _tempscrip[j].AppDep.Trim(), ClosingPercentage = _tempscrip[j].ClosingPercentage == "" ? "-" : _tempscrip[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(_tempscrip[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                        //            //list1.Items.Add(_tempscrip[i]);
+                                        //        }
+                                        //    }
+                                        //}
+
                                         //Style style = new Style();
                                         //style.TargetType = typeof(ListViewItem);
                                         //style.Setters.Add(new Setter(ListViewItem.BackgroundProperty, System.Windows.Media.Brushes.Pink));
                                         //list1.ItemContainerStyle = style;
 
-        //                                string xaml = @"
-        //<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""> 
-        //    <TextBlock Text=""{Binding Path=AppDep" + @"}""> 
-        //        <TextBlock.Style>
-        //            <Style TargetType=""{x:Type TextBlock}"">
-        //                <Setter Property=""Foreground"" Value=""Red"" /><Setter Property=""HorizontalAlignment"" Value=""Right"" /><Setter Property=""TextAlignment"" Value=""Right"" />
-        //            </Style>
-        //        </TextBlock.Style>
-        //    </TextBlock>
-        //    </DataTemplate>";
-        //                                StringReader stringReader = new StringReader(xaml);
-        //                                XmlReader xmlReader = XmlReader.Create(stringReader);
-        //                                gvc10.CellTemplate = XamlReader.Load(xmlReader) as DataTemplate;
+                                        //                                string xaml = @"
+                                        //<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""> 
+                                        //    <TextBlock Text=""{Binding Path=AppDep" + @"}""> 
+                                        //        <TextBlock.Style>
+                                        //            <Style TargetType=""{x:Type TextBlock}"">
+                                        //                <Setter Property=""Foreground"" Value=""Red"" /><Setter Property=""HorizontalAlignment"" Value=""Right"" /><Setter Property=""TextAlignment"" Value=""Right"" />
+                                        //            </Style>
+                                        //        </TextBlock.Style>
+                                        //    </TextBlock>
+                                        //    </DataTemplate>";
+                                        //                                StringReader stringReader = new StringReader(xaml);
+                                        //                                XmlReader xmlReader = XmlReader.Create(stringReader);
+                                        //                                gvc10.CellTemplate = XamlReader.Load(xmlReader) as DataTemplate;
 
                                         //DataTrigger trigger = new DataTrigger();
                                         //trigger.Binding = new Binding("ShareName");
@@ -2022,6 +2067,44 @@ namespace PSXDataFetchingApp
                                     else
                                     {
                                         list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice.ToString() == "0" ? "NOT LISTED" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "NOT LISTED" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "" ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                        //string _keyword = txtSearch.Text.ToLower().Trim();
+                                        //string _category = comboCategory.SelectedItem.ToString().ToLower().Trim();
+                                        //string _categoryKind = comboCategory.SelectedItem.ToString().Trim();
+                                        //if ((_keyword == "") && _category == "all categories")
+                                        //{
+                                        //    list1.Items.Clear();
+                                        //    for (int j = 0; j < fundList.Count; j++)
+                                        //    {
+                                        //        if (fundList[j] == null) { }
+                                        //        //else if (fundList[i].Volume.Trim() == "CHANGE") { }
+                                        //        else
+                                        //        {
+                                        //            list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = fundList[j].ShareName, Symbol = fundList[j].Symbol, Sector = fundList[j].Sector, Quantity = fundList[j].Quantity, AveragePrice = fundList[j].AveragePrice, BookCost = fundList[j].BookCost, MarketPrice = fundList[j].MarketPrice == null || fundList[j].MarketPrice == "0" ? "NOT LISTED" : fundList[j].MarketPrice, MarketValue = fundList[j].MarketValue == "0.00" ? "NOT LISTED" : fundList[j].MarketValue, AppDep = fundList[j].AppDep.Trim(), ClosingPercentage = fundList[j].ClosingPercentage == "" ? "-" : fundList[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                        //        }
+                                        //    }
+                                        //}
+                                        //else
+                                        //{
+                                        //    IEnumerable<FundwiseMarketSummary> _query = fundList;
+                                        //    if (_category != "all categories")
+                                        //    {
+                                        //        _query = fundList.Where(q => q.Sector.ToLower().Trim().Contains(_category));
+                                        //    }
+                                        //    _query = _query.Where(q => (q.ShareName.ToString().ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_keyword)) || (q.Symbol.ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_category) && _keyword == "") || (q.Sector.ToLower().Trim().Contains(_category) && q.ShareName.ToLower().Trim().Contains(_keyword)));
+                                        //    List<FundwiseMarketSummary> _tempscrip = _query.ToList();
+                                        //    list1.Items.Clear();
+                                        //    for (int j = 0; j < _tempscrip.Count; j++)
+                                        //    {
+                                        //        if (_tempscrip[j] == null) { }
+                                        //        //else if (_tempscrip[i].Volume.Trim() == "CHANGE") { }
+                                        //        else
+                                        //        {
+                                        //            list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = _tempscrip[j].ShareName, Symbol = _tempscrip[j].Symbol, Sector = _tempscrip[j].Sector, Quantity = _tempscrip[j].Quantity, AveragePrice = _tempscrip[j].AveragePrice, BookCost = _tempscrip[j].BookCost, MarketPrice = _tempscrip[j].MarketPrice == null || _tempscrip[j].MarketPrice == "0" ? "NOT LISTED" : _tempscrip[j].MarketPrice, MarketValue = _tempscrip[j].MarketValue == "0.00" ? "NOT LISTED" : _tempscrip[j].MarketValue, AppDep = _tempscrip[j].AppDep.Trim(), ClosingPercentage = _tempscrip[j].ClosingPercentage == "" ? "-" : _tempscrip[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(_tempscrip[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                        //            //list1.Items.Add(_tempscrip[i]);
+                                        //        }
+                                        //    }
+                                        //}
+                                        //
                                     }
 
                                     if (Convert.ToDecimal(fundList[i].ClosingPercentage) >= Convert.ToDecimal(CLOSING_PERCENTAGE))
@@ -2537,47 +2620,48 @@ namespace PSXDataFetchingApp
                     while (rdr.Read())
                     {
                         // Qunatity is not Null
-                        if (!rdr.IsDBNull(5))
+                        if (!rdr.IsDBNull("SHARE_QUANTITY"))
                         {
                             // Quantity is not 0
-                            if (rdr.GetString(5) != null && rdr.GetString(5) != "0" && rdr.GetString(5) != "")
+                            if (rdr.GetString("SHARE_QUANTITY") != null && rdr.GetString("SHARE_QUANTITY") != "0" && rdr.GetString("SHARE_QUANTITY") != "")
                             {
                                 string localSymbol = String.Empty;
                                 string localCurrent = String.Empty;
                                 decimal localValue = 0;
-                                if (getSymbolStatus(rdr.GetString(1).ToString()))
+                                if (getSymbolStatus(rdr.GetString("SHARE_SYMBOL").ToString()))
                                 {
-                                    for (int i = 0; i < shareList.Count; i++)
+                                    for (int i = 0; i < _scripList.Count; i++)
                                     {
-                                        if (rdr.GetString(1).Equals(shareList[i].Symbol == null ? "" : shareList[i].Symbol))
+                                        if (rdr.GetString("SHARE_SYMBOL").Equals(_scripList[i].Symbol == null ? "" : _scripList[i].Symbol))
                                         {
-                                            localSymbol = shareList[i].Symbol;
-                                            localCurrent = String.Format("{0:N2}", shareList[i].Current);
-                                            localValue = Convert.ToDecimal(shareList[i].Current) * Convert.ToDecimal(rdr.GetString(5));
+                                            localSymbol = _scripList[i].Symbol;
+                                            localCurrent = String.Format("{0:N2}", _scripList[i].Current);
+                                            localValue = Convert.ToDecimal(_scripList[i].Current) * Convert.ToDecimal(rdr.GetString("SHARE_QUANTITY"));
                                         }
                                     }
                                 }
-                                decimal appreciation = localValue - Convert.ToDecimal(rdr.GetString(4));
+                                decimal appreciation = localValue - Convert.ToDecimal(rdr.GetString("SHARE_BOOK_COST"));
                                 string localAppreciate = Math.Round(appreciation, 2).ToString("#,##0");
                                 if (appreciation < 0)
                                 {
                                     localAppreciate = "(" + localAppreciate.Replace("-", "") + ")";
                                 }
                                 decimal closing = 0;
-                                if (Convert.ToDecimal(rdr.GetString(4)) > 0)
-                                    closing = appreciation / Convert.ToDecimal(rdr.GetString(4));
+                                if (Convert.ToDecimal(rdr.GetString("SHARE_BOOK_COST")) > 0)
+                                    closing = ( appreciation / Convert.ToDecimal(rdr.GetString("SHARE_BOOK_COST")) ) * 100;
                                 total++;
                                 FundwiseMarketSummary item = new FundwiseMarketSummary();
                                 item.FundwiseMarketSummaryId = total;
-                                item.ShareName = rdr.GetString(0);
-                                item.Symbol = rdr.GetString(1);
-                                item.Quantity = Convert.ToDecimal(rdr.GetString(5)).ToString("#,##0");
-                                item.AveragePrice = Decimal.Round(Convert.ToDecimal(rdr.GetString(3)), 2).ToString("N2");
-                                item.BookCost = Decimal.Round(Convert.ToDecimal(rdr.GetString(4)), 2).ToString("N2");
+                                item.ShareName = rdr.GetString("SHARE_NAME");
+                                item.Symbol = rdr.GetString("SHARE_SYMBOL");
+                                item.Sector = rdr.GetString("SHARE_SECTOR");
+                                item.Quantity = Convert.ToDecimal(rdr.GetString("SHARE_QUANTITY")).ToString("#,##0");
+                                item.AveragePrice = Decimal.Round(Convert.ToDecimal(rdr.GetString("SHARE_AVERAGE_COST")), 2).ToString("N2");
+                                item.BookCost = Decimal.Round(Convert.ToDecimal(rdr.GetString("SHARE_BOOK_COST")), 2).ToString("N2");
                                 item.MarketPrice = localCurrent == "" ? "0" : localCurrent;
                                 item.MarketValue = Decimal.Round(localValue, 2).ToString("N2");
                                 item.AppDep = String.Format("{0:N0}", localAppreciate);
-                                item.ClosingPercentage = closing.ToString();
+                                item.ClosingPercentage = localCurrent == "" ? null : closing.ToString();
                                 fundList.Add(item);
                             }
                         }
@@ -2858,6 +2942,45 @@ namespace PSXDataFetchingApp
                         else
                         {
 
+                            //
+                            string _keyword = txtSearch.Text.ToLower().Trim();
+                            string _category = comboCategory.SelectedItem.ToString().ToLower().Trim();
+                            string _categoryKind = comboCategory.SelectedItem.ToString().Trim();
+                            if ((_keyword == "") && _category == "all categories")
+                            {
+                                list1.Items.Clear();
+                                for (int j = 0; j < fundList.Count; j++)
+                                {
+                                    if (fundList[j] == null) { }
+                                    //else if (fundList[i].Volume.Trim() == "CHANGE") { }
+                                    else
+                                    {
+                                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = fundList[j].ShareName, Symbol = fundList[j].Symbol, Sector = fundList[j].Sector, Quantity = fundList[j].Quantity, AveragePrice = fundList[j].AveragePrice, BookCost = fundList[j].BookCost, MarketPrice = fundList[j].MarketPrice == null || fundList[j].MarketPrice == "0" ? "NOT LISTED" : fundList[j].MarketPrice, MarketValue = fundList[j].MarketValue == "0.00" ? "NOT LISTED" : fundList[j].MarketValue, AppDep = fundList[j].AppDep.Trim(), ClosingPercentage = fundList[j].ClosingPercentage == "" ? "-" : fundList[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                IEnumerable<FundwiseMarketSummary> _query = fundList;
+                                if (_category != "all categories")
+                                {
+                                    _query = fundList.Where(q => q.Sector.ToLower().Trim().Contains(_category));
+                                }
+                                _query = _query.Where(q => (q.ShareName.ToString().ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_keyword)) || (q.Symbol.ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_category) && _keyword == "") || (q.Sector.ToLower().Trim().Contains(_category) && q.ShareName.ToLower().Trim().Contains(_keyword)));
+                                List<FundwiseMarketSummary> _tempscrip = _query.ToList();
+                                list1.Items.Clear();
+                                for (int j = 0; j < _tempscrip.Count; j++)
+                                {
+                                    if (_tempscrip[j] == null) { }
+                                    //else if (_tempscrip[i].Volume.Trim() == "CHANGE") { }
+                                    else
+                                    {
+                                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = j + 1, ShareName = _tempscrip[j].ShareName, Symbol = _tempscrip[j].Symbol, Sector = _tempscrip[j].Sector, Quantity = _tempscrip[j].Quantity, AveragePrice = _tempscrip[j].AveragePrice, BookCost = _tempscrip[j].BookCost, MarketPrice = _tempscrip[j].MarketPrice == null || _tempscrip[j].MarketPrice == "0" ? "NOT LISTED" : _tempscrip[j].MarketPrice, MarketValue = _tempscrip[j].MarketValue == "0.00" ? "NOT LISTED" : _tempscrip[j].MarketValue, AppDep = _tempscrip[j].AppDep.Trim(), ClosingPercentage = _tempscrip[j].ClosingPercentage == "" ? "-" : _tempscrip[j].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(_tempscrip[j].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                                        //list1.Items.Add(_tempscrip[i]);
+                                    }
+                                }
+                            }
+
                             //if (Convert.ToDecimal(fundList[i].ClosingPercentage) >= Convert.ToDecimal(CLOSING_PERCENTAGE))
                             //{
                             //    FundPopUpWindowFlag = true;
@@ -2871,7 +2994,7 @@ namespace PSXDataFetchingApp
                             //        int flagBucket = SavingToFundBacket(_miscellenousData["DATE"], _miscellenousData["STATUS"].ToUpper(), false, Convert.ToInt64(getFundId(FundName)), FundName, fundList[i].ShareName, fundList[i].Symbol, Convert.ToDecimal(fundList[i].Quantity.Replace(",", "")), Convert.ToDecimal(fundList[i].AveragePrice), Convert.ToDecimal(fundList[i].BookCost), Convert.ToDecimal(fundList[i].MarketPrice == "" ? "0" : fundList[i].MarketPrice), Convert.ToDecimal(fundList[i].MarketValue), Convert.ToDecimal(fundList[i].AppDep.Trim()), Convert.ToDecimal(fundList[i].ClosingPercentage));
                             //    }
                             //}
-                            list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == "0" ? "Not Listed" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "Not Listed" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "-1.00%" ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                            //list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == "0" ? "Not Listed" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "Not Listed" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "-1.00%" ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
 
                             //decimal lappdepp;
                             //if (Appreciation_Depreciation[i].Contains("("))
@@ -3842,12 +3965,123 @@ namespace PSXDataFetchingApp
 
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            string _keyword = txtSearch.Text.ToLower().Trim();
+            string _category = comboCategory.SelectedItem.ToString().ToLower().Trim();
+            string _categoryKind = comboCategory.SelectedItem.ToString().Trim();
+            if ((_keyword == "") && _category == "all categories")
+            {
+                list1.Items.Clear();
+                for (int i = 0; i < fundList.Count; i++)
+                {
+                    if (fundList[i] == null) { }
+                    //else if (fundList[i].Volume.Trim() == "CHANGE") { }
+                    else
+                    {
+                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == null || fundList[i].MarketPrice == "0" ? "NOT LISTED" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "NOT LISTED" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "" ? "-" : fundList[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                    }
+                }
+            }
+            else
+            {
+                IEnumerable<FundwiseMarketSummary> _query = fundList;
+                if (_category != "all categories")
+                {
+                    _query = fundList.Where(q => q.Sector.ToLower().Trim().Contains(_category));
+                }
+                _query = _query.Where(q => (q.ShareName.ToString().ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_keyword)) || (q.Symbol.ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_category) && _keyword == "") || (q.Sector.ToLower().Trim().Contains(_category) && q.ShareName.ToLower().Trim().Contains(_keyword)));
+                List<FundwiseMarketSummary> _tempscrip = _query.ToList();
+                list1.Items.Clear();
+                for (int i = 0; i < _tempscrip.Count; i++)
+                {
+                    if (_tempscrip[i] == null) { }
+                    //else if (_tempscrip[i].Volume.Trim() == "CHANGE") { }
+                    else
+                    {
+                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = _tempscrip[i].ShareName, Symbol = _tempscrip[i].Symbol, Sector = _tempscrip[i].Sector, Quantity = _tempscrip[i].Quantity, AveragePrice = _tempscrip[i].AveragePrice, BookCost = _tempscrip[i].BookCost, MarketPrice = _tempscrip[i].MarketPrice == null || _tempscrip[i].MarketPrice == "0" ? "NOT LISTED" : _tempscrip[i].MarketPrice, MarketValue = _tempscrip[i].MarketValue == "0.00" ? "NOT LISTED" : _tempscrip[i].MarketValue, AppDep = _tempscrip[i].AppDep.Trim(), ClosingPercentage = _tempscrip[i].ClosingPercentage == "" ? "-" : _tempscrip[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(_tempscrip[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                    }
+                }
+            }
         }
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
+            string _keyword = txtSearch.Text.ToLower().Trim();
+            string _category = comboCategory.SelectedItem.ToString().ToLower().Trim();
+            string _categoryKind = comboCategory.SelectedItem.ToString().Trim();
+            if ((_keyword == "") && _category == "all categories")
+            {
+                list1.Items.Clear();
+                for (int i = 0; i < fundList.Count; i++)
+                {
+                    if (fundList[i] == null) { }
+                    //else if (fundList[i].Volume.Trim() == "CHANGE") { }
+                    else
+                    {
+                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == null || fundList[i].MarketPrice == "0" ? "NOT LISTED" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "NOT LISTED" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "" ? "-" : fundList[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                    }
+                }
+            }
+            else
+            {
+                IEnumerable<FundwiseMarketSummary> _query = fundList;
+                if (_category != "all categories")
+                {
+                    _query = fundList.Where(q => q.Sector.ToLower().Trim().Contains(_category));
+                }
+                _query = _query.Where(q => (q.ShareName.ToString().ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_keyword)) || (q.Symbol.ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_category) && _keyword == "") || (q.Sector.ToLower().Trim().Contains(_category) && q.ShareName.ToLower().Trim().Contains(_keyword)));
+                List<FundwiseMarketSummary> _tempscrip = _query.ToList();
+                list1.Items.Clear();
+                for (int i = 0; i < _tempscrip.Count; i++)
+                {
+                    if (_tempscrip[i] == null) { }
+                    //else if (_tempscrip[i].Volume.Trim() == "CHANGE") { }
+                    else
+                    {
+                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = _tempscrip[i].ShareName, Symbol = _tempscrip[i].Symbol, Sector = _tempscrip[i].Sector, Quantity = _tempscrip[i].Quantity, AveragePrice = _tempscrip[i].AveragePrice, BookCost = _tempscrip[i].BookCost, MarketPrice = _tempscrip[i].MarketPrice == null || _tempscrip[i].MarketPrice == "0" ? "NOT LISTED" : _tempscrip[i].MarketPrice, MarketValue = _tempscrip[i].MarketValue == "0.00" ? "NOT LISTED" : _tempscrip[i].MarketValue, AppDep = _tempscrip[i].AppDep.Trim(), ClosingPercentage = _tempscrip[i].ClosingPercentage == "" ? "-" : _tempscrip[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(_tempscrip[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                    }
+                }
+            }
+        }
 
+        private void comboCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string _keyword = txtSearch.Text.ToLower().Trim();
+            string _category = comboCategory.SelectedItem.ToString().ToLower().Trim();
+            string _categoryKind = comboCategory.SelectedItem.ToString().Trim();
+            if ((_keyword == "") && _category == "all categories")
+            {
+                list1.Items.Clear();
+                for (int i = 0; i < fundList.Count; i++)
+                {
+                    if (fundList[i] == null) { }
+                    //else if (fundList[i].Volume.Trim() == "CHANGE") { }
+                    else
+                    {
+                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = fundList[i].ShareName, Symbol = fundList[i].Symbol, Sector = fundList[i].Sector, Quantity = fundList[i].Quantity, AveragePrice = fundList[i].AveragePrice, BookCost = fundList[i].BookCost, MarketPrice = fundList[i].MarketPrice == null || fundList[i].MarketPrice == "0" ? "NOT LISTED" : fundList[i].MarketPrice, MarketValue = fundList[i].MarketValue == "0.00" ? "NOT LISTED" : fundList[i].MarketValue, AppDep = fundList[i].AppDep.Trim(), ClosingPercentage = fundList[i].ClosingPercentage == "" ? "-" : fundList[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(fundList[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                    }
+                }
+            }
+            else
+            {
+                IEnumerable<FundwiseMarketSummary> _query = fundList;
+                if (_category != "all categories")
+                {
+                    _query = fundList.Where(q => q.Sector.ToLower().Trim().Contains(_category));
+                }
+                _query = _query.Where(q => (q.ShareName.ToString().ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_keyword)) || (q.Symbol.ToLower().Trim().Contains(_keyword)) || (q.Sector.ToLower().Trim().Contains(_category) && _keyword == "") || (q.Sector.ToLower().Trim().Contains(_category) && q.ShareName.ToLower().Trim().Contains(_keyword)));
+                List<FundwiseMarketSummary> _tempscrip = _query.ToList();
+                list1.Items.Clear();
+                for (int i = 0; i < _tempscrip.Count; i++)
+                {
+                    if (_tempscrip[i] == null) { }
+                    //else if (_tempscrip[i].Volume.Trim() == "CHANGE") { }
+                    else
+                    {
+                        list1.Items.Add(new FundwiseMarketSummary { FundwiseMarketSummaryId = i + 1, ShareName = _tempscrip[i].ShareName, Symbol = _tempscrip[i].Symbol, Sector = _tempscrip[i].Sector, Quantity = _tempscrip[i].Quantity, AveragePrice = _tempscrip[i].AveragePrice, BookCost = _tempscrip[i].BookCost, MarketPrice = _tempscrip[i].MarketPrice == null || _tempscrip[i].MarketPrice == "0" ? "NOT LISTED" : _tempscrip[i].MarketPrice, MarketValue = _tempscrip[i].MarketValue == "0.00" ? "NOT LISTED" : _tempscrip[i].MarketValue, AppDep = _tempscrip[i].AppDep.Trim(), ClosingPercentage = _tempscrip[i].ClosingPercentage == "" ? "-" : _tempscrip[i].MarketPrice == null ? "-" : String.Format("{0:N2}", Math.Round(Convert.ToDecimal(_tempscrip[i].ClosingPercentage), 2, MidpointRounding.AwayFromZero).ToString("N2") + "%") });
+                        //list1.Items.Add(_tempscrip[i]);
+                    }
+                }
+            }
         }
     }
 

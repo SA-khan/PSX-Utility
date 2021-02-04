@@ -27,7 +27,7 @@ namespace PSXDataFetchingApp
     public partial class MainWindow : Window
     {
         //License Date 
-        DateTime ExpiryDate = DateTime.ParseExact("22/03/2021", "dd/MM/yyyy", null);
+        DateTime ExpiryDate = DateTime.ParseExact("22/03/2025", "dd/MM/yyyy", null);
         public IConfiguration Configuration { get; set; }
         public DataContext _context;
 

@@ -114,7 +114,7 @@
                     </Button.Content>
                 </Button>
                 <Grid HorizontalAlignment="Right" Grid.Column="5">
-                    <TextBox  Width="115" Height="30" FontSize="13"  VerticalAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" x:Name="txtSearch" Margin="5" TextChanged="txtSearch_TextChanged" />
+                    <TextBox MinWidth="120" Width="Auto" Height="30" FontSize="13"  VerticalAlignment="Center" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" x:Name="txtSearch" Margin="5" TextChanged="txtSearch_TextChanged" />
                     <TextBlock x:Name="txtSearch1" IsHitTestVisible="False" Text="Enter Search.." VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray" FontSize="13" FontFamily="/Fonts/#Raleway">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
@@ -128,7 +128,7 @@
                         </TextBlock.Style>
                     </TextBlock>
                 </Grid>
-                <ComboBox x:Name="comboCategory" Grid.Column="6" Width="120" Height="30" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" FontSize="13" SelectionChanged="comboFund_SelectionChanged" />
+                <ComboBox x:Name="comboCategory" Grid.Column="6" Width="Auto" Height="30" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" FontSize="13" SelectionChanged="comboCategory_SelectionChanged" />
                 <Button x:Name="btnSearch" Grid.Column="7" HorizontalAlignment="Left" BorderBrush="Transparent" VerticalAlignment="Center"  Width="80" Height="30" Background="Transparent" Click="btnSearch_Click" ToolTip="Search By Category." >
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
                         <Grid Width="70" Height="25" Margin="0 0 0 0">
