@@ -1,25 +1,24 @@
-/****** Object:  StoredProcedure [dbo].[spINSERT_CURRENT_MARKET_SUMMARY]    Script Date: 25/01/2021 4:55:26 PM ******/
+/****** Object:  StoredProcedure [dbo].[spINSERT_CURRENT_MARKET_SUMMARY]    Script Date: 10/19/2020 11:24:17 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROC [dbo].[spINSERT_CURRENT_MARKET_SUMMARY]
-		@COMPANY_SECTOR varchar(MAX),
+CREATE PROC [dbo].[spINSERT_CURRENT_MARKET_SUMMARY] 
 		@COMPANY_NAME varchar(MAX),
 		@COMPANY_SYMBOL varchar(MAX),
-		@COMPANY_LDCP varchar(MAX),
-		@COMPANY_OPEN varchar(MAX),
-		@COMPANY_HIGH varchar(MAX),
-		@COMPANY_LOW varchar(MAX),
-		@COMPANY_CURRENT varchar(MAX),
-		@COMPANY_CHANGE varchar(MAX),
-		@COMPANY_VOLUME varchar(MAX)
+		@COMPANY_LDCP float,
+		@COMPANY_OPEN float,
+		@COMPANY_HIGH float,
+		@COMPANY_LOW float,
+		@COMPANY_CURRENT float,
+		@COMPANY_CHANGE float,
+		@COMPANY_VOLUME float
 	AS
 BEGIN
 
 INSERT INTO [dbo].[CURRENT_MARKET_SUMMARY]
            ([CMS_SECTOR]
-		   ,[CMS_SCRIP_NAME]
+	   ,[CMS_SCRIP_NAME]
            ,[CMS_SYMBOL]
            ,[CMS_LDCP]
            ,[CMS_OPEN]
@@ -29,9 +28,9 @@ INSERT INTO [dbo].[CURRENT_MARKET_SUMMARY]
            ,[CMS_CHANGE]
            ,[CMS_VOLUME])
      VALUES
-           (@COMPANY_SECTOR
-		   ,@COMPANY_NAME
-           ,@COMPANY_SYMBOL
+           (''
+	   ,UPPER(@COMPANY_NAME)
+           ,UPPER(@COMPANY_SYMBOL)
            ,@COMPANY_LDCP
            ,@COMPANY_OPEN
            ,@COMPANY_HIGH 

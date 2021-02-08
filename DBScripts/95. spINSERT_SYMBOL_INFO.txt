@@ -1,0 +1,15 @@
+CREATE PROC spINSERT_SYMBOL_INFO 
+	@SYMBOL_MARK varchar(30),
+	@SYMBOL_NAME varchar(500),
+	@SYMBOL_DESCRIPTION varchar(MAX)
+AS
+BEGIN
+	INSERT INTO SYMBOL_INFO
+           ([SYMBOL_MARK]
+           ,[SYMBOL_NAME]
+           ,[SYMBOL_DESCRIPTION])
+     VALUES
+           (@SYMBOL_MARK
+           ,@SYMBOL_NAME
+           ,@SYMBOL_DESCRIPTION) 
+END

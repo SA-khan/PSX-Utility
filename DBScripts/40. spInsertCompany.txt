@@ -1,0 +1,12 @@
+CREATE PROC spInsertCompany
+	@SYMBOL varchar(200),
+	@NAME varchar(MAX)
+AS
+BEGIN
+INSERT INTO [dbo].[Company]
+           ([C_SYMBOL]
+           ,[C_NAME])
+     VALUES
+           (@SYMBOL
+           ,@NAME)
+END

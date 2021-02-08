@@ -1,26 +1,14 @@
 CREATE DATABASE PSXDataWarehouse
-/****** Object:  Table [dbo].[CURRENT_MARKET_SUMMARY]    Script Date: 25/01/2021 5:26:36 PM ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE TABLE [dbo].[CURRENT_MARKET_SUMMARY](
-	[CMS_ID] [int] IDENTITY(1,1) NOT NULL,
-	[CMS_SECTOR] [varchar](max) NULL,
-	[CMS_SCRIP_NAME] [varchar](max) NOT NULL,
-	[CMS_SYMBOL] [varchar](max) NULL,
-	[CMS_LDCP] [varchar](max) NULL,
-	[CMS_OPEN] [varchar](max) NULL,
-	[CMS_HIGH] [varchar](max) NULL,
-	[CMS_LOW] [varchar](max) NULL,
-	[CMS_CURRENT] [varchar](max) NULL,
-	[CMS_CHANGE] [varchar](max) NULL,
-	[CMS_VOLUME] [varchar](max) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[CMS_ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
+	[CMS_ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[CMS_SECTOR] [varchar](MAX) NULL,
+	[CMS_SCRIP_NAME] [varchar](MAX) NOT NULL,
+	[CMS_SYMBOL] [varchar](MAX) NULL,
+	[CMS_LDCP] [decimal](18, 2) NULL,
+	[CMS_OPEN] [decimal](18, 2) NULL,
+	[CMS_HIGH] [decimal](18, 2) NULL,
+	[CMS_LOW] [decimal](18, 2) NULL,
+	[CMS_CURRENT] [decimal](18, 2) NULL,
+	[CMS_CHANGE] [float] NULL,
+	[CMS_VOLUME] [decimal] NULL)

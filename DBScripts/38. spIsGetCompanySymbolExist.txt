@@ -1,13 +1,13 @@
-/****** Object:  StoredProcedure [dbo].[spIsGetCompanySymbolExist]    Script Date: 13/01/2021 3:42:17 PM ******/
+/****** Object:  StoredProcedure [dbo].[spIsGetCompanySymbolExist]    Script Date: 9/11/2020 6:12:23 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROC [dbo].[spIsGetCompanySymbolExist]
+ALTER PROC [dbo].[spIsGetCompanySymbolExist]
 		@SYMBOL varchar(500)
 		AS
 BEGIN
 	DECLARE @Count bigint;
-	SELECT @Count = COUNT(*) FROM [SCRIP_INFO] WHERE [SI_SYMBOL] = @SYMBOL 
+	SELECT @Count = COUNT(*) FROM [Company] WHERE [C_SYMBOL] = @SYMBOL 
 	SELECT @Count AS [FUND_EXIST]
 END

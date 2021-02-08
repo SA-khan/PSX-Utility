@@ -1,0 +1,6 @@
+/****** Script for SelectTopNRows command from SSMS  ******/
+CREATE PROC spGET_FUND_MARKET_SUMMARY
+AS
+BEGIN
+	SELECT * FROM FUND_MARKET_SUMMARY
+END

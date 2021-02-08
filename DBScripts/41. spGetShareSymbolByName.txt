@@ -1,0 +1,8 @@
+CREATE PROC spGetShareSymbolByName
+		@NAME varchar(500)
+AS
+BEGIN
+SELECT 
+      [share_symbol] AS [C_SYMBOL]
+  FROM [ipams_db].[dbo].[pms_shares] WHERE [share_name] LIKE '%'+@NAME+'%'
+END

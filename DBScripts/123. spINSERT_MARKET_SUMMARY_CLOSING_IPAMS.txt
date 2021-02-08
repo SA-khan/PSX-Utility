@@ -1,0 +1,43 @@
+/****** Object:  StoredProcedure [dbo].[spINSERT_MARKET_SUMMARY_CLOSING_IPAMS]    Script Date: 01/02/2021 4:36:29 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROC [dbo].[spINSERT_MARKET_SUMMARY_CLOSING_IPAMS]
+	@MSC_DATE DATETIME,
+	@MSC_SYMBOL varchar(500),
+	@MSC_CATEGORY varchar(MAX),
+	@MSC_NAME varchar(MAX),
+	@MSC_OPEN varchar(MAX),
+	@MSC_HIGH varchar(MAX),
+	@MSC_LOW varchar(MAX),
+	@MSC_CLOSING varchar(MAX),
+	@MSC_VOLUME varchar(MAX),
+	@MSC_LDCP varchar(MAX)
+AS
+BEGIN
+INSERT INTO pms_securityDMPriceRevamp
+           ([MSC_DATE]
+           ,[MSC_SYMBOL]
+           ,[MSC_CATEGORY]
+           ,[MSC_NAME]
+           ,[MSC_OPEN]
+           ,[MSC_HIGH]
+           ,[MSC_LOW]
+           ,[MSC_CLOSING]
+           ,[MSC_VOLUME]
+           ,[MSC_LDCP])
+     VALUES
+           (@MSC_DATE
+           ,@MSC_SYMBOL
+           ,@MSC_CATEGORY
+           ,@MSC_NAME
+           ,@MSC_OPEN
+           ,@MSC_HIGH
+           ,@MSC_LOW
+           ,@MSC_CLOSING
+           ,@MSC_VOLUME
+           ,@MSC_LDCP)
+END
+
+

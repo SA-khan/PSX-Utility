@@ -1,0 +1,23 @@
+/****** Object:  StoredProcedure [dbo].[spInsertFund]    Script Date: 9/11/2020 6:09:01 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROC [dbo].[spInsertFund]
+		@FUND_CODE int,
+		@FUND_NAME varchar(500),
+		@FUND_SYMBOL varchar(500),
+		@FUND_DESC varchar(max)
+		AS
+		BEGIN
+INSERT INTO [dbo].[FUND]
+           ([FUND_CODE]
+		   ,[FUND_NAME]
+           ,[FUND_SYMBOL]
+           ,[FUND_DESC])
+     VALUES
+           (@FUND_CODE
+		   ,@FUND_NAME
+           ,@FUND_SYMBOL
+           ,@FUND_DESC)
+END

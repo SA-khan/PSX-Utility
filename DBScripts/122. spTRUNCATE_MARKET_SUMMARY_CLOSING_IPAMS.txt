@@ -1,0 +1,11 @@
+/****** Object:  StoredProcedure [dbo].[spTRUNCATE_MARKET_SUMMARY_CLOSING_IPAMS]    Script Date: 01/02/2021 4:33:59 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/****** Script for SelectTopNRows command from SSMS  ******/
+CREATE PROC [dbo].[spTRUNCATE_MARKET_SUMMARY_CLOSING_IPAMS]
+AS
+BEGIN
+	TRUNCATE TABLE pms_securityDMPriceRevamp
+END

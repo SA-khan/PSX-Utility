@@ -1,9 +1,14 @@
-CREATE PROC [dbo].[spGetSymbolFromCompanyName]
+/****** Object:  StoredProcedure [dbo].[spGetSymbolFromCompanyName]    Script Date: 10/14/2020 10:20:10 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[spGetSymbolFromCompanyName]
 		@CompanyName varchar(500)
 		AS
 		BEGIN
 		DECLARE @value varchar(500)
-			SELECT @value = SI_SYMBOL FROM SCRIP_INFO WHERE SI_NAME = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@CompanyName,'(XD)',''),'(XR)',''),'(XB)',''),'(XDXB)',''),' [ DEFAULTER SEGMENT ]',''),'(R)','')
+			SELECT @value = C_SYMBOL FROM COMPANY WHERE C_NAME = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@CompanyName,'(XD)',''),'(XR)',''),'(XB)',''),'(XDXB)',''),' [ DEFAULTER SEGMENT ]',''),'(R)','')
 			IF @value is null
 				BEGIN
 					IF  @CompanyName like '%-JAN' OR @CompanyName like '%-FEB' OR @CompanyName like '%-MAR' OR @CompanyName like '%-APR' OR @CompanyName like '%-MAY' OR @CompanyName like '%-JUN' OR @CompanyName like '%-JUL' OR @CompanyName like '%-AUG' OR @CompanyName like '%-SEP' OR @CompanyName like '%-OCT' OR @CompanyName like '%-NOV' OR @CompanyName like '%-DEC'

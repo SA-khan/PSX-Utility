@@ -1,0 +1,7 @@
+/****** Script for SelectTopNRows command from SSMS  ******/
+CREATE PROC spGET_FUND_SCRIP_BUCKET
+AS
+BEGIN
+SELECT *
+  FROM FUND_SCRIP_BUCKET
+END

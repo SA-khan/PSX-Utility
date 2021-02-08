@@ -10,6 +10,7 @@ namespace PSXDataFetchingApp.Model
         public long Number { get; set; }
         public string Symbol { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public long CategoryId { get; set; }
         public string CategoryName { get; set; }
         public long Code { get; set; }

@@ -1,0 +1,18 @@
+  CREATE TABLE FUND_SCRIP_BUCKET(  SB_ID int primary key, 
+              FSB_DATE date NULL, 
+              FSB_STATUS varchar(500),
+              FSB_READING_STATUS NUMBER(1) NULL,
+              FSB_FUND_ID int NULL,
+              FSB_FUND_NAME varchar(500) NULL,
+              FSB_SHARE_NAME varchar(500) NULL,
+              FSB_SHARE_SYMBOL varchar(500) NULL,
+              FSB_SHARE_QUANTITY decimal NULL,
+              FSB_SHARE_AVG_PRICE decimal NULL,
+              FSB_SHARE_BOOK_COST decimal NULL,
+              FSB_SHARE_MARKET_PRICE decimal NULL,
+              FSB_SHARE_MARKET_VALUE decimal NULL,
+              FSB_SHARE_APP_DEP decimal NULL,
+              FSB_SHARE_PERCENTAGE_CLOSING decimal NULL
+              );
+
+CREATE SEQUENCE SYS_C00633981;

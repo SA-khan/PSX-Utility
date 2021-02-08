@@ -1,0 +1,62 @@
+CREATE PROC spINSERT_MUFAP_MARKET_SUMMARY
+			@MMS_DATE Datetime,
+			@MMS_VALIDITY_DATE Datetime,
+			@MMS_CATEGORY varchar(500)
+           ,@MMS_NAME varchar(1000)
+           ,@MMS_RATING varchar(500)
+           ,@MMS_NAV decimal(18,4)
+           ,@MMS_YTD decimal(18,2)
+           ,@MMS_MTD decimal(18,2)
+           ,@MMS_1Day decimal(18,2)
+           ,@MMS_15Days decimal(18,2)
+           ,@MMS_30Days decimal(18,2)
+           ,@MMS_90Days decimal(18,2)
+           ,@MMS_180Days decimal(18,2)
+           ,@MMS_270Days decimal(18,2)
+           ,@MMS_365Days decimal(18,2)
+           ,@MMS_TER decimal(18,2)
+           ,@MMS_MF decimal(18,2)
+           ,@MMS_SANDM decimal(18,2)
+AS
+BEGIN
+INSERT INTO [dbo].[MUFAP_MARKET_SUMMARY]
+           ([MMS_DATE]
+           ,[MMS_VALIDITY_DATE]
+           ,[MMS_CATEGORY]
+           ,[MMS_NAME]
+           ,[MMS_RATING]
+           ,[MMS_NAV]
+           ,[MMS_YTD]
+           ,[MMS_MTD]
+           ,[MMS_1Day]
+           ,[MMS_15Days]
+           ,[MMS_30Days]
+           ,[MMS_90Days]
+           ,[MMS_180Days]
+           ,[MMS_270Days]
+           ,[MMS_365Days]
+           ,[MMS_TER]
+           ,[MMS_MF]
+           ,[MMS_SANDM])
+     VALUES
+           (@MMS_DATE
+           ,@MMS_VALIDITY_DATE
+           ,@MMS_CATEGORY
+           ,@MMS_NAME
+           ,@MMS_RATING
+           ,@MMS_NAV
+           ,@MMS_YTD
+           ,@MMS_MTD
+           ,@MMS_1Day
+           ,@MMS_15Days
+           ,@MMS_30Days
+           ,@MMS_90Days
+           ,@MMS_180Days
+           ,@MMS_270Days
+           ,@MMS_365Days
+           ,@MMS_TER
+           ,@MMS_MF
+           ,@MMS_SANDM)
+END
+
+

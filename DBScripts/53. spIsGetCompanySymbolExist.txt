@@ -3,7 +3,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROC [dbo].[spIsGetCompanySymbolExist]
+ALTER PROC [dbo].[spIsGetCompanySymbolExist]
 		@SYMBOL varchar(500)
 		AS
 BEGIN

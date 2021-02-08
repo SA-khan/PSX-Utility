@@ -1,4 +1,6 @@
-/****** Object:  StoredProcedure [dbo].[spINSERT_FUND_MARKET_SUMMARY]    Script Date: 05/01/2021 2:39:38 PM ******/
+USE [PSXDataWarehouse]
+GO
+/****** Object:  StoredProcedure [dbo].[spINSERT_FUND_MARKET_SUMMARY]    Script Date: 9/16/2020 1:22:10 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -14,8 +16,7 @@ ALTER PROC [dbo].[spINSERT_FUND_MARKET_SUMMARY]
 			@SHR_BOOK_COST decimal,
 			@SHR_MARKET_PRICE decimal,
 			@SHR_MARKET_VALUE decimal,
-			@SHR_APP_DEP varchar(MAX),
-			@SHR_CLOSING_PERCENTAGE float
+			@SHR_APP_DEP varchar(MAX)
 AS
 BEGIN
 INSERT INTO [dbo].[FUND_MARKET_SUMMARY]
@@ -29,8 +30,7 @@ INSERT INTO [dbo].[FUND_MARKET_SUMMARY]
            ,[SHR_BOOK_COST]
            ,[SHR_MARKET_PRICE]
            ,[SHR_MARKET_VALUE]
-           ,[SHR_APP_DEP]
-		   ,[SHR_CLOSING_PERCENTAGE])
+           ,[SHR_APP_DEP])
      VALUES
            (@MARKET_STATUS
 		   ,@FUND_ID
@@ -42,6 +42,5 @@ INSERT INTO [dbo].[FUND_MARKET_SUMMARY]
            ,@SHR_BOOK_COST
            ,@SHR_MARKET_PRICE
            ,@SHR_MARKET_VALUE
-           ,@SHR_APP_DEP
-		   ,@SHR_CLOSING_PERCENTAGE)
+           ,@SHR_APP_DEP)
 END

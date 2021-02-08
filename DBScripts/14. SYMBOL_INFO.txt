@@ -1,0 +1,4 @@
+CREATE TABLE SYMBOL_INFO (SYMBOL_ID bigint primary key identity(1,1),
+						  SYMBOL_MARK varchar(30),
+						  SYMBOL_NAME varchar(500),
+						  SYMBOL_DESCRIPTION varchar(MAX))

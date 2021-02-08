@@ -1,0 +1,48 @@
+CREATE PROC spINSERT_PKFRV_SUMMARY
+	@PKFRV_FloatingRateBond varchar(max),
+	@PKFRV_SelectedDate date,
+	@PKFRV_IssueDate date,
+	@PKFRV_MaturityDate date,
+	@PKFRV_CouponFrequency varchar(max),
+	@PKFRV_BMA decimal(18,2),
+	@PKFRV_CANDM decimal(18,2),
+	@PKFRV_CMKA decimal(18,2),
+	@PKFRV_IONE decimal(18,2),
+	@PKFRV_JSCM decimal(18,2),
+	@PKFRV_MCPL decimal(18,2),
+	@PKFRV_SCPL decimal(18,2),
+	@PKFRV_VCPL decimal(18,2),
+	@PKFRV_FMA decimal(18,2)
+AS
+BEGIN
+INSERT INTO [dbo].[PKFRV_SUMMARY]
+           ([PKFRV_FloatingRateBond]
+           ,[PKFRV_SelectedDate]
+           ,[PKFRV_IssueDate]
+           ,[PKFRV_MaturityDate]
+           ,[PKFRV_CouponFrequency]
+           ,[PKFRV_BMA]
+           ,[PKFRV_CANDM]
+           ,[PKFRV_CMKA]
+           ,[PKFRV_IONE]
+           ,[PKFRV_JSCM]
+           ,[PKFRV_MCPL]
+           ,[PKFRV_SCPL]
+           ,[PKFRV_VCPL]
+           ,[PKFRV_FMA])
+     VALUES
+           (@PKFRV_FloatingRateBond
+           ,@PKFRV_SelectedDate
+           ,@PKFRV_IssueDate
+           ,@PKFRV_MaturityDate
+           ,@PKFRV_CouponFrequency
+           ,@PKFRV_BMA
+           ,@PKFRV_CANDM
+           ,@PKFRV_CMKA
+           ,@PKFRV_IONE
+           ,@PKFRV_JSCM
+           ,@PKFRV_MCPL
+           ,@PKFRV_SCPL
+           ,@PKFRV_VCPL
+           ,@PKFRV_FMA)
+END

@@ -693,7 +693,7 @@ namespace PSXDataFetchingApp
                             /// Clearing Database Table 
                             ///
 
-                            //ClearMarketSummaryClosing();
+                            ClearSymbolInfo();
 
                             ///
                             /// Iterating Each Line of Market Summary Closing File
@@ -727,14 +727,20 @@ namespace PSXDataFetchingApp
                                 //Int64 lNumber = Convert.ToInt64(data[0]);
                                 string lSymbol = data[0].ToString();
                                 string lName = data[1].ToString();
+                                string lDescription = data[2].ToString();
                                 Int64 lCategoryId = 0;
                                 //Int64 lCategoryId = Convert.ToInt64(data[3].ToString());
                                 string lCategoryName = "";
                                 //string lCategoryName = data[4].ToString();
                                 Int64 lCode = 0;
                                 //Int64 lCode = Convert.ToInt64(data[5]);
-                                ScripInfo Item = new ScripInfo { Number = lNumber, Symbol = lSymbol, Name = lName, CategoryId = lCategoryId, CategoryName = lCategoryName, Code =  lCode };
-
+                                ScripInfo Item = new ScripInfo();
+                                if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER")) {
+                                    Item = new ScripInfo { Symbol = lSymbol, Name = lName, Description = lDescription };
+                                }
+                                else {
+                                    Item = new ScripInfo { Number = lNumber, Symbol = lSymbol, Name = lName, Description = lDescription, CategoryId = lCategoryId, CategoryName = lCategoryName, Code = lCode };
+                                }
                                 ///
                                 /// Adding Record to ListView
                                 ///
@@ -745,7 +751,7 @@ namespace PSXDataFetchingApp
                                 /// Saving Record
                                 ///
 
-                                int _DbStatus = SavingMarketSummaryClosing(Item);
+                                int _DbStatus = SavingSymbolInformation(Item);
 
                                 if (_DbStatus == 0)
                                 {
@@ -807,49 +813,93 @@ namespace PSXDataFetchingApp
             }
         }
 
-        private int ClearMarketSummaryClosing()
+        private int ClearSymbolInfo()
         {
-            SqlConnection conn = new SqlConnection();
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
-            conn.Open();
             int status = 0;
-            try
-            {
-                SqlCommand cmd = new SqlCommand("spTRUNCATE_MARKET_SUMMARY_CLOSING", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                status = cmd.ExecuteNonQuery();
-                return status;
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER")) {
+                SqlConnection conn = new SqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+                conn.Open();
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("spTRUNCATE_SYMBOL_INFO", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    status = cmd.ExecuteNonQuery();
+                    return status;
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
             }
-            catch (SqlException ex)
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
             {
-                MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.WriteLine("SQL Exception: " + ex.Message);
-                return 0;
+                //_context.ScripInfo.Remove();
+                foreach (var entity in _context.ScripInfo)
+                    _context.ScripInfo.Remove(entity);
+                _context.SaveChanges();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.WriteLine("General Exception: " + ex.Message);
-                return 0;
-            }
-            finally
-            {
-                conn.Close();
-            }
+
+            return status;
+
 
         }
 
-        public int SavingMarketSummaryClosing(ScripInfo item)
+        public int SavingSymbolInformation(ScripInfo item)
         {
-            //SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            //builder.DataSource = "PSXDataWarehouse.db";
-            //builder.InitialCatalog = "pchr42563";
-            //builder.IntegratedSecurity = true;
-            //_context = new DataContext(builder.ConnectionString);
-            _context.ScripInfo.Add(item);
-            _context.SaveChanges();
-            return 1;
+            int status = 0;
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
+            {
+                SqlConnection conn = new SqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("spINSERT_SYMBOL_INFO", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@SYMBOL_MARK", SqlDbType.VarChar, 30);
+                    cmd.Parameters["@SYMBOL_MARK"].Value = item.Symbol;
+                    cmd.Parameters.Add("@SYMBOL_NAME", SqlDbType.VarChar, 500);
+                    cmd.Parameters["@SYMBOL_NAME"].Value = item.Name;
+                    cmd.Parameters.Add("@SYMBOL_DESCRIPTION", SqlDbType.VarChar, -1);
+                    cmd.Parameters["@SYMBOL_DESCRIPTION"].Value = item.Description;
+                    status = cmd.ExecuteNonQuery();
+                    return status;
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                    return 0;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE")) {
+                _context.ScripInfo.Add(item);
+                _context.SaveChanges();
+                status = 1;
+            }
+            return status;
         }
 
 

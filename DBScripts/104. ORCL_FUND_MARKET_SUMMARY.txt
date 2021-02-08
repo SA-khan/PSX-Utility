@@ -1,0 +1,15 @@
+CREATE TABLE FUND_MARKET_SUMMARY(SHR_ID int not null primary key,
+                 MARKET_DATE Date,
+                 MARKET_STATUS varchar(500),
+                 FUND_ID int,
+                 FUND_NAME varchar(500),
+                 SHR_NAME varchar(500), 
+                 SHR_SYMBOL varchar(500) UNIQUE,
+                 SHR_QUANTITY decimal,
+                 SHR_AVG_PRICE decimal,
+                 SHR_BOOK_COST decimal,
+                 SHR_MARKET_PRICE decimal,
+                 SHR_MARKET_VALUE decimal,
+                 SHR_APP_DEP varchar(1000));
+
+CREATE SEQUENCE SYS_C00633045;

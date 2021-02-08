@@ -12,6 +12,6 @@ CREATE TABLE PKFRV_SUMMARY(PKFRV_ID int primary key,
 						   PKFRV_MCPL decimal,
 						   PKFRV_SCPL decimal,
 						   PKFRV_VCPL decimal,
-						   PKFRV_FMA decimal
+						   PKFRV_FMA decimal,
 						   );
 CREATE SEQUENCE SYS_C00633984;
