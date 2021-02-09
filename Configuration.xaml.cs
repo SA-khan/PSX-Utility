@@ -846,12 +846,44 @@ namespace PSXDataFetchingApp
                     conn.Close();
                 }
             }
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                OracleConnection conn = new OracleConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+                conn.Open();
+                try
+                {
+                    OracleCommand cmd = new OracleCommand("spTRUNCATE_SYMBOL_INFO", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    status = cmd.ExecuteNonQuery();
+                    return status;
+                }
+                catch (OracleException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("Oracle Exception: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
             {
                 //_context.ScripInfo.Remove();
                 foreach (var entity in _context.ScripInfo)
                     _context.ScripInfo.Remove(entity);
                 _context.SaveChanges();
+            }
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH"))
+            {
+                
             }
 
             return status;
@@ -918,7 +950,7 @@ namespace PSXDataFetchingApp
                 catch (OracleException ex)
                 {
                     MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                    Debug.WriteLine("Oracle Exception: " + ex.Message);
                     return 0;
                 }
                 catch (Exception ex)
@@ -939,31 +971,44 @@ namespace PSXDataFetchingApp
             }
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH"))
             {
-                //var Node = new Uri(ConfigurationManager.AppSettings["ELASTICSEARCH_URL"]);
-                //var ConnectionPool = new SniffingConnectionPool(new[] { Node });
-                //var Config = new ConnectionConfiguration(ConnectionPool)
-                //            .SniffOnConnectionFault(false)
-                //            .SniffOnStartup(false)
-                //            .SniffLifeSpan(TimeSpan.FromMinutes(10));
-                //var Client = new ElasticLowLevelClient(Config);
+                var pool = new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
+                var pagesIndex = "SymbolInfo";
+                var connectionSettings = new ConnectionSettings(pool)
+                        .DefaultIndex(pagesIndex)
+                        .PrettyJson()
+                        .DisableDirectStreaming()
+                        .OnRequestCompleted(response =>
+                        {
+                        // log out the request
+                        if (response.RequestBodyInBytes != null)
+                            {
+                                Console.WriteLine(
+                                    $"{response.HttpMethod} {response.Uri} \n" +
+                                    $"{Encoding.UTF8.GetString(response.RequestBodyInBytes)}");
+                            }
+                        else
+                            {
+                                Console.WriteLine($"{response.HttpMethod} {response.Uri}");
+                            }
 
-                //var AllProducts = item;
-                //var SPl = AllProducts; // Split into 100 collections/requests
+                            Console.WriteLine();
 
-                //var COll = new List<ElasticsearchResponse<DynamicDictionary>>();
+                        // log out the response
+                        if (response.ResponseBodyInBytes != null)
+                            {
+                                Console.WriteLine($"Status: {response.HttpStatusCode}\n" +
+                                     $"{Encoding.UTF8.GetString(response.ResponseBodyInBytes)}\n" +
+                                     $"{new string('-', 30)}\n");
+                            }
+                        else
+                            {
+                                Console.WriteLine($"Status: {response.HttpStatusCode}\n" +
+                                    $"{new string('-', 30)}\n");
+                            }
+                        });
 
-                //foreach (var I in SPl)
-                //{
-                //    var Descriptor = new BulkDescriptor();
-
-                //    foreach (var Product in I)
-                //    {
-                //        Descriptor.Index<ScripInfo>(op => op.Document(Product));
-                //    }
-
-                //    COll.Add(Client.Bulk(Descriptor));
-                //}
-            }
+                        var client = new ElasticClient(connectionSettings);
+                        }
             return status;
         }
 

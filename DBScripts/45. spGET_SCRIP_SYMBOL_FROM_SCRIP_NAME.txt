@@ -1,14 +1,16 @@
-/****** Object:  StoredProcedure [dbo].[spGetSymbolFromCompanyName]    Script Date: 10/19/2020 10:29:05 AM ******/
+USE [PSXDataWarehouse]
+GO
+/****** Object:  StoredProcedure [dbo].[spGET_SCRIP_SYMBOL_FROM_SCRIP_NAME]    Script Date: 09/02/2021 10:02:35 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROC [dbo].[spGET_SCRIP_SYMBOL_FROM_SCRIP_NAME]
-		@CompanyName varchar(500)
+ALTER PROC [dbo].[spGET_SCRIP_SYMBOL_FROM_SCRIP_NAME]
+		@CompanyName varchar(MAX)
 		AS
 		BEGIN
-		DECLARE @value varchar(500)
-			SELECT @value = SI_SYMBOL FROM SCRIP_INFO WHERE SI_NAME = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@CompanyName,'(XD)',''),'(XR)',''),'(XB)',''),'(XDXB)',''),' [ DEFAULTER SEGMENT ]',''),'(R)','')
+		DECLARE @value varchar(MAX)
+			select @value = SI_SYMBOL FROM SCRIP_INFO WHERE SI_NAME = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@CompanyName,'(XD)',''),'(XR)',''),'(XB)',''),'(XDXB)',''),' [ DEFAULTER SEGMENT ]',''),'(R)','') 
 			IF @value is null
 				BEGIN
 					IF  @CompanyName like '%-JAN' OR @CompanyName like '%-FEB' OR @CompanyName like '%-MAR' OR @CompanyName like '%-APR' OR @CompanyName like '%-MAY' OR @CompanyName like '%-JUN' OR @CompanyName like '%-JUL' OR @CompanyName like '%-AUG' OR @CompanyName like '%-SEP' OR @CompanyName like '%-OCT' OR @CompanyName like '%-NOV' OR @CompanyName like '%-DEC'
@@ -17,7 +19,15 @@ CREATE PROC [dbo].[spGET_SCRIP_SYMBOL_FROM_SCRIP_NAME]
 						END
 					ELSE
 						BEGIN
-							SELECT 'Nil' AS C_SYMBOL
+							SELECT @value = SYMBOL_MARK FROM SYMBOL_INFO WHERE SYMBOL_NAME like REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('%'+@CompanyName+'%','.',''),'(XD)',''),'(XR)',''),'(XB)',''),'(XDXB)',''),' [ DEFAULTER SEGMENT ]',''),'(R)','')
+							IF @value is null
+								BEGIN
+									SELECT 'Nil' AS C_SYMBOL
+								END
+							ELSE
+								BEGIN
+									SELECT @value AS C_SYMBOL
+								END
 						END
 				END
 			ELSE
