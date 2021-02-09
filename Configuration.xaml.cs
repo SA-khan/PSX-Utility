@@ -21,6 +21,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Threading.Tasks;
+using Oracle.ManagedDataAccess.Client;
+using Elasticsearch.Net;
+using Nest;
 
 namespace PSXDataFetchingApp
 {
@@ -894,10 +897,72 @@ namespace PSXDataFetchingApp
                     conn.Close();
                 }
             }
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                OracleConnection conn = new OracleConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                conn.Open();
+                try
+                {
+                    OracleCommand cmd = new OracleCommand("spINSERT_SYMBOL_INFO", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@SYMBOL_MARK", OracleDbType.Varchar2, 30);
+                    cmd.Parameters["@SYMBOL_MARK"].Value = item.Symbol;
+                    cmd.Parameters.Add("@SYMBOL_NAME", OracleDbType.Varchar2, 500);
+                    cmd.Parameters["@SYMBOL_NAME"].Value = item.Name;
+                    cmd.Parameters.Add("@SYMBOL_DESCRIPTION", OracleDbType.Varchar2, 1000);
+                    cmd.Parameters["@SYMBOL_DESCRIPTION"].Value = item.Description;
+                    status = cmd.ExecuteNonQuery();
+                    return status;
+                }
+                catch (OracleException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("SQL Exception: " + ex.Message);
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("General Exception: " + ex.Message);
+                    return 0;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE")) {
                 _context.ScripInfo.Add(item);
                 _context.SaveChanges();
                 status = 1;
+            }
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH"))
+            {
+                //var Node = new Uri(ConfigurationManager.AppSettings["ELASTICSEARCH_URL"]);
+                //var ConnectionPool = new SniffingConnectionPool(new[] { Node });
+                //var Config = new ConnectionConfiguration(ConnectionPool)
+                //            .SniffOnConnectionFault(false)
+                //            .SniffOnStartup(false)
+                //            .SniffLifeSpan(TimeSpan.FromMinutes(10));
+                //var Client = new ElasticLowLevelClient(Config);
+
+                //var AllProducts = item;
+                //var SPl = AllProducts; // Split into 100 collections/requests
+
+                //var COll = new List<ElasticsearchResponse<DynamicDictionary>>();
+
+                //foreach (var I in SPl)
+                //{
+                //    var Descriptor = new BulkDescriptor();
+
+                //    foreach (var Product in I)
+                //    {
+                //        Descriptor.Index<ScripInfo>(op => op.Document(Product));
+                //    }
+
+                //    COll.Add(Client.Bulk(Descriptor));
+                //}
             }
             return status;
         }

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Nest;
 
 namespace PSXDataFetchingApp.Model
 {
+    //[ElasticType(IProperty = "ScripInfoId")]
     public class ScripInfo
     {
         public long ScripInfoId { get; set; }

@@ -462,7 +462,8 @@ namespace PSXDataFetchingApp
 
         }
         #endregion
-            #region GetDefault
+
+        #region GetDefault
 
             public void GetDefault()
             {
@@ -698,7 +699,7 @@ namespace PSXDataFetchingApp
                         conn.Open();
                         for (int i = 0; i < CompanyName.Count(); i++)
                         {
-                            SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn); // Read user-> stored procedure name
+                            SqlCommand cmd = new SqlCommand("spGET_SCRIP_SYMBOL_FROM_SCRIP_NAME", conn); // Read user-> stored procedure name
                             cmd.CommandType = CommandType.StoredProcedure;
                             cmd.Parameters.Add("@CompanyName", SqlDbType.VarChar, 500);
                             cmd.Parameters["@CompanyName"].Value = CompanyName[i];
@@ -866,10 +867,10 @@ namespace PSXDataFetchingApp
                     using (conn)
                     {
                         conn.Open();
-                        SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn); // Read user-> stored procedure name
+                        SqlCommand cmd = new SqlCommand("spGET_SCRIP_SYMBOL_FROM_SCRIP_NAME", conn); // Read user-> stored procedure name
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("@CompanyName", SqlDbType.VarChar, 500);
-                        cmd.Parameters["@CompanyName"].Value = CompanyName;
+                        cmd.Parameters["@CompanyName"].Value = CompanyName.Trim();
                         using (SqlDataReader rdr = cmd.ExecuteReader())
                         {
                             while (rdr.Read())

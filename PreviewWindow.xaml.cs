@@ -45,6 +45,9 @@ namespace PSXDataFetchingApp
 
         public DataContext _context;
 
+        //Get Time Reset Interval
+        public static decimal Interval = Convert.ToDecimal(ConfigurationManager.AppSettings["Interval"]);
+
         //Market Date, Status and other Variable Declarations
         public Dictionary<string, string> _miscellenousData = new Dictionary<string, string>(){
                                                             {"DATE", ""},
@@ -189,112 +192,49 @@ namespace PSXDataFetchingApp
         {
             InitializeComponent();
             Debug.WriteLine("Preview Screen Initialized..");
-            int total = 1;
-            for(int i = 0; i < ScripList.Count; i++)
-            {
-                _scrip.Add(new CurrentMarketSummary { CurrentMarketSummaryId = total++, Name = ScripList[i].Name, Symbol = ScripList[i].Symbol, Category = ScripList[i].Category, Ldcp = ScripList[i].Ldcp, Open = ScripList[i].Open, High = ScripList[i].High, Low = ScripList[i].Low, Current = ScripList[i].Current, Change = ScripList[i].Change, Volume = ScripList[i].Volume });
-            }
-
+            
             ClientSideProperties();
 
-            lblDate.Text +=  date.ToString();
-            lblStatus.Text += status.ToString().ToUpper();
-            lblVolume.Text += Convert.ToDouble(Volume).ToString("#,##0");
-            lblValue.Text += Convert.ToDouble(Value).ToString("#,##0");
-            lblTrades.Text += Convert.ToDouble(Trades).ToString("#,##0");
+            _miscellenousData["DATE"] = DateTime.Parse(date).ToString("dddd, dd MMMM yyyy hh:mm tt");
+            _miscellenousData["STATUS"] = status.ToString().ToUpper();
+            _miscellenousData["VOLUME"] = Convert.ToDouble(Volume).ToString("#,##0");
+            _miscellenousData["VALUE"] = Convert.ToDouble(Value).ToString("#,##0");
+            _miscellenousData["TRADES"] = Convert.ToDouble(Trades).ToString("#,##0");
 
-            //MarketSummary[] data = new MarketSummary[companyName.Count];
+            lblDate.Text += _miscellenousData["DATE"];
+            lblStatus.Text += _miscellenousData["STATUS"];
+            lblVolume.Text += Convert.ToDouble(_miscellenousData["VOLUME"]).ToString("#,##0");
+            lblValue.Text += Convert.ToDouble(_miscellenousData["VALUE"]).ToString("#,##0");
+            lblTrades.Text += Convert.ToDouble(_miscellenousData["TRADES"]).ToString("#,##0");
 
-            //GridViewColumn col1 = new GridViewColumn();
-            //GridViewColumn col2 = new GridViewColumn();
-            //GridViewColumn col3 = new GridViewColumn();
-            //GridViewColumn col4 = new GridViewColumn();
-            //GridViewColumn col5 = new GridViewColumn();
-            //GridViewColumn col6 = new GridViewColumn();
-            //GridViewColumn col7 = new GridViewColumn();
-            //GridViewColumn col8 = new GridViewColumn();
-            //gridView.Columns.Add(col1);
-            //gridView.Columns.Add(col2);
-            //gridView.Columns.Add(col3);
-            //gridView.Columns.Add(col4);
-            //gridView.Columns.Add(col5);
-            //gridView.Columns.Add(col6);
-            //gridView.Columns.Add(col7);
-            //gridView.Columns.Add(col8);
-            //col1.DisplayMemberBinding = new Binding("Name");
-            //col2.DisplayMemberBinding = new Binding("Symbol");
-            //col3.DisplayMemberBinding = new Binding("CURRENT");
-            //col4.DisplayMemberBinding = new Binding("OPEN");
-            //col5.DisplayMemberBinding = new Binding("HIGH");
-            //col6.DisplayMemberBinding = new Binding("LOW");
-            //col7.DisplayMemberBinding = new Binding("Change");
-            //col8.DisplayMemberBinding = new Binding("Volume");
-            //col1.Header = "Name";
-            //col2.Header = "Symbol";
-            //col3.Header = "CURRENT";
-            //col4.Header = "OPEN";
-            //col5.Header = "HIGH";
-            //col6.Header = "LOW";
-            //col7.Header = "CHANGE";
-            //col8.Header = "VOLUME";
-
-            //gridView.Columns.Add(col1);
-            //gridView.Columns.Add(col2);
-            //gridView.Columns.Add(col3);
-            //gridView.Columns.Add(col4);
-            //gridView.Columns.Add(col5);
-            //gridView.Columns.Add(col6);
-            //gridView.Columns.Add(col7);
-            //gridView.Columns.Add(col8);
-            //gridView.Columns.Add(col9);
-
-
-
-            //col1.DisplayMemberBinding = new Binding("Name");
-            //col2.DisplayMemberBinding = new Binding("Symbol");
-            //col3.DisplayMemberBinding = new Binding("CURRENT");
-            //col4.DisplayMemberBinding = new Binding("LDCP");
-            //col5.DisplayMemberBinding = new Binding("OPEN");
-            //col6.DisplayMemberBinding = new Binding("HIGH");
-            //col7.DisplayMemberBinding = new Binding("LOW");
-            //col8.DisplayMemberBinding = new Binding("Change");
-            //col9.DisplayMemberBinding = new Binding("Volume");
-            //col1.Header = "NAME";
-            //col2.Header = "SYMBOL";
-            //col3.Header = "CURRENT";
-            //col4.Header = "LDCP";
-            //col5.Header = "OPEN";
-            //col6.Header = "HIGH";
-            //col7.Header = "LOW";
-            //col8.Header = "CHANGE";
-            //col9.Header = "VOLUME";
-            //int count = 1;
-
-            #region ComboBoxDataInitializzation
-
-            List<string> categoryList = new List<string>();
-            categoryList.Add("ALL CATEGORIES");
-            comboCategory.SelectedIndex = 0;
-            categoryList.Add(_scrip[0].Category.Trim());
-            string tempcategory = _scrip[0].Category;
-            for (int i = 0; i < _scrip.Count; i++)
+            if (ScripList.Count > 0)
             {
-                if (_scrip[i] == null) { }
-                else if (_scrip[i].Volume.Trim() == "CHANGE") { }
-                else
+                List<string> categoryList = new List<string>();
+                categoryList.Add("All Categories");
+                comboCategory.SelectedIndex = 0;
+                categoryList.Add(ScripList[0].Category.Trim());
+                string tempcategory = ScripList[0].Category;
+                Truncate_CURRENT_MARKET_OVERVIEW_DB();
+                INSERT_CURRENT_MARKET_OVERVIEW_DB(_miscellenousData["DATE"], _miscellenousData["STATUS"], _miscellenousData["VOLUME"], _miscellenousData["VALUE"], _miscellenousData["TRADES"]);
+                Truncate_CURRENT_MARKET_SUMMARY_DB();
+                int total = 1;
+                for (int i = 0; i < ScripList.Count; i++)
                 {
-                    if(_scrip[i].Category != tempcategory)
+                    if (ScripList[i].Volume.Trim() == "CHANGE") { }
+                    else
                     {
-                        categoryList.Add(_scrip[i].Category.Trim());
-                        tempcategory = _scrip[i].Category;
+                        if (ScripList[i].Category != tempcategory)
+                        {
+                            categoryList.Add(ScripList[i].Category.Trim());
+                            tempcategory = ScripList[i].Category;
+                        }
+                        list1.Items.Add(ScripList[i]);
+                        _scrip.Add(new CurrentMarketSummary { CurrentMarketSummaryId = total++, Name = ScripList[i].Name, Symbol = ScripList[i].Symbol, Category = ScripList[i].Category, Ldcp = ScripList[i].Ldcp, Open = ScripList[i].Open, High = ScripList[i].High, Low = ScripList[i].Low, Current = ScripList[i].Current, Change = ScripList[i].Change, Volume = ScripList[i].Volume });
+                        SavingScrip(_miscellenousData["DATE"], _miscellenousData["STATUS"], _miscellenousData["VOLUME"], _miscellenousData["VALUE"], _miscellenousData["TRADES"], ScripList[i]);
                     }
-                    list1.Items.Add(_scrip[i]);
                 }
+                comboCategory.ItemsSource = categoryList;
             }
-
-            comboCategory.ItemsSource = categoryList;
-
-            #endregion
 
             DispatcherTimer dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
@@ -308,7 +248,7 @@ namespace PSXDataFetchingApp
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             countTimer++;
-            if (countTimer % 80 == 0)
+            if (countTimer % Interval == 0)
             {
                 ButtonAutomationPeer peer = new ButtonAutomationPeer(btnRefresh);
                 IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
@@ -1061,10 +1001,7 @@ namespace PSXDataFetchingApp
         {
             try
             {
-                MainWindow cl = new MainWindow(_context);
                 GetDefault();
-                RequestDate = DateTime.Parse(_miscellenousData["DATE"]);
-
                 worker.WorkerReportsProgress = true;
                 worker.ReportProgress(1);
 
@@ -1079,9 +1016,6 @@ namespace PSXDataFetchingApp
                 }
                 else
                 {
-
-                    MainWindow cls = new MainWindow(_context);
-
                     statusContent = "Status: Refreshing Scrips..";
                     this.Dispatcher.Invoke(() =>
                     {
@@ -1093,123 +1027,12 @@ namespace PSXDataFetchingApp
                         lblStatusMessage.Text = statusContent;
                         progressBar.Value = 10;
                     });
-                    //worker.ReportProgress(10);
-                    _scrip = new List<CurrentMarketSummary>();
-                    //GetDefault();
-                    //List<string> catData = GetCategoryData();
+                    
                     GetScripDetails();
-                    //NAME = GetMarketSummaryCompanyNames();
-                    //statusContent = "Status: Getting Symbols..";
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    lblStatusMessage.Text = statusContent;
-                    //    progressBar.Value = 25;
-                    //});
-                    ////worker.ReportProgress(25);
-                    //SYMBOL = cls.GetMarketSummaryCompanySymbols(NAME);
-                    //statusContent = "Status: Getting LDCP..";
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    lblStatusMessage.Text = statusContent;
-                    //    progressBar.Value = 40;
-                    //});
-                    ////worker.ReportProgress(40);
-                    //string[] getCompanyLDCP = GetMarketSummaryCompanyLDCP();
-                    //statusContent = "Status: Getting Open..";
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    lblStatusMessage.Text = statusContent;
-                    //    progressBar.Value = 55;
-                    //});
-                    ////worker.ReportProgress(55);
-                    //string[] getCompanyOPEN = GetMarketSummaryCompanyOPEN();
-                    //statusContent = "Status: Getting High..";
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    lblStatusMessage.Text = statusContent;
-                    //    progressBar.Value = 65;
-                    //});
-                    ////worker.ReportProgress(65);
-                    //string[] getCompanyHIGH = GetMarketSummaryCompanyHIGH();
-                    //statusContent = "Status: Getting Low..";
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    lblStatusMessage.Text = statusContent;
-                    //    progressBar.Value = 75;
-                    //});
-                    ////worker.ReportProgress(75);
-                    //string[] getCompanyLOW = GetMarketSummaryCompanyLOW();
-                    //statusContent = "Status: Getting Current..";
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    lblStatusMessage.Text = statusContent;
-                    //    progressBar.Value = 85;
-                    //});
-                    ////worker.ReportProgress(85);
-                    //string[] getCompanyCURRENT = GetMarketSummaryCompanyCURRENT();
-                    //statusContent = "Status: Getting Change..";
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    lblStatusMessage.Text = statusContent;
-                    //    progressBar.Value = 95;
-                    //});
-                    ////worker.ReportProgress(95);
-                    //string[] getCompanyCHANGE = GetMarketSummaryCompanyCHANGE();
-                    //statusContent = "Status: Getting Volume..";
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    lblStatusMessage.Text = statusContent;
-                    //    progressBar.Value = 98;
-                    //});
-                    ////worker.ReportProgress(98);
-                    //string[] getCompanyVOLUME = GetMarketSummaryCompanyVOLUME();
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    progressBar.Value = 99;
-                    //});
-                    ////worker.ReportProgress(99);
-                    //double[] CompanyLDCP = new double[getCompanyLDCP.Length];
-                    //double[] CompanyOPEN = new double[getCompanyLDCP.Length];
-                    //double[] CompanyHIGH = new double[getCompanyLDCP.Length];
-                    //double[] CompanyLOW = new double[getCompanyLDCP.Length];
-                    //double[] CompanyCURRENT = new double[getCompanyLDCP.Length];
-                    //double[] CompanyCHANGE = new double[getCompanyLDCP.Length];
-                    //double[] CompanyVOLUME = new double[getCompanyLDCP.Length];
-                    ////worker.ReportProgress(75);
-
-                    //for (int i = 0; i < NAME.Count; i++)
-                    //{
-                    //    CompanyLDCP[i] = Convert.ToDouble(getCompanyLDCP[i]);
-                    //    CompanyOPEN[i] = Convert.ToDouble(getCompanyOPEN[i]);
-                    //    CompanyHIGH[i] = Convert.ToDouble(getCompanyHIGH[i]);
-                    //    CompanyLOW[i] = Convert.ToDouble(getCompanyLOW[i]);
-                    //    CompanyCURRENT[i] = Convert.ToDouble(getCompanyCURRENT[i]);
-                    //    CompanyCHANGE[i] = Convert.ToDouble(getCompanyCHANGE[i]);
-                    //    CompanyVOLUME[i] = Convert.ToDouble(getCompanyVOLUME[i]);
-
-                    //    LDCP.Add(CompanyLDCP[i]);
-                    //    OPEN.Add(CompanyOPEN[i]);
-                    //    HIGH.Add(CompanyHIGH[i]);
-                    //    LOW.Add(CompanyLOW[i]);
-                    //    CURRENT.Add(CompanyCURRENT[i]);
-                    //    CHANGE.Add(CompanyCHANGE[i]);
-                    //    VOLUME.Add(CompanyVOLUME[i]);
-                    //}
-
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    var image = new BitmapImage();
-                    //    image.BeginInit();
-                    //    image.UriSource = ResourceAccessor.Get("Images/tick.gif");
-                    //    image.EndInit();
-                    //    ImageBehavior.SetAnimatedSource(imgStatus, image);
-                    //    lblStatusMessage.Text = "Status: Completed";
-                    //    progressBar.Value = 100;
-                    //});
 
                     this.Dispatcher.Invoke(() =>
                     {
-                        lblDate.Text = DateTime.Parse(_miscellenousData["DATE"]).ToString();
+                        lblDate.Text = DateTime.Parse(_miscellenousData["DATE"]).ToString("dddd, dd MMMM yyyy hh:mm tt");
                         lblStatus.Text = _miscellenousData["STATUS"].ToUpper();
                         lblVolume.Text = String.Format("{0:#,##0}", _miscellenousData["VOLUME"]);
                         lblValue.Text = String.Format("{0:#,##0}", _miscellenousData["VALUE"]);
@@ -1234,6 +1057,7 @@ namespace PSXDataFetchingApp
                                 string _categoryKind = comboCategory.SelectedItem.ToString().Trim();
                                 if ((_keyword == "") && _category == "all categories")
                                 {
+                                    list1.Items.Clear();
                                     for (int j = 0; j < _scrip.Count; j++)
                                     {
                                         if (_scrip[j] == null) { }
@@ -1267,11 +1091,7 @@ namespace PSXDataFetchingApp
                                 //
                                 SavingScrip(_miscellenousData["DATE"], _miscellenousData["STATUS"], _miscellenousData["VOLUME"], _miscellenousData["VALUE"], _miscellenousData["TRADES"], _scrip[i]);
                             }
-                            //CurrentMarketSummary tempData = new CurrentMarketSummary { CurrentMarketSummaryId = count++, Name = _scrip[i].Name, Symbol = _scrip[i].Symbol, Category = _scrip[i].Category, Ldcp = String.Format("{0:00.00}", _scrip[i].Ldcp), Open = String.Format("{0:00.00}", _scrip[i].Open), High = String.Format("{0:00.00}", _scrip[i].High), Low = String.Format("{0:00.00}", _scrip[i].Low), Current = String.Format("{0:00.00}", _scrip[i].Current), Change = _scrip[i].Change, Volume = _scrip[i].Volume) };
-                            
-                            //_scrip.Add(tempData);
                         }
-                        
 
                     });
                     
@@ -1566,10 +1386,10 @@ namespace PSXDataFetchingApp
                     using (conn)
                     {
                         conn.Open();
-                        SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn); // Read user-> stored procedure name
+                        SqlCommand cmd = new SqlCommand("spGET_SCRIP_SYMBOL_FROM_SCRIP_NAME", conn); // Read user-> stored procedure name
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("@CompanyName", SqlDbType.VarChar, 500);
-                        cmd.Parameters["@CompanyName"].Value = CompanyName;
+                        cmd.Parameters["@CompanyName"].Value = CompanyName.Trim();
                         using (SqlDataReader rdr = cmd.ExecuteReader())
                         {
                             while (rdr.Read())
@@ -1757,6 +1577,7 @@ namespace PSXDataFetchingApp
             int volumeOccurance = 0;
             string _tempCategory = String.Empty;
             string _tempScrip = String.Empty;
+            _scrip.Clear();
             for (int j = 0; j < _filteredData.Count; j++)
             {
                 if (j > 0)
@@ -1896,7 +1717,7 @@ namespace PSXDataFetchingApp
             //}
         }
 
-#endregion
+        #endregion
 
         #region GetScripNames
 
