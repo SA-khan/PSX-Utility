@@ -351,7 +351,7 @@ namespace PSXDataFetchingApp
                             ClearMarketSummaryClosing();
 
                             //CLearing In Ipams
-                            ClearMarketSummaryClosingIpams();
+                            //ClearMarketSummaryClosingIpams();
 
                             ///
                             /// Iterating Each Line of Market Summary Closing File
@@ -406,7 +406,7 @@ namespace PSXDataFetchingApp
                                 int _DbStatus = SavingMarketSummaryClosing(counter,Convert.ToDateTime(_Date), lCategory, lClosing.ToString("N2"), Item);
 
                                 // Saving in Ipams
-                                SavingMarketSummaryClosingIpams(counter, Convert.ToDateTime(_Date), lCategory, lClosing.ToString("N2"), Item);
+                                //SavingMarketSummaryClosingIpams(counter, Convert.ToDateTime(_Date), lCategory, lClosing.ToString("N2"), Item);
 
                                 if (_DbStatus == 0)
                                 {
@@ -1145,7 +1145,7 @@ namespace PSXDataFetchingApp
 
         #endregion
 
-        #region SavingMarketSummaryClosing
+        #region SavingMarketSummaryClosingIpams
 
         public int SavingMarketSummaryClosingIpams(Int64 _id, DateTime _date, Int64 _category, string _closing, MarketSummary summary)
         {

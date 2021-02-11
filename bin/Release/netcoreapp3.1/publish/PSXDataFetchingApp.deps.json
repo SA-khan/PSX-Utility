@@ -25,6 +25,7 @@
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "5.0.1",
           "Microsoft.Extensions.Hosting": "5.0.0",
           "Microsoft.Extensions.Hosting.Abstractions": "5.0.0",
+          "NEST": "7.10.1",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "5.0.1",
           "Oracle.ManagedDataAccess.Core": "2.19.100",
           "RazorEngine.NetCore": "3.1.0",
@@ -109,7 +110,7 @@
       "Elastic.Apm.Elasticsearch/1.7.1": {
         "dependencies": {
           "Elastic.Apm": "1.7.1",
-          "Elasticsearch.Net": "7.6.0"
+          "Elasticsearch.Net": "7.10.1"
         },
         "runtime": {
           "lib/netstandard2.0/Elastic.Apm.Elasticsearch.dll": {
@@ -181,16 +182,16 @@
           }
         }
       },
-      "Elasticsearch.Net/7.6.0": {
+      "Elasticsearch.Net/7.10.1": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
-          "System.Buffers": "4.5.0",
+          "System.Buffers": "4.5.1",
           "System.Diagnostics.DiagnosticSource": "5.0.0"
         },
         "runtime": {
           "lib/netstandard2.1/Elasticsearch.Net.dll": {
             "assemblyVersion": "7.0.0.0",
-            "fileVersion": "7.6.0.0"
+            "fileVersion": "7.10.1.0"
           }
         }
       },
@@ -413,7 +414,7 @@
           "Microsoft.AspNetCore.Http.Abstractions": "2.2.0",
           "Microsoft.Extensions.FileProviders.Abstractions": "5.0.0",
           "Microsoft.Net.Http.Headers": "2.2.0",
-          "System.Buffers": "4.5.0"
+          "System.Buffers": "4.5.1"
         }
       },
       "Microsoft.AspNetCore.Http.Features/2.2.0": {
@@ -468,7 +469,7 @@
           "Microsoft.AspNetCore.HttpOverrides": "2.2.0",
           "Microsoft.Extensions.Logging.Abstractions": "5.0.0",
           "Microsoft.Extensions.Options": "5.0.0",
-          "System.Buffers": "4.5.0",
+          "System.Buffers": "4.5.1",
           "System.IO.Pipelines": "4.5.2",
           "System.Memory": "4.5.3",
           "System.Numerics.Vectors": "4.5.0",
@@ -1341,7 +1342,7 @@
       "Microsoft.Net.Http.Headers/2.2.0": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "5.0.0",
-          "System.Buffers": "4.5.0"
+          "System.Buffers": "4.5.1"
         }
       },
       "Microsoft.NETCore.Platforms/5.0.0": {},
@@ -1389,6 +1390,17 @@
             "assetType": "runtime",
             "assemblyVersion": "5.0.0.0",
             "fileVersion": "5.0.20.51904"
+          }
+        }
+      },
+      "NEST/7.10.1": {
+        "dependencies": {
+          "Elasticsearch.Net": "7.10.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Nest.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.10.1.0"
           }
         }
       },
@@ -1768,7 +1780,7 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "System.Buffers/4.5.0": {},
+      "System.Buffers/4.5.1": {},
       "System.Collections/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
@@ -2053,7 +2065,7 @@
       "System.IO.Compression/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
-          "System.Buffers": "4.5.0",
+          "System.Buffers": "4.5.1",
           "System.Collections": "4.3.0",
           "System.Diagnostics.Debug": "4.3.0",
           "System.IO": "4.3.0",
@@ -2071,7 +2083,7 @@
       },
       "System.IO.Compression.ZipFile/4.3.0": {
         "dependencies": {
-          "System.Buffers": "4.5.0",
+          "System.Buffers": "4.5.1",
           "System.IO": "4.3.0",
           "System.IO.Compression": "4.3.0",
           "System.IO.FileSystem": "4.3.0",
@@ -2916,12 +2928,12 @@
       "path": "elastic.apm.sqlclient/1.7.1",
       "hashPath": "elastic.apm.sqlclient.1.7.1.nupkg.sha512"
     },
-    "Elasticsearch.Net/7.6.0": {
+    "Elasticsearch.Net/7.10.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-5YAjvtkAuTvZhH5bOT/5Hced9tPS9j6MAiD5pjCI5CFlAK0WdA3YzTwcTLa5Yz1CiV4RM7XVwVIOzwDyEugSEw==",
-      "path": "elasticsearch.net/7.6.0",
-      "hashPath": "elasticsearch.net.7.6.0.nupkg.sha512"
+      "sha512": "sha512-Eo7KwMgLt6kJ8SYo1UmYDWZ02wbZGRBCSsjyyKSKbF4HKBA1HLKIWmLCFMk+x22DNbTLV5E++30IgRNKZSLVPQ==",
+      "path": "elasticsearch.net/7.10.1",
+      "hashPath": "elasticsearch.net.7.10.1.nupkg.sha512"
     },
     "EPPlus/5.4.2": {
       "type": "package",
@@ -3595,6 +3607,13 @@
       "path": "microsoft.win32.systemevents/5.0.0",
       "hashPath": "microsoft.win32.systemevents.5.0.0.nupkg.sha512"
     },
+    "NEST/7.10.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SPc+gxKrag2UBoyW2eK67Aj0Bp81sfNwYWLL/Gr7l1WLYaTZOavURXg4VYOF3J7s0johccSkuqa3PyDd4FtD9w==",
+      "path": "nest/7.10.1",
+      "hashPath": "nest.7.10.1.nupkg.sha512"
+    },
     "NETStandard.Library/1.6.1": {
       "type": "package",
       "serviceable": true,
@@ -3861,12 +3880,12 @@
       "path": "system.appcontext/4.3.0",
       "hashPath": "system.appcontext.4.3.0.nupkg.sha512"
     },
-    "System.Buffers/4.5.0": {
+    "System.Buffers/4.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-pL2ChpaRRWI/p4LXyy4RgeWlYF2sgfj/pnVMvBqwNFr5cXg7CXNnWZWxrOONLg8VGdFB8oB+EG2Qw4MLgTOe+A==",
-      "path": "system.buffers/4.5.0",
-      "hashPath": "system.buffers.4.5.0.nupkg.sha512"
+      "sha512": "sha512-Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg==",
+      "path": "system.buffers/4.5.1",
+      "hashPath": "system.buffers.4.5.1.nupkg.sha512"
     },
     "System.Collections/4.3.0": {
       "type": "package",

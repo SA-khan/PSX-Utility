@@ -19,36 +19,44 @@
                 <Border Margin="2" HorizontalAlignment="Left" Padding="5" Background="White">
                 <Image x:Name="imgClient" Source="/Images/BOP.png"   />
                 </Border>
-                <Label  Content="Pakistan Stock Exchange Live Data Preview" FontFamily="/Fonts/#Lato" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
-                <Border HorizontalAlignment="Right" Padding="5" >
-                    <Grid Margin="0 0 10 0">
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="2*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Grid VerticalAlignment="Bottom" Background="White">
+                    <Label  Content="Pakistan Stock Exchange Market Summary" FontFamily="/Fonts/#Raleway" FontWeight="DemiBold" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"  FontSize="20"/>
+                    <Label Grid.Row="1"  Content="View the Real Time Stocks of the Pakistan Stock Market" VerticalContentAlignment="Top" HorizontalContentAlignment="Center" Padding="1" FontFamily="/Fonts/#Raleway"  FontSize="14" VerticalAlignment="Top" />
+                </Grid>
+                
+                <Border HorizontalAlignment="Right" Padding="5" VerticalAlignment="Center" >
+                    <Grid Margin="0 0 10 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid VerticalAlignment="Stretch" Background="White">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" MinWidth="40" MaxWidth="40" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                            <Border Padding="2">
-                                <TextBlock x:Name="Date" Text="Date:" FontFamily="/Fonts/#Lato" FontSize="12" />
+                            <Border Padding="0">
+                                <TextBlock x:Name="Date" Text="Date" FontFamily="/Fonts/#Lato" FontSize="12" TextAlignment="Left" Padding="2" FontWeight="DemiBold" />
                             </Border>
-                            <Border Padding="2"  Grid.Column="1">
-                                <TextBlock x:Name="lblDate" FontFamily="/Fonts/#Lato" FontStyle="Italic" FontSize="12" />
+                            <Border Padding="0 2"  Grid.Column="1" Background="White">
+                                <TextBlock x:Name="lblDate" FontFamily="Franklin Gothic" Background="White" FontStyle="Normal" FontSize="12" TextAlignment="Left" Padding="2" />
                             </Border>
                         </Grid>
 
-                        <Grid VerticalAlignment="Top" Grid.Row="1" Background="White">
+                        <Grid VerticalAlignment="Stretch" Grid.Row="1" Background="White">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" MinWidth="40" MaxWidth="40" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                            <Border Padding="2">
-                                <TextBlock x:Name="Status" Text="Market Status: " FontFamily="/Fonts/#Lato" FontSize="12" VerticalAlignment="Top"/>
+                            <Border Padding="0">
+                                <TextBlock x:Name="Status" Text="Status " FontFamily="/Fonts/#Lato" FontSize="12" VerticalAlignment="Stretch" TextAlignment="Left" Padding="2" FontWeight="DemiBold" />
                             </Border>
-                            <Border Padding="2" Grid.Column="1">
-                                <TextBlock x:Name="lblStatus" FontFamily="/Fonts/#Lato" Foreground="Green" FontWeight="Bold" FontSize="12" VerticalAlignment="Top"/>
+                            <Border Padding="2" Grid.Column="1" Background="White">
+                                <TextBlock x:Name="lblStatus" FontFamily="Franklin Gothic" Foreground="Green" FontWeight="DemiBold" FontSize="12" VerticalAlignment="Stretch" TextAlignment="Left" HorizontalAlignment="Left" Padding="2"/>
                             </Border>
                         </Grid>
                     
@@ -108,9 +116,10 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid HorizontalAlignment="Left">
-                            <TextBox  Width="205" Height="25" FontSize="13"  VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="txtSearch" Margin="5" TextChanged="txtSearch_TextChanged" />
+                            <TextBox  Width="185" Height="25" FontSize="13"  VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="txtSearch" Margin="5" TextChanged="txtSearch_TextChanged" />
                             <TextBlock x:Name="txtSearch1" IsHitTestVisible="False" Text="Enter Search Term Here" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray" FontSize="13" FontFamily="/Fonts/#Raleway">
                                 <TextBlock.Style>
                                     <Style TargetType="{x:Type TextBlock}">
@@ -125,7 +134,7 @@
                             </TextBlock>
                         </Grid>
                         <!--<TextBox x:Name="txtSearch" Text=" Search Here.."  FontSize="14" Foreground="Gray" VerticalContentAlignment="Center" Width="200" Height="30" Margin="1 0 2 0" TextChanged="txtSearch_TextChanged" />-->
-                        <ComboBox x:Name="comboCategory" Grid.Column="1" Width="200" Height="30" VerticalContentAlignment="Center" SelectionChanged="comboCategory_SelectionChanged" />
+                        <ComboBox x:Name="comboCategory" Grid.Column="1" Width="170" Height="25" VerticalContentAlignment="Center" SelectionChanged="comboCategory_SelectionChanged" />
                         <Button x:Name="btnSearch" Grid.Column="2" HorizontalAlignment="Center" BorderBrush="Transparent" VerticalAlignment="Center"  Width="80" Height="30" Background="Transparent" Click="btnSearch_Click" ToolTip="Search By Category." >
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
                                 <Grid Width="70" Height="25" Margin="0 0 0 0">
@@ -136,7 +145,26 @@
                                 </Grid>
                             </StackPanel>
                         </Button>
+                        <Grid Grid.Column="3" VerticalAlignment="Center" Background="CornflowerBlue" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="AUTO SYNC" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="8" Padding="1" Margin="1" FontWeight="DemiBold" />
+                            <Grid Grid.Column="1" Background="White">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text=" OFF" FontSize="10" FontWeight="Bold" Padding="2" Margin="0 2" Foreground="Black" />
+                                <Slider x:Name="sliderRecur" Grid.Column="1" Value="1" Maximum="1" Padding="2" Margin="0 2" />
+                                <TextBlock Grid.Column="2" Text="ON " FontSize="10" FontWeight="Bold" Padding="2" Margin="0 2" Foreground="Black" />
+                            </Grid>
+
+                        </Grid>
                     </Grid>
+                    
                     <Grid Grid.Column="3" HorizontalAlignment="Right">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -318,7 +346,15 @@
                 </Grid.ColumnDefinitions>
                 <StatusBar DockPanel.Dock="Bottom" Grid.Column="0" HorizontalAlignment="Left" Name="statusBar"  VerticalAlignment="Center" Background="Transparent" Foreground="Black" Margin="1">
                     <StatusBarItem>
-                        <TextBlock x:Name="lblStatusMessage" Grid.Column="0" Text="Status: Ready" FontFamily="/Fonts/#Lato" FontSize="11" Background="Transparent" />
+                        <Grid Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="lblStatusMessage" Grid.Column="0" Text="Status " FontFamily="/Fonts/#Lato" FontWeight="Black" FontSize="12" Padding="5" />
+                            <TextBlock x:Name="StatusMessage" Grid.Column="1" Text="Ready" FontWeight="DemiBold" FontFamily="/Fonts/#Lato" FontSize="12" Background="White" Padding="5" />
+                        </Grid>
+                        
                     </StatusBarItem>
                 </StatusBar>
                 <StatusBar x:Name="progressBarContainer" DockPanel.Dock="Bottom" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0" Background="Transparent" Visibility="Hidden">

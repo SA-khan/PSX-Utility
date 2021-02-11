@@ -115,6 +115,10 @@ namespace PSXDataFetchingApp
                         header.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#76b0cc");
                         Footer.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#76b0cc");
 
+                        Date.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+                        Status.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+                        lblStatusMessage.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#fff");
+
                         //Setting Logo
                         var image = new BitmapImage();
                         image.BeginInit();
@@ -133,6 +137,10 @@ namespace PSXDataFetchingApp
                         var bc = new BrushConverter();
                         header.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
                         Footer.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#f0a500");
+
+                        Date.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
+                        Status.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
+                        lblStatusMessage.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#ffde80");
 
                         //Setting Logo
                         var image = new BitmapImage();
@@ -153,6 +161,10 @@ namespace PSXDataFetchingApp
                         header.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
                         Footer.Background = (Brush)bc.ConvertFrom("#008269");
 
+                        Date.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cdcdcd");
+                        Status.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cdcdcd");
+                        lblStatusMessage.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#cdcdcd");
+
                         //Setting Logo
                         var image = new BitmapImage();
                         image.BeginInit();
@@ -171,6 +183,10 @@ namespace PSXDataFetchingApp
                         var bc = new BrushConverter();
                         header.Background = (Brush)bc.ConvertFrom("#01808d");
                         Footer.Background = (Brush)bc.ConvertFrom("#01808d");
+
+                        Date.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        Status.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        lblStatusMessage.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
 
                         //Setting Logo
                         var image = new BitmapImage();
@@ -191,7 +207,7 @@ namespace PSXDataFetchingApp
         public PreviewWindow(string date, string status, string Volume, string Value, string Trades, List<CurrentMarketSummary> ScripList)
         {
             InitializeComponent();
-            Debug.WriteLine("Preview Screen Initialized..");
+            //Debug.WriteLine("Preview Screen Initialized..");
             
             ClientSideProperties();
 
@@ -247,12 +263,15 @@ namespace PSXDataFetchingApp
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            countTimer++;
-            if (countTimer % Interval == 0)
+            if (sliderRecur.Value == 1)
             {
-                ButtonAutomationPeer peer = new ButtonAutomationPeer(btnRefresh);
-                IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
-                invokeProv.Invoke();
+                countTimer++;
+                if (countTimer % Interval == 0)
+                {
+                    ButtonAutomationPeer peer = new ButtonAutomationPeer(btnRefresh);
+                    IInvokeProvider invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
+                    invokeProv.Invoke();
+                }
             }
         }
 
@@ -264,7 +283,7 @@ namespace PSXDataFetchingApp
             image.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image);
             progressBarContainer.Visibility = Visibility.Visible;
-            lblStatusMessage.Text = "Status: Refreshing Data..";
+            StatusMessage.Text = "Refreshing Data..";
 
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 MyDelegate mdelegate = new MyDelegate(mustWork);
@@ -279,7 +298,7 @@ namespace PSXDataFetchingApp
             image2.UriSource = ResourceAccessor.Get("Images/tick.gif");
             image2.EndInit();
             ImageBehavior.SetAnimatedSource(imgStatus, image2);
-            lblStatusMessage.Text = "Status: Ready";
+            StatusMessage.Text = "Ready";
 
         }
 
@@ -1016,7 +1035,7 @@ namespace PSXDataFetchingApp
                 }
                 else
                 {
-                    statusContent = "Status: Refreshing Scrips..";
+                    statusContent = "Refreshing Scrips..";
                     this.Dispatcher.Invoke(() =>
                     {
                         var image = new BitmapImage();
@@ -1024,7 +1043,7 @@ namespace PSXDataFetchingApp
                         image.UriSource = ResourceAccessor.Get("Images/gear.gif");
                         image.EndInit();
                         ImageBehavior.SetAnimatedSource(imgStatus, image);
-                        lblStatusMessage.Text = statusContent;
+                        StatusMessage.Text = statusContent;
                         progressBar.Value = 10;
                     });
                     
@@ -1094,7 +1113,19 @@ namespace PSXDataFetchingApp
                         }
 
                     });
-                    
+
+                    statusContent = "Ready";
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/tick.gif");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(imgStatus, image);
+                        StatusMessage.Text = statusContent;
+                        progressBar.Value = 100;
+                    });
+
                 }
             }
             catch (WebException ex)
@@ -1545,77 +1576,62 @@ namespace PSXDataFetchingApp
 
         public void GetScripDetails()
         {
-            HtmlNodeCollection nodes = _webDataCollection;
+            HtmlNodeCollection nodes = _webDataCollection != null ? _webDataCollection : null;
+            
             List<string> _filteredData = new List<string>();
             List<int> _categoryCount = new List<int>();
             int _counter = 0;
             int _captureflag = 0;
-            foreach (HtmlAgilityPack.HtmlNode node in nodes)
+            if (nodes != null)
             {
-                for (int i = 0; i < _categoryList.Count; i++)
+                foreach (HtmlAgilityPack.HtmlNode node in nodes)
                 {
-                    if (node.InnerText.Equals(_categoryList[i]))
+                    for (int i = 0; i < _categoryList.Count; i++)
                     {
-                        _categoryCount.Add(0);
-                        _captureflag = 1;
+                        if (node.InnerText.Equals(_categoryList[i]))
+                        {
+                            _categoryCount.Add(0);
+                            _captureflag = 1;
+                        }
+
+                        //else if (node.InnerText.ToString().Trim().Equals("VOLUME") && _captureflag == 0)
+                        //{
+
+                        //}
+                    }
+                    if (_captureflag == 1)
+                    {
+                        _filteredData.Add(node.InnerText);
                     }
 
-                    //else if (node.InnerText.ToString().Trim().Equals("VOLUME") && _captureflag == 0)
-                    //{
-
-                    //}
-                }
-                if (_captureflag == 1)
-                {
-                    _filteredData.Add(node.InnerText);
                 }
 
-            }
-
-            int flagger = 0;
-            int _scriptor = 2;
-            int volumeOccurance = 0;
-            string _tempCategory = String.Empty;
-            string _tempScrip = String.Empty;
-            _scrip.Clear();
-            for (int j = 0; j < _filteredData.Count; j++)
-            {
-                if (j > 0)
+                int flagger = 0;
+                int _scriptor = 2;
+                int volumeOccurance = 0;
+                string _tempCategory = String.Empty;
+                string _tempScrip = String.Empty;
+                _scrip.Clear();
+                for (int j = 0; j < _filteredData.Count; j++)
                 {
-
-                    if (_filteredData[j].Equals("VOLUME"))
+                    if (j > 0)
                     {
-                        //Debug.WriteLine("Category -> " + _filteredData[j - 8]);
-                        _tempCategory = _filteredData[j - 8];
-                        if (volumeOccurance > 0)
-                        {
-                            flagger++;
-                        }
-                    }
-                    else if (!CheckCategoryStatus(_filteredData[j])) { }
-                    else
-                    {
-                        if (_filteredData[j - 1].Equals("VOLUME"))
-                        {
-                            volumeOccurance++;
-                            _scriptor = j;
-                            _scriptor++;
-                            _tempScrip = _filteredData[j];
-                            if (_filteredData[j].Equals(_tempCategory))
-                            {
 
-                            }
-                            else
-                            {
-                                //Debug.WriteLine("Scrip Name: " + _filteredData[j] + ", Category: " + _tempCategory + ", LDCP: " + _filteredData[_scriptor] + ", OPEN: " + _filteredData[_scriptor + 1] + ", HIGH: " + _filteredData[_scriptor + 2] + ", LOW: " + _filteredData[_scriptor + 3] + ", CURRENT: " + _filteredData[_scriptor + 4] + ", CHANGE: " + _filteredData[_scriptor + 5] + ", VOLUME: " + _filteredData[_scriptor + 6]);
-                                _scrip.Add(new CurrentMarketSummary { Name = _filteredData[j], Symbol = GetCompanySymbols(_filteredData[j]), Category = _tempCategory, Ldcp = _filteredData[_scriptor], Open = _filteredData[_scriptor + 1], High = _filteredData[_scriptor + 2], Low = _filteredData[_scriptor + 3], Current = _filteredData[_scriptor + 4], Change = _filteredData[_scriptor + 5].Trim().Replace(" ", ""), Volume = _filteredData[_scriptor + 6] });
-                            }
-                            _scriptor = 2;
-                        }
-                        if (j > 7)
+                        if (_filteredData[j].Equals("VOLUME"))
                         {
-                            if (_filteredData[j - 8] == _tempScrip)
+                            //Debug.WriteLine("Category -> " + _filteredData[j - 8]);
+                            _tempCategory = _filteredData[j - 8];
+                            if (volumeOccurance > 0)
                             {
+                                flagger++;
+                            }
+                        }
+                        else if (!CheckCategoryStatus(_filteredData[j])) { }
+                        else
+                        {
+                            if (_filteredData[j - 1].Equals("VOLUME"))
+                            {
+                                volumeOccurance++;
                                 _scriptor = j;
                                 _scriptor++;
                                 _tempScrip = _filteredData[j];
@@ -1629,6 +1645,25 @@ namespace PSXDataFetchingApp
                                     _scrip.Add(new CurrentMarketSummary { Name = _filteredData[j], Symbol = GetCompanySymbols(_filteredData[j]), Category = _tempCategory, Ldcp = _filteredData[_scriptor], Open = _filteredData[_scriptor + 1], High = _filteredData[_scriptor + 2], Low = _filteredData[_scriptor + 3], Current = _filteredData[_scriptor + 4], Change = _filteredData[_scriptor + 5].Trim().Replace(" ", ""), Volume = _filteredData[_scriptor + 6] });
                                 }
                                 _scriptor = 2;
+                            }
+                            if (j > 7)
+                            {
+                                if (_filteredData[j - 8] == _tempScrip)
+                                {
+                                    _scriptor = j;
+                                    _scriptor++;
+                                    _tempScrip = _filteredData[j];
+                                    if (_filteredData[j].Equals(_tempCategory))
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        //Debug.WriteLine("Scrip Name: " + _filteredData[j] + ", Category: " + _tempCategory + ", LDCP: " + _filteredData[_scriptor] + ", OPEN: " + _filteredData[_scriptor + 1] + ", HIGH: " + _filteredData[_scriptor + 2] + ", LOW: " + _filteredData[_scriptor + 3] + ", CURRENT: " + _filteredData[_scriptor + 4] + ", CHANGE: " + _filteredData[_scriptor + 5] + ", VOLUME: " + _filteredData[_scriptor + 6]);
+                                        _scrip.Add(new CurrentMarketSummary { Name = _filteredData[j], Symbol = GetCompanySymbols(_filteredData[j]), Category = _tempCategory, Ldcp = _filteredData[_scriptor], Open = _filteredData[_scriptor + 1], High = _filteredData[_scriptor + 2], Low = _filteredData[_scriptor + 3], Current = _filteredData[_scriptor + 4], Change = _filteredData[_scriptor + 5].Trim().Replace(" ", ""), Volume = _filteredData[_scriptor + 6] });
+                                    }
+                                    _scriptor = 2;
+                                }
                             }
                         }
                     }

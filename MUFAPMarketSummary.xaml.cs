@@ -303,7 +303,8 @@ namespace PSXDataFetchingApp
             List<String> text = new List<string>();
             try
             {
-
+                //http://www.mufap.com.pk/nav_returns_performance.php?tab=01
+                //http://www.mufap.com.pk/nav-report.php?tab=01
                 string URL = "http://www.mufap.com.pk/nav_returns_performance.php?tab=01";
                 HtmlNodeCollection _nodes = null;
                 HtmlNodeCollection _temp = null;
