@@ -51,6 +51,33 @@ namespace PSXDataFetchingApp
 
             pkrvDatepicker.SelectedDate = DateTime.Now;
 
+            ClientSideProperties();
+
+            txtClient.Text = ConfigurationManager.AppSettings["Client"].ToString();
+            txtPrimaryConnection.Text = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
+            txtSecondaryConnection.Text = ConfigurationManager.ConnectionStrings["IpamsConnection"].ToString();
+            if(ConfigurationManager.AppSettings["PopupAlert"].ToString() == "1")
+            {
+                checkAlert.IsChecked = true;
+            }
+            else
+            {
+                checkAlert.IsChecked = false;
+            }
+            if (ConfigurationManager.AppSettings["EmailAlert"].ToString() == "1")
+            {
+                checkEmail.IsChecked = true;
+            }
+            else
+            {
+                checkEmail.IsChecked = false;
+            }
+            txtClosingPercentage.Text = ConfigurationManager.AppSettings["FundClosingPercentage"].ToString();
+
+        }
+
+        public void ClientSideProperties()
+        {
             //Client Specific Properties
             try
             {
@@ -111,29 +138,9 @@ namespace PSXDataFetchingApp
                 }
             }
             catch { }
-
-            txtClient.Text = ConfigurationManager.AppSettings["Client"].ToString();
-            txtPrimaryConnection.Text = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
-            txtSecondaryConnection.Text = ConfigurationManager.ConnectionStrings["IpamsConnection"].ToString();
-            if(ConfigurationManager.AppSettings["PopupAlert"].ToString() == "1")
-            {
-                checkAlert.IsChecked = true;
-            }
-            else
-            {
-                checkAlert.IsChecked = false;
-            }
-            if (ConfigurationManager.AppSettings["EmailAlert"].ToString() == "1")
-            {
-                checkEmail.IsChecked = true;
-            }
-            else
-            {
-                checkEmail.IsChecked = false;
-            }
-            txtClosingPercentage.Text = ConfigurationManager.AppSettings["FundClosingPercentage"].ToString();
-
         }
+
+        #region btnBack_Click
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
@@ -141,6 +148,10 @@ namespace PSXDataFetchingApp
             window.Show();
             this.Hide();
         }
+
+        #endregion
+
+        #region btnClient_Click
 
         private void btnClient_Click(object sender, RoutedEventArgs e)
         {
@@ -172,6 +183,10 @@ namespace PSXDataFetchingApp
             
         }
 
+        #endregion
+
+        #region btnPrimaryConnection_Click
+
         private void btnPrimaryConnection_Click(object sender, RoutedEventArgs e)
         {
             string PrimaryConnection = txtPrimaryConnection.Text;
@@ -201,6 +216,10 @@ namespace PSXDataFetchingApp
 
         }
 
+        #endregion
+
+        #region btnSecondaryConnection_Click
+
         private void btnSecondaryConnection_Click(object sender, RoutedEventArgs e)
         {
 
@@ -229,6 +248,10 @@ namespace PSXDataFetchingApp
             }
 
         }
+
+        #endregion
+
+        #region btnCompanyCheck_Click
 
         private void btnCompanyCheck_Click(object sender, RoutedEventArgs e)
         {
@@ -294,6 +317,9 @@ namespace PSXDataFetchingApp
             }
         }
 
+        #endregion
+
+        #region btnInsertCompany_Click
         private void btnInsertCompany_Click(object sender, RoutedEventArgs e)
         {
             string _symbol = txtID.Text;
@@ -349,6 +375,10 @@ namespace PSXDataFetchingApp
                 conn.Close();
             }
         }
+
+        #endregion
+
+        #region btnCompanySymbolCheckSecondary_Click
 
         private void btnCompanySymbolCheckSecondary_Click(object sender, RoutedEventArgs e)
         {
@@ -414,6 +444,10 @@ namespace PSXDataFetchingApp
             }
         }
 
+        #endregion
+
+        #region btnAlert_Click
+
         private void btnAlert_Click(object sender, RoutedEventArgs e)
         {
             bool _status = false;
@@ -449,26 +483,11 @@ namespace PSXDataFetchingApp
             config.Save(ConfigurationSaveMode.Modified);
 
             
-
             // Force a reload of the changed section.
             ConfigurationManager.RefreshSection("appSettings");
 
             bool _what = ConfigurationManager.AppSettings["PopupAlert"].ToString() == "1" ? true : false;
 
-            
-
-            //if ( _what == _status)
-            //{
-            //    var bc = new BrushConverter();
-            //    btnAlert.Background = (Brush)bc.ConvertFrom("#32CD32");
-            //}
-            //else
-            //{
-            //    var bc = new BrushConverter();
-            //    btnAlert.Background = (Brush)bc.ConvertFrom("#FF6347");
-            //}
-
-            //
             bool _statusEmail = false;
 
             System.Configuration.Configuration configEmail = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -515,6 +534,10 @@ namespace PSXDataFetchingApp
 
         }
 
+        #endregion
+
+        #region btnClosingPercentage_Click
+
         private void btnClosingPercentage_Click(object sender, RoutedEventArgs e)
         {
             string _percentage = txtClosingPercentage.Text;
@@ -545,6 +568,10 @@ namespace PSXDataFetchingApp
                 btnClosingPercentage.Background = (Brush)bc.ConvertFrom("#FF6347");
             }
         }
+
+        #endregion
+
+        #region btnUploadScripSymbols_Click
 
         private async void btnUploadScripSymbols_Click(object sender, RoutedEventArgs e)
         {
@@ -612,6 +639,9 @@ namespace PSXDataFetchingApp
             ImageBehavior.SetAnimatedSource(imgStatus, image2);
         }
 
+        #endregion
+
+        #region FetchDataFromPSX
 
         private HtmlNodeCollection FetchDataFromPSX(string url, string param)
         {
@@ -630,6 +660,10 @@ namespace PSXDataFetchingApp
             HtmlNodeCollection result = doc.DocumentNode.SelectNodes(param);
             return result;
         }
+
+        #endregion
+
+        #region GetFileUploadPSXMarketSummary
 
         public List<ScripInfo> GetFileUploadPSXMarketSummary(int _year, int _month, int _day)
         {
@@ -741,6 +775,10 @@ namespace PSXDataFetchingApp
                                 if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER")) {
                                     Item = new ScripInfo { Symbol = lSymbol, Name = lName, Description = lDescription };
                                 }
+                                else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+                                {
+                                    Item = new ScripInfo { ScripInfoId = counter , Symbol = lSymbol, Name = lName, Description = lDescription };
+                                }
                                 else {
                                     Item = new ScripInfo { Number = lNumber, Symbol = lSymbol, Name = lName, Description = lDescription, CategoryId = lCategoryId, CategoryName = lCategoryName, Code = lCode };
                                 }
@@ -796,6 +834,9 @@ namespace PSXDataFetchingApp
             //Code Runner End
         }
 
+        #endregion
+
+        #region UnzipPSXFile
         public bool UnzipPSXFile(string path)
         {
             bool result = false;
@@ -816,9 +857,16 @@ namespace PSXDataFetchingApp
             }
         }
 
+        #endregion
+
+        #region ClearSymbolInfo
+
         private int ClearSymbolInfo()
         {
             int status = 0;
+
+            #region ClearSymbolInfo_MSSQLSERVER
+
             if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER")) {
                 SqlConnection conn = new SqlConnection();
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -846,6 +894,11 @@ namespace PSXDataFetchingApp
                     conn.Close();
                 }
             }
+
+            #endregion
+
+            #region ClearSymbolInfo_ORACLE
+
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
             {
                 OracleConnection conn = new OracleConnection();
@@ -854,9 +907,16 @@ namespace PSXDataFetchingApp
                 conn.Open();
                 try
                 {
-                    OracleCommand cmd = new OracleCommand("spTRUNCATE_SYMBOL_INFO", conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    OracleCommand cmd1 = new OracleCommand("COMMIT", conn);
+                    cmd1.ExecuteNonQuery();
+
+                    OracleCommand cmd = new OracleCommand("TRUNCATE TABLE SYMBOL_INFO", conn);
+                    cmd.CommandType = CommandType.Text;
                     status = cmd.ExecuteNonQuery();
+
+                    OracleCommand cmd2 = new OracleCommand("COMMIT", conn);
+                    cmd2.ExecuteNonQuery();
+
                     return status;
                 }
                 catch (OracleException ex)
@@ -874,6 +934,11 @@ namespace PSXDataFetchingApp
                     conn.Close();
                 }
             }
+
+            #endregion
+
+            #region ClearSymbolInfo_SQLITE
+
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
             {
                 //_context.ScripInfo.Remove();
@@ -881,19 +946,31 @@ namespace PSXDataFetchingApp
                     _context.ScripInfo.Remove(entity);
                 _context.SaveChanges();
             }
+
+            #endregion
+
+            #region ClearSymbolInfo_ELASTICSEARCH
+
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH"))
             {
                 
             }
 
+            #endregion
+
             return status;
-
-
         }
+
+        #endregion
+
+        #region SavingSymbolInformation
 
         public int SavingSymbolInformation(ScripInfo item)
         {
             int status = 0;
+
+            #region SavingSymbolInformation_MSSQLSERVER
+
             if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
             {
                 SqlConnection conn = new SqlConnection();
@@ -920,7 +997,7 @@ namespace PSXDataFetchingApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Debug.WriteLine("General Exception: " + ex.Message);
                     return 0;
                 }
@@ -929,6 +1006,11 @@ namespace PSXDataFetchingApp
                     conn.Close();
                 }
             }
+
+            #endregion
+
+            #region SavingSymbolInformation_ORACLE
+
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
             {
                 OracleConnection conn = new OracleConnection();
@@ -936,15 +1018,14 @@ namespace PSXDataFetchingApp
                 conn.Open();
                 try
                 {
-                    OracleCommand cmd = new OracleCommand("spINSERT_SYMBOL_INFO", conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@SYMBOL_MARK", OracleDbType.Varchar2, 30);
-                    cmd.Parameters["@SYMBOL_MARK"].Value = item.Symbol;
-                    cmd.Parameters.Add("@SYMBOL_NAME", OracleDbType.Varchar2, 500);
-                    cmd.Parameters["@SYMBOL_NAME"].Value = item.Name;
-                    cmd.Parameters.Add("@SYMBOL_DESCRIPTION", OracleDbType.Varchar2, 1000);
-                    cmd.Parameters["@SYMBOL_DESCRIPTION"].Value = item.Description;
+                    //Debug.WriteLine("ID: " + item.ScripInfoId+", '"+ item.Symbol + "', '"+ item.Name + "', '"+item.Description+"'");
+                    OracleCommand cmd = new OracleCommand("INSERT INTO SYMBOL_INFO(SYMBOL_ID,SYMBOL_MARK, SYMBOL_NAME, SYMBOL_DESCRIPTION) VALUES ("+item.ScripInfoId+",'"+ item.Symbol + "', '"+ item.Name.Replace("'","") + "', '"+item.Description.Replace("'", "") + "')", conn);
+                    cmd.CommandType = CommandType.Text;
                     status = cmd.ExecuteNonQuery();
+
+                    OracleCommand cmd1 = new OracleCommand("COMMIT", conn);
+                    cmd1.ExecuteNonQuery();
+
                     return status;
                 }
                 catch (OracleException ex)
@@ -955,7 +1036,7 @@ namespace PSXDataFetchingApp
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Database Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Debug.WriteLine("General Exception: " + ex.Message);
                     return 0;
                 }
@@ -964,11 +1045,21 @@ namespace PSXDataFetchingApp
                     conn.Close();
                 }
             }
+
+            #endregion
+
+            #region SavingSymbolInformation_SQLITE
+
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE")) {
                 _context.ScripInfo.Add(item);
                 _context.SaveChanges();
                 status = 1;
             }
+
+            #endregion
+
+            #region SavingSymbolInformation_ELASTICSEARCH
+
             else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ELASTICSEARCH"))
             {
                 var pool = new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
@@ -1009,8 +1100,13 @@ namespace PSXDataFetchingApp
 
                         var client = new ElasticClient(connectionSettings);
                         }
+
+            #endregion
+
             return status;
         }
+
+        #endregion
 
 
     }

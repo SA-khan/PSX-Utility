@@ -1,0 +1,6 @@
+CREATE TABLE SYMBOL_INFO (SYMBOL_ID integer primary key,
+              SYMBOL_MARK varchar2(30),
+              SYMBOL_NAME varchar2(500),
+              SYMBOL_DESCRIPTION varchar2(1000))
+              
+              CREATE SEQUENCE SYS_C00864008

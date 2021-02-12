@@ -63,6 +63,8 @@ namespace PSXDataFetchingApp
                                                         "Shariah Compliant Commodities",
                                                         "Shariah Compliant Equity"
                                         };
+
+        #region MUFAPMarketSummary
         public MUFAPMarketSummary()
         {
             InitializeComponent();
@@ -77,13 +79,18 @@ namespace PSXDataFetchingApp
             SearchTermTextBox.IsEnabled = false;
             btnSearch.IsEnabled = false;
         }
+        #endregion
 
+        #region btnBack_Click
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             MainWindow window = new MainWindow(_context);
             window.Show();
             this.Close();
         }
+        #endregion
+
+        #region btnReset_Click
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
@@ -95,6 +102,9 @@ namespace PSXDataFetchingApp
             comboCategory.SelectedIndex = 0;
         }
 
+        #endregion
+
+        #region btnGet_Click
         private async void btnGet_Click(object sender, RoutedEventArgs e)
         {
 
@@ -153,6 +163,8 @@ namespace PSXDataFetchingApp
             ImageBehavior.SetAnimatedSource(imgStatus, image2);
 
         }
+
+        #endregion
 
         private List<String> GetHeaderData()
         {
@@ -305,7 +317,7 @@ namespace PSXDataFetchingApp
             {
                 //http://www.mufap.com.pk/nav_returns_performance.php?tab=01
                 //http://www.mufap.com.pk/nav-report.php?tab=01
-                string URL = "http://www.mufap.com.pk/nav_returns_performance.php?tab=01";
+                string URL = "http://www.mufap.com.pk/nav-report.php?tab=01";
                 HtmlNodeCollection _nodes = null;
                 HtmlNodeCollection _temp = null;
                 _temp = FetchDataFromPSX(URL, "//td");
@@ -317,6 +329,7 @@ namespace PSXDataFetchingApp
                         if (node.InnerText != null)
                         {
                             _originalText += node.InnerText.ToString() + "\n";
+                            Debug.WriteLine("=> " + node.InnerText.ToString());
                         }
                     }
                 }
