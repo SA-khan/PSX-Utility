@@ -2272,5 +2272,27 @@ namespace PSXDataFetchingApp
 
         #endregion
 
+        #region sliderRecur_ValueChanged
+
+        private void sliderRecur_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            try
+            {
+                if (sliderRecur.Value == 0)
+                {
+                    lblOff.Foreground = new SolidColorBrush(Colors.Black);
+                    lblOff.Text = " OFF";
+                }
+                else if (sliderRecur.Value == 1)
+                {
+                    lblOff.Foreground = new SolidColorBrush(Colors.Green);
+                    lblOff.Text = " ON";
+                }
+            }
+            catch(Exception) { }
+        }
+
+        #endregion
+
     }
 }

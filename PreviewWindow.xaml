@@ -150,18 +150,18 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="2*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="AUTO SYNC" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="8" Padding="1" Margin="1" FontWeight="DemiBold" />
-                            <Grid Grid.Column="1" Background="White">
+                            <TextBlock Text="AUTO SYNC" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="8" Padding="2 0" Margin="0" FontWeight="DemiBold" />
+                            <Border Grid.Column="1" Padding="1">
+                            <Grid Background="White">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="3*" />
-                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text=" OFF" FontSize="10" FontWeight="Bold" Padding="2" Margin="0 2" Foreground="Black" />
-                                <Slider x:Name="sliderRecur" Grid.Column="1" Value="1" Maximum="1" Padding="2" Margin="0 2" />
-                                <TextBlock Grid.Column="2" Text="ON " FontSize="10" FontWeight="Bold" Padding="2" Margin="0 2" Foreground="Black" />
+                                    <TextBlock x:Name="lblOff" Grid.Column="0" Text=" ON" FontSize="9" FontWeight="Bold" Padding="2" Margin="0 2" />
+                                    <Slider x:Name="sliderRecur" Grid.Column="1" Value="1" Maximum="1" Interval="1" Padding="2" Margin="0 2" ValueChanged="sliderRecur_ValueChanged" />
+                                
                             </Grid>
-
+                            </Border>
                         </Grid>
                     </Grid>
                     
