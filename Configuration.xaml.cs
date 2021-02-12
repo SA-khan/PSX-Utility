@@ -76,6 +76,9 @@ namespace PSXDataFetchingApp
 
         }
 
+
+        #region ClientSideProperties
+
         public void ClientSideProperties()
         {
             //Client Specific Properties
@@ -83,6 +86,9 @@ namespace PSXDataFetchingApp
             {
                 if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
                 {
+
+                    #region ClientSideProperties_BOP
+
                     if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
                     {
                         // Header Background Color 
@@ -107,6 +113,11 @@ namespace PSXDataFetchingApp
                         //Status Bar Background
                         statusBar.Background = (Brush)bc.ConvertFrom("#f0a500");
                     }
+
+                    #endregion
+
+                    #region ClientSideProperties_HBL
+
                     else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
                     {
                         // Header Background Color
@@ -135,10 +146,46 @@ namespace PSXDataFetchingApp
 
                     }
 
+                    #endregion
+
+                    #region ClientSideProperties_EFU
+
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("EFU"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        MainWindow1.Background = (Brush)bc.ConvertFrom("#b9c9d3");
+
+                        //lblDemo.Foreground = (Brush)bc.ConvertFrom("#008269");
+
+                        //lblSubHeading.Background = (Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/efu.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(ClientLogo, image);
+
+                        //Header Background
+                        Header.Background = (Brush)bc.ConvertFrom("#01808d");
+
+                        //Body Background
+                        Body.Background = (Brush)bc.ConvertFrom("#b9c9d3");
+
+                        //Status Bar Background
+                        statusBar.Background = (Brush)bc.ConvertFrom("#01808d");
+
+                    }
+
+                    #endregion
+
                 }
             }
             catch { }
         }
+
+        #endregion
 
         #region btnBack_Click
 
@@ -255,66 +302,174 @@ namespace PSXDataFetchingApp
 
         private void btnCompanyCheck_Click(object sender, RoutedEventArgs e)
         {
-            string _companyName = txtCompanyName.Text;
-            string _symbol = String.Empty;
+            #region btnCompanyCheck_Click_MSSQLSERVER
 
-            SqlConnection conn = new SqlConnection();
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            try
+            if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("MSSQLSERVER"))
             {
+                string _companyName = txtCompanyName.Text;
+                string _symbol = String.Empty;
 
-                conn.Open();
-                // 1.  create a command object identifying the stored procedure
-                SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn);
-
-                // 2. set the command object so it knows to execute a stored procedure
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                // 3. add parameter to command, which will be passed to the stored procedure
-                cmd.Parameters.Add(new SqlParameter("@CompanyName", _companyName));
-
-                // execute the command
-                using (SqlDataReader rdr = cmd.ExecuteReader())
+                SqlConnection conn = new SqlConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                try
                 {
-                    // iterate through results, printing each to console
-                    while (rdr.Read())
+
+                    conn.Open();
+                    // 1.  create a command object identifying the stored procedure
+                    SqlCommand cmd = new SqlCommand("spGetSymbolFromCompanyName", conn);
+
+                    // 2. set the command object so it knows to execute a stored procedure
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // 3. add parameter to command, which will be passed to the stored procedure
+                    cmd.Parameters.Add(new SqlParameter("@CompanyName", _companyName));
+
+                    // execute the command
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
-                        _symbol = rdr["C_SYMBOL"].ToString();
+                        // iterate through results, printing each to console
+                        while (rdr.Read())
+                        {
+                            _symbol = rdr["C_SYMBOL"].ToString();
+                        }
                     }
+
+                    lblCompanyStatus.Text = _symbol;
+
+                    if (_symbol != "Nil")
+                    {
+                        var bc = new BrushConverter();
+                        btnCompanyCheck.Background = (Brush)bc.ConvertFrom("#32CD32");
+                    }
+                    else
+                    {
+                        var bc = new BrushConverter();
+                        btnCompanyCheck.Background = (Brush)bc.ConvertFrom("#FF6347");
+                    }
+
+
                 }
+
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("Database Error: " + ex.Message);
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("Error: " + ex.Message);
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+            #endregion
+
+            #region btnCompanyCheck_Click_ORACLE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("ORACLE"))
+            {
+                string _companyName = txtCompanyName.Text;
+                string _symbol = String.Empty;
+
+                OracleConnection conn = new OracleConnection();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                try
+                {
+
+                    conn.Open();
+                    // 1.  create a command object identifying the stored procedure
+                    OracleCommand cmd = new OracleCommand("SELECT * FROM SCRIP_INFO WHERE SI_NAME like '%" + _companyName + "%'", conn);
+
+                    // 2. set the command object so it knows to execute a stored procedure
+                    cmd.CommandType = CommandType.Text;
+
+                    // 3. add parameter to command, which will be passed to the stored procedure
+                    //cmd.Parameters.Add(new SqlParameter("@CompanyName", _companyName));
+
+                    // execute the command
+                    using (OracleDataReader rdr = cmd.ExecuteReader())
+                    {
+                        // iterate through results, printing each to console
+                        while (rdr.Read())
+                        {
+                            _symbol = rdr["SI_SYMBOL"].ToString();
+                        }
+                    }
+
+                    lblCompanyStatus.Text = _symbol;
+
+                    if (_symbol != "")
+                    {
+                        var bc = new BrushConverter();
+                        btnCompanyCheck.Background = (Brush)bc.ConvertFrom("#32CD32");
+                        btnCompanyCheck.Content = "SYMBOL EXIST";
+                    }
+                    else
+                    {
+                        var bc = new BrushConverter();
+                        btnCompanyCheck.Background = (Brush)bc.ConvertFrom("#FF6347");
+                        btnCompanyCheck.Content = "NOT FOUND";
+                    }
+
+
+                }
+
+                catch (OracleException ex)
+                {
+                    MessageBox.Show(ex.Message, "Database Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("Database Error: " + ex.Message);
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Debug.WriteLine("Error: " + ex.Message);
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+            #endregion
+
+            #region btnCompanyCheck_Click_SQLITE
+
+            else if (ConfigurationManager.AppSettings["DatabaseVendor"].Equals("SQLITE"))
+            {
+                string _companyName = txtCompanyName.Text;
+                string _symbol = String.Empty;
+                ScripInfo scrip = new ScripInfo();
+
+                scrip =  _context.ScripInfo.FirstOrDefault(s => s.Name.Contains(_companyName) );
+                _symbol = scrip.Symbol;
 
                 lblCompanyStatus.Text = _symbol;
 
-                if(_symbol != "Nil")
+                if (_symbol != "")
                 {
                     var bc = new BrushConverter();
                     btnCompanyCheck.Background = (Brush)bc.ConvertFrom("#32CD32");
+                    btnCompanyCheck.Content = "SYMBOL EXIST";
                 }
                 else
                 {
                     var bc = new BrushConverter();
                     btnCompanyCheck.Background = (Brush)bc.ConvertFrom("#FF6347");
+                    btnCompanyCheck.Content = "NOT FOUND";
                 }
 
-
             }
 
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message, "Database Connectivity Problem", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.WriteLine("Database Error: " + ex.Message);
-            }
+            #endregion
 
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "General Problem", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.WriteLine("Error: " + ex.Message);
-            }
-
-            finally
-            {
-                conn.Close();
-            }
         }
 
         #endregion
