@@ -4,6 +4,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>web-scrap.ico</ApplicationIcon>
+    <Authors>Saad Ahmed</Authors>
+    <Company>Sidat Hyder Morshed Associates</Company>
+    <Product>Pakistan Stock Exchange and MUFAP Data Crawler Application</Product>
   </PropertyGroup>
 
   <ItemGroup>
@@ -87,6 +91,7 @@
     <None Remove="Images\run.jpg" />
     <None Remove="Images\search.png" />
     <None Remove="Images\setting.png" />
+    <None Remove="Images\SIZA_PHARMA.png" />
     <None Remove="Images\stockMarket.jpg" />
     <None Remove="Images\system.png" />
     <None Remove="Images\system2.png" />
@@ -153,6 +158,7 @@
     <Resource Include="Images\gear.gif" />
     <Resource Include="Images\processing.gif" />
     <Resource Include="Images\search.png" />
+    <Resource Include="Images\SIZA_PHARMA.png" />
     <Resource Include="Images\Tutorial\ConfigurationManagerIconView.png" />
     <Resource Include="Images\Tutorial\ConfigurationManagerScreen.PNG" />
     <Resource Include="notification.mp3">

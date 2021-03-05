@@ -27,7 +27,7 @@ namespace PSXDataFetchingApp
     public partial class MainWindow : Window
     {
         //License Date 
-        DateTime ExpiryDate = DateTime.ParseExact("22/03/2025", "dd/MM/yyyy", null);
+        DateTime ExpiryDate = DateTime.ParseExact("01/06/2021", "dd/MM/yyyy", null);
         public IConfiguration Configuration { get; set; }
         public DataContext _context;
 
@@ -170,6 +170,39 @@ namespace PSXDataFetchingApp
                         var image = new BitmapImage();
                         image.BeginInit();
                         image.UriSource = ResourceAccessor.Get("Images/efu.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(ClientLogo, image);
+                    }
+
+                    #endregion
+
+                    #region ClientSideProperties_SIZA
+
+                    if (ConfigurationManager.AppSettings["Client"].Equals("SIZA"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        MainWindow1.Background = (Brush)bc.ConvertFrom("#b9c9d3");
+
+                        lblDemo.Foreground = (Brush)bc.ConvertFrom("#01808d");
+
+                        lblSubHeading.Background = (Brush)bc.ConvertFrom("#01808d");
+
+                        btnGet.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnGetV2.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnGetV3.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnMufapGetMarketSummary.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnMufapGetPKRV.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        btnMufapGetPKFRV.Background = (Brush)bc.ConvertFrom("#1c5b64");
+                        //btnPrivacy.Foreground = (Brush)bc.ConvertFrom("#01808d");
+                        //btnTutorial.Foreground = (Brush)bc.ConvertFrom("#01808d");
+                        //btnDisclaimer.Foreground = (Brush)bc.ConvertFrom("#01808d");
+                        //lblProgress.Foreground = (Brush)bc.ConvertFrom("#01808d");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/SIZA_PHARMA.png");
                         image.EndInit();
                         ImageBehavior.SetAnimatedSource(ClientLogo, image);
                     }

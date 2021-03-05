@@ -41,7 +41,7 @@ namespace PSXDataFetchingApp
     {
 
         //15/10/2020
-        DateTime ExpiryDate = DateTime.Parse("2025/03/25 15:17:00");
+        DateTime ExpiryDate = DateTime.Parse("2021/06/01 15:17:00");
 
         public DataContext _context;
 
@@ -197,6 +197,30 @@ namespace PSXDataFetchingApp
                     }
 
                     #endregion
+
+                    #region ClientSideProperties_SIZA
+
+                    if (ConfigurationManager.AppSettings["Client"].Equals("SIZA"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        header.Background = (Brush)bc.ConvertFrom("#01808d");
+                        Footer.Background = (Brush)bc.ConvertFrom("#01808d");
+
+                        Date.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        Status.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        lblStatusMessage.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/SIZA_PHARMA.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(imgClient, image);
+                    }
+
+                    #endregion
+
                 }
             }
             catch { }

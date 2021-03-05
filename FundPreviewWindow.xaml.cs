@@ -408,6 +408,39 @@ namespace PSXDataFetchingApp
 
                     #endregion
 
+                    #region ClientSideProperties_SIZA
+
+                    if (ConfigurationManager.AppSettings["Client"].Equals("SIZA"))
+                    {
+                        // Header Background Color 
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#01808d");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/SIZA_PHARMA.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+
+                        CriteriaSection.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+
+                        //list1.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+
+                        lblStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#01808d");
+
+                        lblDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        txtDate.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        txtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+                        lbltxtStatus.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#b9c9d3");
+
+                        Footer.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#01808d");
+
+                    }
+
+                    #endregion
+
+
                 }
             }
             catch { }
@@ -3819,6 +3852,8 @@ namespace PSXDataFetchingApp
 
         #endregion
 
+        #region txtSearch_TextChanged
+
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             string _keyword = txtSearch.Text.ToLower().Trim();
@@ -3858,6 +3893,10 @@ namespace PSXDataFetchingApp
                 }
             }
         }
+
+        #endregion
+
+        #region btnSearch_Click
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
@@ -3899,6 +3938,10 @@ namespace PSXDataFetchingApp
             }
         }
 
+        #endregion
+
+        #region comboCategory_SelectionChanged
+
         private void comboCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string _keyword = txtSearch.Text.ToLower().Trim();
@@ -3939,6 +3982,9 @@ namespace PSXDataFetchingApp
                 }
             }
         }
+
+        #endregion
+
     }
 
 }

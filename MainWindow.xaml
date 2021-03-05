@@ -29,7 +29,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="2*" />
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="lblDemo" Foreground="Black" Text="Demo Version v4.5.0" FontFamily="/Fonts/#Raleway-Bold" FontWeight="Bold" Padding="2"/>
+                    <TextBlock x:Name="lblDemo" Foreground="Black" Text="Demo Version v4.5.3" FontFamily="/Fonts/#Raleway-Bold" FontWeight="Bold" Padding="2"/>
                     <Border Margin="0 5 0 0" Grid.Row="1" Padding="2">
                         <Image x:Name="ClientLogo"  Source="Images/BOP.png" MaxWidth="120" MaxHeight="120" />
                     </Border>

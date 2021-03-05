@@ -40,19 +40,18 @@ namespace PSXDataFetchingApp
         //
         public List<MarketSummary> _tempItems = new List<MarketSummary>();
 
-        #region UploadPSXData
+        #region ClientSpecificProperties
 
-        public UploadPSXData()
+        public void ClientSpecificProperties()
         {
-            InitializeComponent();
-
-            datepsxpicker.SelectedDate = DateTime.Now;
-
             //Client Specific Properties
             try
             {
                 if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Client"]))
                 {
+
+                    #region BOP
+
                     if (ConfigurationManager.AppSettings["Client"].Equals("BOP"))
                     {
                         // Header Background Color 
@@ -66,6 +65,11 @@ namespace PSXDataFetchingApp
                         image.EndInit();
                         ImageBehavior.SetAnimatedSource(HeaderImage, image);
                     }
+
+                    #endregion
+
+                    #region HBL
+
                     else if (ConfigurationManager.AppSettings["Client"].Equals("HBL"))
                     {
                         // Header Background Color
@@ -79,9 +83,61 @@ namespace PSXDataFetchingApp
                         image.EndInit();
                         ImageBehavior.SetAnimatedSource(HeaderImage, image);
                     }
+
+                    #endregion
+
+                    #region EFU
+
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("EFU"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/efu.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+
+                    #endregion
+
+                    #region SIZA
+
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("SIZA"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        HeaderColor.Background = (System.Windows.Media.Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/SIZA_PHARMA.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(HeaderImage, image);
+                    }
+
+                    #endregion
+
                 }
             }
             catch { }
+        }
+
+        #endregion
+
+        #region UploadPSXData
+
+        public UploadPSXData()
+        {
+            InitializeComponent();
+
+            datepsxpicker.SelectedDate = DateTime.Now;
+
+            ClientSpecificProperties();
 
         }
 

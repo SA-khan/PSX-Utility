@@ -180,6 +180,39 @@ namespace PSXDataFetchingApp
 
                     #endregion
 
+                    #region ClientSideProperties_SIZA
+
+                    else if (ConfigurationManager.AppSettings["Client"].Equals("SIZA"))
+                    {
+                        // Header Background Color
+                        var bc = new BrushConverter();
+                        MainWindow1.Background = (Brush)bc.ConvertFrom("#b9c9d3");
+
+                        //lblDemo.Foreground = (Brush)bc.ConvertFrom("#008269");
+
+                        //lblSubHeading.Background = (Brush)bc.ConvertFrom("#008269");
+
+                        //Setting Logo
+                        var image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = ResourceAccessor.Get("Images/SIZA_PHARMA.png");
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(ClientLogo, image);
+
+                        //Header Background
+                        Header.Background = (Brush)bc.ConvertFrom("#01808d");
+
+                        //Body Background
+                        Body.Background = (Brush)bc.ConvertFrom("#b9c9d3");
+
+                        //Status Bar Background
+                        statusBar.Background = (Brush)bc.ConvertFrom("#01808d");
+
+                    }
+
+                    #endregion
+
+
                 }
             }
             catch { }
